@@ -33,6 +33,10 @@ html {
   background-color: #f7f7f7;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 a {
   display: inline-block;
   color: #000;
@@ -45,6 +49,10 @@ button:hover {
 
 .material-icons {
   cursor: pointer;
+}
+
+.material-icons.cursor-none {
+  cursor: text;
 }
 
 .page-container {
@@ -121,7 +129,6 @@ header {
 }
 
 .navbar-search > .matched-container1 {
-  visibility: hidden;
   position: absolute;
   width: 100%;
   top: 60px;
@@ -130,6 +137,12 @@ header {
   background-color: #fff;
   line-height: normal;
   font-weight: normal;
+}
+
+.matched-container1 > div:first-child {
+  padding-left: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .navbar-bg > .customize-color {
@@ -319,8 +332,10 @@ header {
 }
 
 .speed {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   cursor: pointer;
+  font-weight: 700;
+  width: 40px;
 }
 
 .playcontrols {
@@ -336,6 +351,24 @@ header {
   font-size: 4.2rem;
 }
 
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  color: grey;
+  text-align: center;
+  top: 5px;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 .progressbar {
   height: 2px;
   background-color: #dbdbdb;
@@ -344,10 +377,10 @@ header {
 }
 
 .progressbar-filled {
-  width: 50%;
+  width: 50%; /* to-do: seems like nothing is different when removing it. or 0%? */
   background-color: var(--custom-color);
   flex: 0;
-  flex-basis: 50%;
+  flex-basis: 0%;
 }
 
 .timer {
@@ -444,6 +477,10 @@ header {
   height: auto;
 }
 
+.show-preview > .align {
+  justify-content: center;
+}
+
 /* Style EpisodeCardStyleB.js */
 
 .episode-preview {
@@ -480,7 +517,6 @@ header {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 3px;
-  background-color: #f8f8f8;
 }
 
 .episode-preview > *:nth-child(2) > *:nth-child(3) {
@@ -495,4 +531,8 @@ header {
 
 .episode-preview > *:nth-child(2) > *:nth-child(3) > *:nth-child(2) {
   margin-right: 10px;
+}
+
+.hl {
+  background-color: #dbdbdb;
 }
