@@ -102,7 +102,7 @@ header {
 }
 
 .navbar-logo {
-  color: #000;
+  color: var(--custom-color);
   font-size: 2.6rem;
   letter-spacing: 1.2px;
 }
@@ -230,6 +230,10 @@ header {
   border-bottom: 1px solid #dbdbdb;
 }
 
+.episode.noBorderBottom {
+  border-bottom: none;
+}
+
 .episode > * {
   margin-bottom: 7px;
   font-size: 1.4rem;
@@ -352,8 +356,13 @@ header {
 }
 
 .tooltip {
+  visibility: hidden;
   position: relative;
   display: inline-block;
+}
+
+.player-controls:hover .tooltip {
+  visibility: visible;
 }
 
 .tooltip .tooltiptext {
@@ -402,6 +411,16 @@ header {
   margin-right: 20px;
 }
 
+.matched-results {
+  padding-left: 15px;
+  min-height: 500px;
+}
+
+.no-match-prompt {
+  font-size: 1.4rem;
+  margin-left: 20px;
+}
+
 .filter {
   height: 60px;
   display: flex;
@@ -426,10 +445,6 @@ header {
 .filter > .active {
   font-weight: bold;
   color: var(--custom-color);
-}
-
-.matched-results {
-  padding-left: 15px;
 }
 
 /* Style PodcastCardStyleB.js */

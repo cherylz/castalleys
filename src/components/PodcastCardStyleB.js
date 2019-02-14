@@ -1,15 +1,28 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function PodcastCardStyleB(props) {
   const { id, image, title_original:title, publisher_original:publisher } = props.podcast;
-  const link = `/${id}`;
+
   return (
     <div className="show-preview">
-      <a href={link}>
+      <Link
+        to={{
+          pathname: `/podcast/${id}`,
+        }}
+        onClick={props.handleClick}
+      >
         <img className="artwork-sm" src={image} alt="podcast artwork" />
-      </a>
+      </Link>
       <div>
-        <a className="title3" href={link}>{title}</a>
+        <Link
+        to={{
+          pathname: `/podcast/${id}`,
+        }}
+          onClick={props.handleClick}
+        >
+          {title}
+        </Link>
         <p className="title4">{publisher}</p>
       </div>
     </div>

@@ -2,20 +2,6 @@ import React from 'react';
 
 function EpisodeCardStyleB(props) {
 
-// pass the audio details and display audio player.
-  function handleClick() {
-    const episodeOnPlay = {
-      image: props.episode.image,
-      episodeId: props.episode.id,
-      podcastId: props.episode.podcast_id,
-      episodeTitle: props.episode.title_original,
-      podcastTitle: props.episode.podcast_title_original,
-      audio: props.episode.audio,
-      length: props.episode.audio_length,
-    };
-    props.updateEpisodeOnPlay(episodeOnPlay, props.index);
-  }
-
   function clean(obj) {
     return JSON.parse(
       JSON.stringify(obj)
@@ -26,14 +12,14 @@ function EpisodeCardStyleB(props) {
 
   function highlight(str) {
     return str.split(' ').map((char, i) => {
-      if (keywords.toLowerCase().includes(char.toLowerCase())) {
-        return (<span key={i} className="hl">{char + ' '}</span>);
+      if (keywordsArr.indexOf(char.toLowerCase()) !== -1) {
+        return (<span key={i}><span className="hl">{char}</span>{' '}</span>);
       };
       return char + ' ';
     });
   }
 
-  const keywords = props.keywords;
+  const keywordsArr = props.currentFullQuery.toLowerCase().split(' '); // TBC: may try Regex. a) doesn't work with punctuation such as 'WWF,'. b) only works with English or English-alike characters. i.e. doesn't work for all languages such as Chinese whose characters are not divided by space.
   const {
     description_highlighted:descToHighlight,
     publisher_highlighted:publisherToHighlight,
@@ -55,24 +41,32 @@ function EpisodeCardStyleB(props) {
     ? highlight(transcriptsToHighlight.join(' ... '))
     : '';
   const date = new Date(pub_date_ms).toDateString();
+  const duration = audio ? audio_length : '(no audio)';
   let toggleIcon;
   if (audio) {
-    toggleIcon = props.index !== props.episodeOnPlayId ?
+    toggleIcon = props.episode.id !== props.episodeOnPlayId ?
         'play_circle_outline' :
         props.playing ?
           'pause_circle_outline' :
           'play_circle_outline';
   }
-/*
-<i
-  className="material-icons"
-  onClick={handleClick}
->
-  {toggleIcon}
-</i>
-*/
 
-  const length = audio ? audio_length : '(no audio)';
+  function handleClick() {
+    if (props.episode.id !== props.episodeOnPlayId) {
+      const episodeOnPlay = {
+        image: props.episode.image,
+        episodeId: props.episode.id,
+        podcastId: props.episode.podcast_id,
+        episodeTitle: props.episode.title_original,
+        podcastTitle: props.episode.podcast_title_original,
+        audio: props.episode.audio,
+        duration: props.episode.audio_length
+      };
+      props.updateEpisodeOnPlay(episodeOnPlay);
+    } else {
+      props.updatePlaying();
+    }
+  }
 
   return (
     <div className="episode-preview">
@@ -91,7 +85,7 @@ function EpisodeCardStyleB(props) {
           >
             {toggleIcon}
           </i>
-          <span className="duration">{length}</span>
+          <span className="duration">{duration}</span>
           <i className="material-icons cursor-none">date_range</i>
           <span className="date">{date}</span>
         </div>

@@ -1,34 +1,27 @@
 import React from 'react';
-import Header from './Header';
 import PodcastCardStyleC from './PodcastCardStyleC';
 import EpisodeCardStyleB from './EpisodeCardStyleB';
-import AudioPlayer from './AudioPlayer';
 // import { typeaheadPodcasts, fullSearchPodcasts, fullSearchEpisodes } from '../sample-responses';
 import { apiKey } from '../apiKey';
 
 class Search extends React.Component {
   state = {
-    keywords: '',
-    hideSearchbarResults: true,
-    typeaheadPodcasts: [],
     fullSearchPodcasts: [],
     fullSearchEpisodes: [],
     fliter: 'episodes',
+    calledFullSearchEpisodes: false,
+    calledFullSearchPodcasts: false
   };
 
-  // TBC: go to router url with keyword value passed, re-render everything
-  handleEnterKeyUp = (keywords) => {
-    console.log('handle enterkey up');
-    this.setState({
-      fullSearchPodcasts: [],
-      fullSearchEpisodes: []
-    });
-    const endpoint = `https://listennotes.p.mashape.com/api/v1/search?q=%22${keywords}%22&genre_ids&type=episode&language&len_max&len_min&ncid&ocid&offset&only_in&published_after&published_before&sort_by_date=0`;
+  callFullSearchEpisodes = (keywords) => {
+    console.log('calling api to search episodes');
+    console.log(keywords);
+    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=0&safe_mode=1&q=%22${keywords}%22`;
     const request = {
       method: 'GET',
       headers: {
-          "X-Mashape-Key": apiKey,
-          "Accept": "application/json",
+        "X-RapidAPI-Key": apiKey,
+        "Accept": "application/json"
       }
     };
     fetch(endpoint, request)
@@ -36,36 +29,35 @@ class Search extends React.Component {
       .then(data => {
         console.log(data);
         this.setState({
-          hideSearchbarResults: true,
-          typeaheadPodcasts: [],
-          fliter: 'episodes',
-          fullSearchEpisodes: [...data.results]
+          fullSearchEpisodes: [...data.results],
+          calledFullSearchEpisodes: true
         });
       })
       .catch(err => console.log(err));
   }
 
-  handleKeywordsChange = (keywords) => {
-    if (keywords) {
-      this.setState({
-        keywords: keywords,
-        hideSearchbarResults: false,
-        // typeaheadPodcasts: [...typeaheadPodcasts.podcasts]
-      });
-    } else {
-      this.setState({
-        keywords: keywords,
-        hideSearchbarResults: true,
-        typeaheadPodcasts: []
-      });
-
-    }
+  componentDidMount() {
+    console.log('i mounted');
+    const keywords = this.props.match.params.keywords;
+    this.callFullSearchEpisodes(keywords);
+    this.props.updateKeywordsAndQueries(keywords);
   }
 
-  updateSearchbarResults = (data) => {
-    this.setState({
-      typeaheadPodcasts: [...data.podcasts]
-    });
+  componentDidUpdate() {
+    if (this.props.previousFullQuery !== this.props.currentFullQuery) {
+      const keywords = this.props.currentFullQuery;
+      this.props.history.push(`/search/${keywords}`);
+      this.props.updatePreviousFullQuery();
+      this.setState({
+        fullSearchPodcasts: [],
+        fullSearchEpisodes: [],
+        fliter: 'episodes',
+        calledFullSearchEpisodes: false,
+        calledFullSearchPodcasts: false
+      });
+      console.log('reset myself');
+      this.callFullSearchEpisodes(this.props.currentFullQuery);
+    }
   }
 
   handleFilterChange = (e) => {
@@ -77,13 +69,14 @@ class Search extends React.Component {
       this.setState({
         fliter: 'podcasts'
       });
-      if (!this.state.fullSearchPodcasts.length) {
-        const endpoint = `https://listennotes.p.mashape.com/api/v1/search?q=%22${this.state.keywords}%22&genre_ids&type=podcast&language&len_max&len_min&ncid&ocid&offset&only_in&published_after&published_before&sort_by_date=0`;
+      if (!this.state.calledFullSearchPodcasts) {
+        const keywords = this.props.currentFullQuery;
+        const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=podcast&offset=0&safe_mode=1&q=%22${keywords}%22`;
         const request = {
           method: 'GET',
           headers: {
-              "X-Mashape-Key": apiKey,
-              "Accept": "application/json",
+            "X-RapidAPI-Key": apiKey,
+            "Accept": "application/json"
           }
         };
         fetch(endpoint, request)
@@ -91,7 +84,8 @@ class Search extends React.Component {
           .then(data => {
             console.log(data);
             this.setState({
-              fullSearchPodcasts: [...data.results]
+              fullSearchPodcasts: [...data.results],
+              calledFullSearchPodcasts: true
             });
           })
           .catch(err => console.log(err));
@@ -100,39 +94,43 @@ class Search extends React.Component {
   }
 
   render() {
-    const typeaheadPodcasts = this.state.typeaheadPodcasts;
-    const fullSearchPodcasts = this.state.fullSearchPodcasts;
     const fullSearchEpisodes = this.state.fullSearchEpisodes;
-    const renderEpisodes = fullSearchEpisodes.map((match) => (
-      <EpisodeCardStyleB
-        keywords={this.state.keywords}
-        episode={match}
-        key={match.id}
-        index={match.id}
-        episodeOnPlayId={this.props.episodeOnPlay.episodeId}
-        updateEpisodeOnPlay={this.props.onPlay}
-        playing={this.props.playing}
-      />
-    ));
-    const renderPodcasts = fullSearchPodcasts.map((match) => (
-      <PodcastCardStyleC
-        podcast={match}
-        key={match.id}
-      />
-    ));
+    const fullSearchPodcasts = this.state.fullSearchPodcasts;
+    let renderEpisodes;
+    let renderPodcasts;
+
+    if (fullSearchEpisodes.length) {
+      renderEpisodes = fullSearchEpisodes.map((episode) => (
+        <EpisodeCardStyleB
+          key={episode.id}
+          currentFullQuery={this.props.currentFullQuery}
+          episode={episode}
+          episodeOnPlayId={this.props.episodeOnPlayId}
+          playing={this.props.playing}
+          updateEpisodeOnPlay={this.props.updateEpisodeOnPlay}
+          updatePlaying={this.props.updatePlaying}
+        />
+      ));
+    } else if (this.state.calledFullSearchEpisodes) {
+      renderEpisodes = (<div className="no-match-prompt">Oops... No matched results found.</div>);
+    }
+
+    if (fullSearchPodcasts.length) {
+      renderPodcasts = fullSearchPodcasts.map((match) => (
+        <PodcastCardStyleC
+          podcast={match}
+          key={match.id}
+        />
+      ));
+    } else if (this.state.calledFullSearchPodcasts) {
+      renderPodcasts = (<div className="no-match-prompt">Oops... No matched results found.</div>);
+    }
+
     const matches = this.state.fliter === 'episodes' ?  renderEpisodes : renderPodcasts;
     const episodesActive = this.state.fliter === 'episodes' ? 'active' : '';
     const podcastsActive = this.state.fliter === 'episodes' ? '' : 'active';
     return (
       <div>
-        <Header
-          matchedPodcasts={typeaheadPodcasts}
-          hideSearchbarResults={this.state.hideSearchbarResults}
-          keywords={this.state.keywords}
-          onKeywordsChange={this.handleKeywordsChange}
-          onKeyUp={this.handleEnterKeyUp}
-          updateSearchbarResults={this.updateSearchbarResults}
-        />
         <div className="page-container">
           <div className="matched-container2">
             <div className="filter">
@@ -157,15 +155,6 @@ class Search extends React.Component {
             </div>
           </div>
         </div>
-        <AudioPlayer
-          hidePlayer={this.props.hidePlayer}
-          audioDetails={this.props.episodeOnPlay}
-          playing={this.props.playing}
-          speed={this.props.speed}
-          onClick={this.props.onClick}
-          removePlayer={this.props.removePlayer}
-          onEnded={this.props.onEnded}
-        />
       </div>
     )
   }

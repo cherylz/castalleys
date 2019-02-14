@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { formatSeconds } from '../helpers';
 
 // use props to render UI
@@ -54,30 +55,44 @@ class AudioPlayer extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log('hi, props or state in AudioPlayer.js got updated');
-    const audio = this.audio.current;
-    const method = this.props.playing ? 'play' : 'pause';
-    audio[method]();
-    audio.playbackRate = this.props.speed;
+    console.log('Props in AudioPlayer.js got updated. Check if it should be handled with care.');
+    if (!this.props.hidePlayer) {
+      const audio = this.audio.current;
+      const method = this.props.playing ? 'play' : 'pause';
+      audio[method]();
+      audio.playbackRate = this.props.speed;
+    }
   }
 
   render() {
+    console.log('AudioPlayer is rendering. Check if it should be handled with care.');
     const displayAndStyle = this.props.hidePlayer ? 'wrapper hidden' : 'wrapper';
     const speed = this.props.speed;
-    const { image, episodeId, podcastId, episodeTitle, podcastTitle, audio, length } = this.props.audioDetails;
-    const episodeIdUrl = `/${episodeId}`;
-    const podcastIdUrl = `/${podcastId}`;
+    const { image, episodeId, podcastId, episodeTitle, podcastTitle, audio, duration } = this.props.episodeOnPlay;
     const togglePlayIcon = this.props.playing ? 'pause' : 'play_arrow';
     let mousedown = false;
-    const totalTime = length; // tbc: length got from API call doesn't always equal to the actual length // this could be slow and show NaN at the beginning -> const totalTime = this.audio.current ? formatSeconds(this.audio.current.duration) : length;
+    const totalTime = duration; // tbc: duration got from API call doesn't always equal to the actual duration // this could be slow and show NaN at the beginning -> const totalTime = this.audio.current ? formatSeconds(this.audio.current.duration) : duration;
     return (
       <div className={displayAndStyle}>
         <div className="player">
           <div className="episode-info">
             <img className="artwork-in-player" src={image} alt="podcast artwork" />
             <div>
-              <a className="title1" href={episodeIdUrl}>{episodeTitle}</a><br />
-              <a className="title2" href={podcastIdUrl}>{podcastTitle}</a>
+              <Link
+                to={`/episode/${episodeId}`}
+                onClick={this.props.clearInputInHeader}
+                className="title1"
+              >
+                {episodeTitle}
+              </Link>
+              <br />
+              <Link
+                to={`/podcast/${podcastId}`}
+                onClick={this.props.clearInputInHeader}
+                className="title2"
+              >
+                {podcastTitle}
+              </Link>
             </div>
           </div>
           <div className="player-controls">
