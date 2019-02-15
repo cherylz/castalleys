@@ -46,7 +46,7 @@ class Header extends React.Component {
   }
   handleKeywordsChange = (e) => {
     console.log('firing keyword change');
-    e.persist();
+    e.persist(); // is it needed here?
     const keywords = e.target.value;
     this.props.updateKeywords(keywords);
     if (keywords === '') {
@@ -81,6 +81,11 @@ class Header extends React.Component {
       hasMatches: true
     });
     this.props.clearInputInHeader();
+  }
+
+  customizeColor = (e) => {
+    const customColor = e.target.dataset.value;
+    document.documentElement.style.setProperty('--custom-color', customColor);
   }
 
   render() {
@@ -124,6 +129,43 @@ class Header extends React.Component {
             <i className="material-icons custom-color">
               color_lens
             </i>
+            <div className="color-picker">
+              <div>
+                <span
+                  onClick={this.customizeColor}
+                  data-value="#ce0925"
+                  className="dot red"
+                ></span> Mars Red
+              </div>
+              <div>
+                <span
+                  onClick={this.customizeColor}
+                  data-value="#dd4124"
+                  className="dot orange"
+                ></span> Warm Orange
+              </div>
+              <div>
+                <span
+                  onClick={this.customizeColor}
+                  data-value="#009874"
+                  className="dot emerald"
+                ></span> Lively Emerald
+              </div>
+              <div>
+                <span
+                  onClick={this.customizeColor}
+                  data-value="#ff6f61"
+                  className="dot coral"
+                ></span> Playful Coral
+              </div>
+              <div>
+                <span
+                  onClick={this.customizeColor}
+                  data-value="#604c8d"
+                  className="dot purple"
+                ></span> Mystical Purple
+              </div>
+            </div>
           </div>
         </div>
       </header>

@@ -146,12 +146,68 @@ header {
 }
 
 .navbar-bg > .customize-color {
+  position: relative;
   height: 60px;
   padding-left: 60px;
   padding-right: 60px;
+}
+
+.customize-color > i:first-child {
+  line-height: 60px;
+}
+
+.color-picker {
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.5s;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 0 0 5% 5%;
+}
+
+.customize-color:hover .color-picker {
+  visibility: visible;
+  opacity: 1;
+}
+
+.color-picker > * {
+  line-height: 36px;
   display: flex;
   align-items: center;
+  font-size: 1.2rem;
+}
+
+.dot {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 6px;
   cursor: pointer;
+}
+
+.dot.red {
+  background-color: #ce0925;
+}
+
+.dot.orange {
+  background-color: #dd4124;
+}
+
+.dot.emerald {
+  background-color: #009874;
+}
+
+.dot.coral {
+  background-color: #ff6f61;
+}
+
+.dot.purple {
+  background-color: #604c8d;
 }
 
 /* Style Podcast.js & Episode.js */
