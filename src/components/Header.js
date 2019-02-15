@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import PodcastCardStyleB from './PodcastCardStyleB';
 import { apiKey } from '../apiKey';
@@ -70,16 +71,16 @@ class Header extends React.Component {
         typeaheadPodcasts: [],
         hasMatches: true
       });
-      this.props.onEnterKeyUp(keywords);
+      this.props.goToOrUpdateSearchPage(keywords);
     }
   }
   resetSearchbar = () => {
     this.setState({
-      keywords: '',
       hideSearchbarResults: true,
       typeaheadPodcasts: [],
       hasMatches: true
     });
+    this.props.clearInputInHeader();
   }
 
   render() {
@@ -95,7 +96,7 @@ class Header extends React.Component {
         <PodcastCardStyleB
           key={podcast.id}
           podcast={podcast}
-          handleClick={this.resetSearchbar}
+          resetSearchbar={this.resetSearchbar}
         />
       ));
     }
@@ -103,7 +104,7 @@ class Header extends React.Component {
       <header>
         <div className="navbar-bg">
           <div>
-            <a href="/"><span className="navbar-logo">CastAlleys</span></a>
+            <Link to="/"><span className="navbar-logo">CastAlleys</span></Link>
           </div>
           <div className="navbar-search">
             <input

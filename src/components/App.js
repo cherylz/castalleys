@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Header from './Header';
 import AudioPlayer from './AudioPlayer';
 import Home from './Home';
@@ -7,7 +7,6 @@ import Search from './Search';
 import Podcast from './Podcast';
 import Episode from './Episode';
 import NotFound from './NotFound';
-import { apiKey } from '../apiKey';
 
 class App extends React.Component {
   state = {
@@ -25,12 +24,14 @@ class App extends React.Component {
   }
 
   clearInputInHeader = () => {
-    this.setState({
-      keywords: ''
-    });
+    if (this.state.keywords) {
+      this.setState({
+        keywords: ''
+      });
+    }
   }
 
-  goToFullSearchEpisodes = (keywords) => {
+  goToOrUpdateSearchPage = (keywords) => {
     this.setState({
       currentFullQuery: keywords
     });
@@ -109,7 +110,8 @@ class App extends React.Component {
             keywords={this.state.keywords}
             currentFullQuery={this.state.currentFullQuery}
             updateKeywords={this.updateKeywords}
-            onEnterKeyUp={this.goToFullSearchEpisodes}
+            goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
+            clearInputInHeader={this.clearInputInHeader}
           />
           <Switch>
             <Route exact path="/" render={(props) => (
@@ -131,24 +133,31 @@ class App extends React.Component {
                 updatePreviousFullQuery={this.updatePreviousFullQuery}
                 updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                 updatePlaying={this.updatePlaying}
+                clearInputInHeader={this.clearInputInHeader}
               />)}
             />
             <Route path="/podcast/:podcastId" render={(props) => (
               <Podcast
                 {...props}
+                previousFullQuery={this.state.previousFullQuery}
+                currentFullQuery={this.state.currentFullQuery}
                 episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                 playing={this.state.playing}
                 updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                 updatePlaying={this.updatePlaying}
+                updatePreviousFullQuery={this.updatePreviousFullQuery}
               />)}
             />
             <Route path="/episode/:episodeId" render={(props) => (
               <Episode
                 {...props}
+                previousFullQuery={this.state.previousFullQuery}
+                currentFullQuery={this.state.currentFullQuery}
                 episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                 playing={this.state.playing}
                 updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                 updatePlaying={this.updatePlaying}
+                updatePreviousFullQuery={this.updatePreviousFullQuery}
               />)}
             />
             <Route render={() => <NotFound />} />

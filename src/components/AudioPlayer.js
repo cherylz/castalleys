@@ -56,10 +56,10 @@ class AudioPlayer extends React.Component {
 
   componentDidUpdate() {
     console.log('Props in AudioPlayer.js got updated. Check if it should be handled with care.');
+    const audio = this.audio.current;
+    const method = this.props.playing ? 'play' : 'pause';
+    audio[method]();
     if (!this.props.hidePlayer) {
-      const audio = this.audio.current;
-      const method = this.props.playing ? 'play' : 'pause';
-      audio[method]();
       audio.playbackRate = this.props.speed;
     }
   }

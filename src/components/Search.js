@@ -55,7 +55,7 @@ class Search extends React.Component {
         calledFullSearchEpisodes: false,
         calledFullSearchPodcasts: false
       });
-      console.log('reset myself');
+      console.log('new full search in the same Search component');
       this.callFullSearchEpisodes(this.props.currentFullQuery);
     }
   }
@@ -103,12 +103,13 @@ class Search extends React.Component {
       renderEpisodes = fullSearchEpisodes.map((episode) => (
         <EpisodeCardStyleB
           key={episode.id}
-          currentFullQuery={this.props.currentFullQuery}
+          query={this.props.currentFullQuery}
           episode={episode}
           episodeOnPlayId={this.props.episodeOnPlayId}
           playing={this.props.playing}
           updateEpisodeOnPlay={this.props.updateEpisodeOnPlay}
           updatePlaying={this.props.updatePlaying}
+          clearInputInHeader={this.props.clearInputInHeader}
         />
       ));
     } else if (this.state.calledFullSearchEpisodes) {
@@ -120,6 +121,7 @@ class Search extends React.Component {
         <PodcastCardStyleC
           podcast={match}
           key={match.id}
+          clearInputInHeader={this.props.clearInputInHeader}
         />
       ));
     } else if (this.state.calledFullSearchPodcasts) {

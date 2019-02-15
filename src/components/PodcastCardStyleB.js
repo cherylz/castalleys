@@ -7,19 +7,15 @@ function PodcastCardStyleB(props) {
   return (
     <div className="show-preview">
       <Link
-        to={{
-          pathname: `/podcast/${id}`,
-        }}
-        onClick={props.handleClick}
+        to={`/podcast/${id}`}
+        onClick={props.resetSearchbar}
       >
         <img className="artwork-sm" src={image} alt="podcast artwork" />
       </Link>
       <div>
         <Link
-        to={{
-          pathname: `/podcast/${id}`,
-        }}
-          onClick={props.handleClick}
+          to={`/podcast/${id}`}
+          onClick={props.resetSearchbar}
         >
           {title}
         </Link>

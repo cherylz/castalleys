@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function EpisodeCardStyleB(props) {
 
@@ -19,7 +20,7 @@ function EpisodeCardStyleB(props) {
     });
   }
 
-  const keywordsArr = props.currentFullQuery.toLowerCase().split(' '); // TBC: may try Regex. a) doesn't work with punctuation such as 'WWF,'. b) only works with English or English-alike characters. i.e. doesn't work for all languages such as Chinese whose characters are not divided by space.
+  const keywordsArr = props.query.toLowerCase().split(' '); // TBC: may try Regex. a) doesn't work with punctuation such as 'WWF,'. b) only works with English or English-alike characters. i.e. doesn't work for all languages such as Chinese whose characters are not divided by space.
   const {
     description_highlighted:descToHighlight,
     publisher_highlighted:publisherToHighlight,
@@ -29,9 +30,9 @@ function EpisodeCardStyleB(props) {
     image,
     audio_length,
     audio,
-    podcast_id,
+    podcast_id:podcastId,
     pub_date_ms,
-    id
+    id:episodeId
   } = clean(props.episode);
   const description = highlight(descToHighlight);
   const publisher = highlight(publisherToHighlight);
@@ -44,7 +45,7 @@ function EpisodeCardStyleB(props) {
   const duration = audio ? audio_length : '(no audio)';
   let toggleIcon;
   if (audio) {
-    toggleIcon = props.episode.id !== props.episodeOnPlayId ?
+    toggleIcon = episodeId !== props.episodeOnPlayId ?
         'play_circle_outline' :
         props.playing ?
           'pause_circle_outline' :
@@ -52,7 +53,7 @@ function EpisodeCardStyleB(props) {
   }
 
   function handleClick() {
-    if (props.episode.id !== props.episodeOnPlayId) {
+    if (episodeId !== props.episodeOnPlayId) {
       const episodeOnPlay = {
         image: props.episode.image,
         episodeId: props.episode.id,
@@ -70,13 +71,29 @@ function EpisodeCardStyleB(props) {
 
   return (
     <div className="episode-preview">
-      <a href={`/${id}`}>
+      <Link
+        to={`/podcast/${podcastId}`}
+        onClick={props.clearInputInHeader}
+      >
         <img className="artwork-md" src={image} alt="podcast artwork" />
-      </a>
+      </Link>
       <div>
-        <a className="title5" href={`/${id}`}>{episodeTitle}</a>
+        <Link
+          to={`/episode/${episodeId}`}
+          onClick={props.clearInputInHeader}
+          className="title5"
+        >
+          {episodeTitle}
+        </Link>
         <p>
-          From <a href={`/${podcast_id}`}>{podcastTitle}</a> by <span>{publisher}</span>
+          From{' '}
+          <Link
+            to={`/podcast/${podcastId}` }
+            onClick={props.clearInputInHeader}
+          >
+            {podcastTitle}
+          </Link>
+           {' '}by <span>{publisher}</span>
         </p>
         <div>
           <i

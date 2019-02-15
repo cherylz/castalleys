@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function PodcastCardStyleC(props) {
   if (!props.podcast) {
@@ -9,14 +10,22 @@ function PodcastCardStyleC(props) {
     );
   } else {
     const { id, image, title_original:title, publisher_original:publisher } = props.podcast;
-    const link = `/${id}`;
     return (
       <div className="show-preview">
-        <a href={link}>
+        <Link
+          to={`/podcast/${id}`}
+          onClick={props.clearInputInHeader}
+        >
           <img className="artwork-md" src={image} alt="podcast artwork" />
-        </a>
+        </Link>
         <div className="align">
-          <a className="title3" href={link}>{title}</a>
+          <Link
+            to={`/podcast/${id}`}
+            onClick={props.clearInputInHeader}
+            className="title3"
+          >
+            {title}
+          </Link>
           <p className="title4">{publisher}</p>
         </div>
       </div>
