@@ -63,6 +63,68 @@ button:hover {
   display: flex;
 }
 
+/* Style Home.js */
+
+.home-cover {
+  background: center / cover no-repeat url("./images/home-cover.png");
+  height: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Rubik', sans-serif;
+}
+
+.home-cover > * {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.home-cover > span:first-child {
+  font-size: 6rem;
+  font-weight: 700;
+  margin-top: 320px;
+  margin-bottom: 20px;
+}
+
+.home-cover > span:last-child {
+  font-size: 2.4rem;
+  font-weight: 300;
+}
+
+footer {
+  margin-top: 40px;
+  margin-bottom: 130px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#email {
+  line-height: 32px;
+  margin-left: 5px;
+}
+
+/* Style NotFound.js */
+
+.not-found-cover {
+  background: center / cover no-repeat url("./images/404-cover.png");
+  height: 900px;
+  display: flex;
+  justify-content: center;
+  font-family: 'Rubik', sans-serif;
+}
+
+.not-found-cover > span:first-child {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 330px 20px 0 20px;
+}
+
 /* Style Header.js */
 
 header {
@@ -103,6 +165,7 @@ header {
 
 .navbar-logo {
   color: var(--custom-color);
+  font-family: 'Carter One', cursive;
   font-size: 2.6rem;
   letter-spacing: 1.2px;
 }
