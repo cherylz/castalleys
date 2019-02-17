@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function EpisodeCardStyleA(props) {
-  const { episodeTitle, episodeId, image, audio, desc, date, duration } = props.episode;
+  const { episodeTitle, episodeId, image, audio, date, duration } = props.episode;
+  const desc = descComponent();
   let episodeStyle;
   let renderTitle;
   let renderDesc;
@@ -16,15 +17,15 @@ function EpisodeCardStyleA(props) {
       </Link>
     );
     renderDesc = (
-      <p className="desc">
+      <div className="desc">
         {desc}
         <span className="more">more</span>
-      </p>
+      </div>
     );
   } else if (props.episodeOnWhichPage === 'episode') {
     episodeStyle = 'episode noBorderBottom';
     renderTitle = (<h3>{episodeTitle}</h3>);
-    renderDesc = (<p className="desc">{desc}</p>);
+    renderDesc = (<div className="desc">{desc}</div>);
   }
 
   if (audio) {
@@ -33,6 +34,13 @@ function EpisodeCardStyleA(props) {
         props.playing ?
           'pause_circle_outline' :
           'play_circle_outline';
+  }
+
+  function createDescMarkup() {
+    return {__html: props.episode.desc};
+  }
+  function descComponent() {
+    return <div dangerouslySetInnerHTML={createDescMarkup()} className='inline' />;
   }
 
   function handleClick() {

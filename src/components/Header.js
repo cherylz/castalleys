@@ -91,8 +91,8 @@ class Header extends React.Component {
   render() {
     const displayAndStyle = this.state.hideSearchbarResults ? "matched-container1 hidden" : "matched-container1";
     const renderPrompt = this.state.hasMatches ?
-      (<div>Search for "{this.props.keywords}". Press <code>Enter</code> to check matched episodes and more podcasts.</div>) :
-      (<div>Oops, no matched podcast found. Press <code>Enter</code> to check matched episodes. Good luck!</div>);
+      (<div>Top matched podcasts for "{this.props.keywords}". Press <code>return</code> to check matched episodes and more podcasts.</div>) :
+      (<div>Oops, no matched podcast found. Press <code>return</code> to check matched episodes. Good luck!</div>);
     const matchedPodcasts = this.state.typeaheadPodcasts;
     let renderMatches;
     if (matchedPodcasts && matchedPodcasts.length) {
@@ -107,9 +107,15 @@ class Header extends React.Component {
     }
     return (
       <header>
-        <div className="navbar-bg">
+        <div className="navbar">
           <div>
-            <Link to="/"><span className="navbar-logo">CastAlleys</span></Link>
+            <Link
+              to="/"
+              onClick={this.props.clearInputInHeader}
+            >
+              <span className="navbar-logo navbar-logo-bg">CastAlleys</span>
+              <span className="navbar-logo navbar-logo-sm">C</span>
+            </Link>
           </div>
           <div className="navbar-search">
             <input

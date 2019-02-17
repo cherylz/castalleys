@@ -19,9 +19,9 @@ class Home extends React.Component {
           <span>Wander around the alleys of podcasts.</span>
         </div>
         <footer>
-          <span>This website is a fun project built by Cheryl. If you like it, email to say hi :)</span>
+          <span>This website is a fun project built by Cheryl. If you like it, email to say hi =)</span>
           <a href="mailto:czcodes@gmail.com">
-            <i id="email" className="material-icons custom-color">email</i>
+            <i id="email" className="material-icons custom-color shake">email</i>
           </a>
         </footer>
       </div>

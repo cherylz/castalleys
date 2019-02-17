@@ -76,8 +76,8 @@ class Episode extends React.Component {
       );
     }
     return (
-      <div>
-        <div className="page-container">
+      <div className="page-container">
+        <div className="podcast-episode-container">
           {renderPodcastInfo}
           <div className="episodes">
             {renderEpisodeInfo}

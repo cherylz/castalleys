@@ -3,45 +3,49 @@ import { Link } from 'react-router-dom';
 
 function EpisodeCardStyleB(props) {
 
-  function clean(obj) {
-    return JSON.parse(
-      JSON.stringify(obj)
-        .replace(/<\/span>/g, '')
-        .replace(/<span class=\\"ln-search-highlight\\">/g, '')
-    );
+  function createEpisodeTitleMarkup() {
+    return {__html: props.episode.title_highlighted};
+  }
+  function episodeTitleComponent() {
+    return <div dangerouslySetInnerHTML={createEpisodeTitleMarkup()} className='inline' />;
   }
 
-  function highlight(str) {
-    return str.split(' ').map((char, i) => {
-      if (keywordsArr.indexOf(char.toLowerCase()) !== -1) {
-        return (<span key={i}><span className="hl">{char}</span>{' '}</span>);
-      };
-      return char + ' ';
-    });
+  function createDescMarkup() {
+    return {__html: props.episode.description_highlighted};
+  }
+  function descComponent() {
+    return <div dangerouslySetInnerHTML={createDescMarkup()} className='inline' />;
   }
 
-  const keywordsArr = props.query.toLowerCase().split(' '); // TBC: may try Regex. a) doesn't work with punctuation such as 'WWF,'. b) only works with English or English-alike characters. i.e. doesn't work for all languages such as Chinese whose characters are not divided by space.
-  const {
-    description_highlighted:descToHighlight,
-    publisher_highlighted:publisherToHighlight,
-    podcast_title_highlighted:podcastTitleToHighlight,
-    title_highlighted:episodeTitleToHighlight,
-    transcripts_highlighted:transcriptsToHighlight,
-    image,
-    audio_length,
-    audio,
-    podcast_id:podcastId,
-    pub_date_ms,
-    id:episodeId
-  } = clean(props.episode);
-  const description = highlight(descToHighlight);
-  const publisher = highlight(publisherToHighlight);
-  const podcastTitle = highlight(podcastTitleToHighlight);
-  const episodeTitle = highlight(episodeTitleToHighlight);
-  const transcripts = transcriptsToHighlight.length
-    ? highlight(transcriptsToHighlight.join(' ... '))
-    : '';
-  const date = new Date(pub_date_ms).toDateString();
+  function createPodcastTitleMarkup() {
+    return {__html: props.episode.podcast_title_highlighted};
+  }
+  function podcastTitleComponent() {
+    return <div dangerouslySetInnerHTML={createPodcastTitleMarkup()} className='inline' />;
+  }
+
+  function createPublisherMarkup() {
+    return {__html: props.episode.publisher_highlighted};
+  }
+  function publisherComponent() {
+    return <div dangerouslySetInnerHTML={createPublisherMarkup()} className='inline' />;
+  }
+
+  function createTranscriptsMarkup() {
+    return {__html: props.episode.transcripts_highlighted.join(' ... ')};
+  }
+  function transcriptsComponent() {
+    return <div dangerouslySetInnerHTML={createTranscriptsMarkup()} className='inline' />;
+  }
+
+  const episodeTitle = episodeTitleComponent();
+  const podcastTitle = podcastTitleComponent();
+  const publisher = publisherComponent();
+  const desc = descComponent();
+  const transcripts = transcriptsComponent();
+
+  const { image, audio_length, audio, podcast_id:podcastId, id:episodeId } = props.episode;
+  const date = new Date(props.episode.pub_date_ms).toDateString();
   const duration = audio ? audio_length : '(no audio)';
   let toggleIcon;
   if (audio) {
@@ -55,13 +59,13 @@ function EpisodeCardStyleB(props) {
   function handleClick() {
     if (episodeId !== props.episodeOnPlayId) {
       const episodeOnPlay = {
-        image: props.episode.image,
-        episodeId: props.episode.id,
-        podcastId: props.episode.podcast_id,
-        episodeTitle: props.episode.title_original,
         podcastTitle: props.episode.podcast_title_original,
-        audio: props.episode.audio,
-        duration: props.episode.audio_length
+        episodeTitle: props.episode.title_original,
+        duration: props.episode.audio_length,
+        podcastId,
+        episodeId,
+        image,
+        audio
       };
       props.updateEpisodeOnPlay(episodeOnPlay);
     } else {
@@ -85,7 +89,7 @@ function EpisodeCardStyleB(props) {
         >
           {episodeTitle}
         </Link>
-        <p>
+        <div>
           From{' '}
           <Link
             to={`/podcast/${podcastId}` }
@@ -94,7 +98,7 @@ function EpisodeCardStyleB(props) {
             {podcastTitle}
           </Link>
            {' '}by <span>{publisher}</span>
-        </p>
+        </div>
         <div>
           <i
             className="material-icons"
@@ -106,14 +110,13 @@ function EpisodeCardStyleB(props) {
           <i className="material-icons cursor-none">date_range</i>
           <span className="date">{date}</span>
         </div>
-        <p>
-          <span><b>Description</b></span>: {description}
-        </p>
-        <p>
-          <span><b>Transcripts</b></span>: ...{transcripts ? transcripts : '(no match found)'}...
-        </p>
+        <div>
+          <span><b>Description</b></span>: {desc}...
+        </div>
+        <div>
+          <span><b>Transcripts</b></span>: ...{transcripts}...
+        </div>
       </div>
-      <audio src={audio}></audio>
     </div>
   )
 }

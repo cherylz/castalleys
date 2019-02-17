@@ -103,7 +103,6 @@ class Search extends React.Component {
       renderEpisodes = fullSearchEpisodes.map((episode) => (
         <EpisodeCardStyleB
           key={episode.id}
-          query={this.props.currentFullQuery}
           episode={episode}
           episodeOnPlayId={this.props.episodeOnPlayId}
           playing={this.props.playing}
@@ -132,29 +131,27 @@ class Search extends React.Component {
     const episodesActive = this.state.fliter === 'episodes' ? 'active' : '';
     const podcastsActive = this.state.fliter === 'episodes' ? '' : 'active';
     return (
-      <div>
-        <div className="page-container">
-          <div className="matched-container2">
-            <div className="filter">
-              <button
-                id="episodes"
-                className={episodesActive}
-                onClick={this.handleFilterChange}
-              >
-                Episodes
-              </button>
-              <span>/</span>
-              <button
-                id="podcasts"
-                className={podcastsActive}
-                onClick={this.handleFilterChange}
-              >
-                Podcasts
-              </button>
-            </div>
-            <div className="matched-results">
-              {matches}
-            </div>
+      <div className="page-container">
+        <div className="matched-container2">
+          <div className="filter">
+            <button
+              id="episodes"
+              className={episodesActive}
+              onClick={this.handleFilterChange}
+            >
+              Episodes
+            </button>
+            <span>/</span>
+            <button
+              id="podcasts"
+              className={podcastsActive}
+              onClick={this.handleFilterChange}
+            >
+              Podcasts
+            </button>
+          </div>
+          <div className="matched-results">
+            {matches}
           </div>
         </div>
       </div>

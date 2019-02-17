@@ -1,6 +1,7 @@
 import React from 'react';
 import PodcastCardStyleA from './PodcastCardStyleA';
 import EpisodeCardStyleA from './EpisodeCardStyleA';
+import EpisodeCardStyleC from './EpisodeCardStyleC';
 import { apiKey } from '../apiKey';
 import { formatSeconds } from '../helpers';
 
@@ -77,19 +78,12 @@ class Podcast extends React.Component {
         />
       );
     }
-    if (this.state.episodes.length) {
-      const episodesToRender = this.state.searchingInPodcast ? this.state.matchedEpisodes : this.state.episodes;
-      renderEpisodesInfo = episodesToRender.map((episode) => {
-        const { id:episodeId, image, audio } = episode;
-        const episodeTitle = episode.title || episode.title_original;
-        const desc = episode.description || episode.description_original;
+    if (!this.state.searchingInPodcast && this.state.episodes.length) {
+      renderEpisodesInfo = this.state.episodes.map((episode) => {
+        const { title:episodeTitle, id:episodeId, description:desc, image, audio } = episode;
         const date = new Date(episode.pub_date_ms).toDateString();
-        const duration = !audio ?
-          '(no audio)' :
-          this.state.searchingInPodcast ?
-            episode.audio_length :
-            formatSeconds(episode.audio_length);
-        const processedEpisode = { episodeTitle, episodeId, image, audio, desc, date, duration };
+        const duration = audio ? formatSeconds(episode.audio_length) : '(no audio)';
+        const processedEpisode = { episodeTitle, episodeId, desc, image, audio, date, duration };
         return (
           <EpisodeCardStyleA
             key={episode.id}
@@ -104,12 +98,23 @@ class Podcast extends React.Component {
           />
         );
       });
+    } else if (this.state.searchingInPodcast && this.state.matchedEpisodes.length) {
+      renderEpisodesInfo = this.state.matchedEpisodes.map((episode) => (
+        <EpisodeCardStyleC
+          key={episode.id}
+          episode={episode}
+          episodeOnPlayId={this.props.episodeOnPlayId}
+          playing={this.props.playing}
+          updateEpisodeOnPlay={this.props.updateEpisodeOnPlay}
+          updatePlaying={this.props.updatePlaying}
+        />
+      ));
     } else if (this.state.searchingInPodcast && !this.state.matchedEpisodes.length) {
       renderEpisodesInfo = (<div className="no-match-prompt">Oops... No matched results found.</div>);
     }
     return (
-      <div>
-        <div className="page-container">
+      <div className="page-container">
+        <div className="podcast-episode-container">
           {renderPodcastInfo}
           <div className="episodes">
             {renderEpisodesInfo}

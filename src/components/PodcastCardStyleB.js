@@ -16,6 +16,7 @@ function PodcastCardStyleB(props) {
         <Link
           to={`/podcast/${id}`}
           onClick={props.resetSearchbar}
+          className="title3"
         >
           {title}
         </Link>

@@ -77,7 +77,7 @@ class AudioPlayer extends React.Component {
         <div className="player">
           <div className="episode-info">
             <img className="artwork-in-player" src={image} alt="podcast artwork" />
-            <div>
+            <div className="titles-in-player">
               <Link
                 to={`/episode/${episodeId}`}
                 onClick={this.props.clearInputInHeader}

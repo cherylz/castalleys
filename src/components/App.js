@@ -160,7 +160,14 @@ class App extends React.Component {
                 updatePreviousFullQuery={this.updatePreviousFullQuery}
               />)}
             />
-            <Route render={() => <NotFound />} />
+            <Route render={(props) => (
+              <NotFound
+                {...props}
+                previousFullQuery={this.state.previousFullQuery}
+                currentFullQuery={this.state.currentFullQuery}
+                updatePreviousFullQuery={this.updatePreviousFullQuery}
+              />)}
+            />
           </Switch>
           <AudioPlayer
             hidePlayer={this.state.hidePlayer}
