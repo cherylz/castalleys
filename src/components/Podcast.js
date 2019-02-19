@@ -32,28 +32,30 @@ class Podcast extends React.Component {
   }
 
   componentDidMount() {
-    // const id = this.props.history.location.id;
     const id = this.props.match.params.podcastId;
-    console.log(id);
-    const endpoint = `https://api.listennotes.com/api/v1/podcasts/${id}?sort=recent_first`;
-    const request = {
-      method: 'GET',
-      headers: {
-        "X-RapidAPI-Key": apiKey,
-        "Accept": "application/json"
-      }
-    };
-    fetch(endpoint, request)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        const {episodes, ...rest} = data;
-        this.setState({
-          podcast: rest,
-          episodes: episodes
-        });
-      })
-      .catch(err => console.log(err));
+    if (id.length === 32) {
+      const endpoint = `https://api.listennotes.com/api/v1/podcasts/${id}?sort=recent_first`;
+      const request = {
+        method: 'GET',
+        headers: {
+          "X-RapidAPI-Key": apiKey,
+          "Accept": "application/json"
+        }
+      };
+      fetch(endpoint, request)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          const {episodes, ...rest} = data;
+          this.setState({
+            podcast: rest,
+            episodes: episodes
+          });
+        })
+        .catch(err => console.log(err));
+    } else {
+      this.props.history.push(`/404`);
+    }
   }
 
   componentDidUpdate() {

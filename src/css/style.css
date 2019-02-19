@@ -114,6 +114,13 @@ button:hover {
   width: 90%;
 }
 
+.title5 {
+  text-decoration: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
 /* Style Home.js */
 
 .home-cover {
@@ -451,9 +458,10 @@ header {
   margin-right: 5px;
 }
 
-.desc > .more {
-  margin-left: 5px;
-  font-style: italic;
+.desc {
+  line-height: 2rem;
+  max-height: 12rem;
+  overflow: scroll;
 }
 
 /* ** Style AudioPlayer.js */
@@ -678,16 +686,6 @@ header {
   margin-bottom: 10px;
 }
 
-.episode-preview .title5 {
-  text-decoration: none;
-  font-size: 1.4rem;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 3px;
-}
-
 .episode-preview > *:nth-child(2) > *:nth-child(3) {
   font-size: 1.2rem;
   display: flex;
@@ -840,6 +838,10 @@ header {
     margin-right: 5px;
     padding-left: 25px;
     padding-right: 25px;
+  }
+
+  .desc {
+    max-height: 24rem;
   }
 }
 

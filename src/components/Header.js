@@ -58,6 +58,7 @@ class Header extends React.Component {
     } else {
       this.setState({
         hideSearchbarResults: false,
+        typeaheadPodcasts: []
         // typeaheadPodcasts: [...typeaheadPodcasts.podcasts]
       });
     }

@@ -16,16 +16,11 @@ function EpisodeCardStyleA(props) {
         <h3>{episodeTitle}</h3>
       </Link>
     );
-    renderDesc = (
-      <div className="desc">
-        {desc}
-        <span className="more">more</span>
-      </div>
-    );
+    renderDesc = (<div className="desc">{desc}</div>);
   } else if (props.episodeOnWhichPage === 'episode') {
     episodeStyle = 'episode noBorderBottom';
     renderTitle = (<h3>{episodeTitle}</h3>);
-    renderDesc = (<div className="desc">{desc}</div>);
+    renderDesc = (<div>{desc}</div>);
   }
 
   if (audio) {

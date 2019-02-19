@@ -48,8 +48,16 @@ class PodcastCardStyleA extends React.Component {
       .catch(err => console.log(err));
   }
 
+  createDescMarkup = () => {
+    return {__html: this.props.podcast.description};
+  }
+
+  descComponent = () => {
+    return <div dangerouslySetInnerHTML={this.createDescMarkup()} className='inline' />;
+  }
+
   render() {
-    const { id, title, image:imageSrc, publisher, description:desc, rss, total_episodes:totalEpisodes } = this.props.podcast;
+    const { id, title, image:imageSrc, publisher, rss, total_episodes:totalEpisodes } = this.props.podcast;
     const website = this.props.podcast.website.replace('?utm_source=listennotes.com&utm_campaign=Listen+Notes&utm_medium=website', '');
     const itunes = `https://itunes.apple.com/podcast/id${this.props.podcast.itunes_id}`;
     const firstPublishDate = new Date(this.props.podcast.earliest_pub_date_ms).toDateString();
@@ -75,6 +83,9 @@ class PodcastCardStyleA extends React.Component {
         </Link>
       );
     }
+
+    const desc = this.descComponent();
+
     return (
       <div className="show">
         {renderTitle}
@@ -82,7 +93,7 @@ class PodcastCardStyleA extends React.Component {
         <p><em>By</em> {publisher}</p>
         {/* <button className="subscribe-btn">Subscribe</button> */}
         {renderSearchBox}
-        <p className="desc">{desc}</p>
+        <div>{desc}</div>
         <div className="podcast-links">
           <a href={website} target="_blank" rel='noreferrer noopener'>Website</a>
           <a href={rss} target="_blank" rel='noreferrer noopener'>RSS</a>
