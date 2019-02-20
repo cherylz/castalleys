@@ -624,6 +624,17 @@ header {
   color: var(--custom-color);
 }
 
+.load-more {
+  margin: 20px auto;
+  font-size: 1.6rem;
+  font-family: 'Open Sans', sans-serif;
+  cursor: pointer;
+  border: 2px solid var(--custom-color);
+  display: flex;
+  outline: 0;
+  padding: 5px 20px;
+}
+
 /* Style PodcastCardStyleB.js */
 
 .show-preview {
