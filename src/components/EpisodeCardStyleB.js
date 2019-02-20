@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { msToDate } from '../helpers';
 
 function EpisodeCardStyleB(props) {
 
@@ -45,7 +46,7 @@ function EpisodeCardStyleB(props) {
   const transcripts = transcriptsComponent();
 
   const { image, audio_length, audio, podcast_id:podcastId, id:episodeId } = props.episode;
-  const date = new Date(props.episode.pub_date_ms).toDateString();
+  const date = msToDate(props.episode.pub_date_ms);
   const duration = audio ? audio_length : '(no audio)';
   let toggleIcon;
   if (audio) {

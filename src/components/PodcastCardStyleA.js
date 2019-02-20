@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { apiKey } from '../apiKey';
+import { msToDate } from '../helpers';
 
 // render user input
 // press enter to search
@@ -60,7 +61,7 @@ class PodcastCardStyleA extends React.Component {
     const { id, title, image:imageSrc, publisher, rss, total_episodes:totalEpisodes } = this.props.podcast;
     const website = this.props.podcast.website.replace('?utm_source=listennotes.com&utm_campaign=Listen+Notes&utm_medium=website', '');
     const itunes = `https://itunes.apple.com/podcast/id${this.props.podcast.itunes_id}`;
-    const firstPublishDate = new Date(this.props.podcast.earliest_pub_date_ms).toDateString();
+    const firstPublishDate = msToDate(this.props.podcast.earliest_pub_date_ms);
     const genresInString = this.props.podcast.genres.join(', ').toLowerCase() || "n/a";
     let renderTitle;
     let renderSearchBox;

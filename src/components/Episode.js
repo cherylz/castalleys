@@ -2,7 +2,7 @@ import React from 'react';
 import PodcastCardStyleA from './PodcastCardStyleA';
 import EpisodeCardStyleA from './EpisodeCardStyleA';
 import { apiKey } from '../apiKey';
-import { formatSeconds } from '../helpers';
+import { formatSeconds, msToDate } from '../helpers';
 
 class Episode extends React.Component {
   state = {
@@ -59,7 +59,7 @@ class Episode extends React.Component {
     }
     if (Object.keys(episode).length) {
       const { id:episodeId, image, audio, title:episodeTitle, description:desc } = episode;
-      const date = new Date(episode.pub_date_ms).toDateString();
+      const date = msToDate(episode.pub_date_ms);
       const duration = !audio ?
         '(no audio)' :
         formatSeconds(episode.audio_length);

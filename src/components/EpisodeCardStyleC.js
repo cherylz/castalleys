@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { msToDate } from '../helpers';
 
 function EpisodeCardStyleC(props) {
   const { podcast_title_original:podcastTitle, podcast_id:podcastId, id:episodeId, image, audio, audio_length } = props.episode;
   const episodeTitle = episodeTitleComponent();
   const desc = descComponent();
   const transcripts = transcriptsComponent();
-  const date = new Date(props.episode.pub_date_ms).toDateString();
+  const date = msToDate(props.episode.pub_date_ms);
   const duration = audio ? audio_length : '(no audio)';
   let toggleIcon;
 

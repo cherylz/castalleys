@@ -3,7 +3,7 @@ import PodcastCardStyleA from './PodcastCardStyleA';
 import EpisodeCardStyleA from './EpisodeCardStyleA';
 import EpisodeCardStyleC from './EpisodeCardStyleC';
 import { apiKey } from '../apiKey';
-import { formatSeconds } from '../helpers';
+import { formatSeconds, msToDate } from '../helpers';
 
 class Podcast extends React.Component {
   state = {
@@ -82,7 +82,7 @@ class Podcast extends React.Component {
     if (!this.state.searchingInPodcast && this.state.episodes.length) {
       renderEpisodesInfo = this.state.episodes.map((episode) => {
         const { title:episodeTitle, id:episodeId, description:desc, image, audio } = episode;
-        const date = new Date(episode.pub_date_ms).toDateString();
+        const date = msToDate(episode.pub_date_ms);
         const duration = audio ? formatSeconds(episode.audio_length) : '(no audio)';
         const processedEpisode = { episodeTitle, episodeId, desc, image, audio, date, duration };
         return (
