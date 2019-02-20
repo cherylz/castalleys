@@ -2,27 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatSeconds } from '../helpers';
 
-// use props to render UI
-// simulate: (attention: don't use state and data upflow now) click the play button, show audio player, play automatically.
-// control playbacks.
-// add a close window button to audio player
-
-//Step One: basic controls
-// (done) play pause: render the clicked episode, two ways to play and pause, toggle button UI ->
-// (done) update playing (UI) when the current playback is over.
-// (done) forward and rewind
-// (done) playback rate
-// (cancelled) download
-
-//Step Two: progress bar
-// (done) how to update current time in real time? check wes tutorial.
-// (done) progress bar real time move
-// (done) scroll progress bar
-  // to-do: update state with info to render new pages like currentTimeFromPreviousPage OR move AudioPlayer to App.js
-  // to-do: 00:03:15 not consistent with 00:02:59
-  // to-do: helper function too slow and has NaN
-// (done) add a close window button to audio player
-
 class AudioPlayer extends React.Component {
   audio = React.createRef();
   progressBar = React.createRef();
@@ -54,13 +33,17 @@ class AudioPlayer extends React.Component {
     currentTime.textContent = formatSeconds(audio.currentTime);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     console.log('Props in AudioPlayer.js got updated. Check if it should be handled with care.');
-    const audio = this.audio.current;
-    const method = this.props.playing ? 'play' : 'pause';
-    audio[method]();
-    if (!this.props.hidePlayer) {
-      audio.playbackRate = this.props.speed;
+    if (this.props.episodeOnPlay && !this.props.hidePlayer) {
+      const audio = this.audio.current;
+      const method = this.props.playing ? 'play' : 'pause';
+      if (this.props.playing !== prevProps.playing) {
+        audio[method]();
+      }
+      if (this.props.speed !== prevProps.speed) {
+        audio.playbackRate = this.props.speed;
+      }
     }
   }
 

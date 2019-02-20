@@ -87,6 +87,7 @@ class Header extends React.Component {
   customizeColor = (e) => {
     const customColor = e.target.dataset.value;
     document.documentElement.style.setProperty('--custom-color', customColor);
+    localStorage.setItem('customColor', customColor);
   }
 
   render() {

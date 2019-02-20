@@ -19,6 +19,27 @@ class App extends React.Component {
     speed: 1,
   };
 
+  componentDidMount() {
+    const hidePlayerRef = JSON.parse(localStorage.getItem('hidePlayer'));
+    const episodeOnPlayRef = JSON.parse(localStorage.getItem('episodeOnPlay'));
+    document.documentElement.style.setProperty('--custom-color', localStorage.getItem('customColor'));
+    if (!hidePlayerRef && localStorage.getItem('episodeOnPlay')) {
+      this.setState({
+        hidePlayer: false,
+        episodeOnPlay: episodeOnPlayRef,
+        speed: JSON.parse(localStorage.getItem('speed'))
+      });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    if (this.state.speed !== prevState.speed || this.state.hidePlayer !== prevState.hidePlayer || this.state.episodeOnPlay.episodeId !== prevState.episodeOnPlay.episodeId) {
+      localStorage.setItem('episodeOnPlay', JSON.stringify(this.state.episodeOnPlay));
+      localStorage.setItem('speed', this.state.speed);
+      localStorage.setItem('hidePlayer', this.state.hidePlayer);
+    }
+  }
+
   updateKeywords = (keywords) => {
     this.setState({ keywords });
   }
@@ -186,22 +207,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-/*
-return (
-  <BrowserRouter>
-    <Switch>
-      <Route
-        exact
-        path="/"
-        component={() => <Search
-        />}
-      />
-      <Route path="/keyword" component={Home} />
-      <Route path="/podcastId" component={Podcast} />
-      <Route path="/podcastId/:episodeId" component={Episode} />
-      <Route component={NotFound} />
-    </Switch>
-  </BrowserRouter>
-)
-*/
