@@ -58,23 +58,12 @@ class Podcast extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    if (this.props.previousFullQuery !== this.props.currentFullQuery) {
-      const keywords = this.props.currentFullQuery;
-      this.props.history.push(`/search/${keywords}`);
-      this.props.updatePreviousFullQuery();
-    }
-  }
-
-  /*
   componentDidUpdate(prevProps) {
-    if (prevProps.currentFullQuery !== this.props.currentFullQuery) {
+    if (this.props.currentFullQuery !== prevProps.currentFullQuery) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);
-      this.props.updatePreviousFullQuery();
     }
   }
-  */
 
   render() {
     let renderPodcastInfo;

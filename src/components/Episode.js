@@ -37,11 +37,10 @@ class Episode extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    if (this.props.previousFullQuery !== this.props.currentFullQuery) {
+  componentDidUpdate(prevProps) {
+    if (this.props.currentFullQuery !== prevProps.currentFullQuery) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);
-      this.props.updatePreviousFullQuery();
     }
   }
 

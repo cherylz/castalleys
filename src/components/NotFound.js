@@ -1,13 +1,10 @@
 import React from 'react';
 
 class NotFound extends React.Component {
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-    if (this.props.previousFullQuery !== this.props.currentFullQuery) {
-      console.log('hii');
+  componentDidUpdate(prevProps) {
+    if (this.props.currentFullQuery !== prevProps.currentFullQuery) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);
-      this.props.updatePreviousFullQuery();
     }
   }
   render() {

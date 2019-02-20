@@ -11,12 +11,11 @@ import NotFound from './NotFound';
 class App extends React.Component {
   state = {
     keywords: '',
-    previousFullQuery: '',
     currentFullQuery: '',
     hidePlayer: true,
     episodeOnPlay: {},
     playing: false,
-    speed: 1,
+    speed: 1
   };
 
   componentDidMount() {
@@ -33,10 +32,14 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevState) {
-    if (this.state.speed !== prevState.speed || this.state.hidePlayer !== prevState.hidePlayer || this.state.episodeOnPlay.episodeId !== prevState.episodeOnPlay.episodeId) {
-      localStorage.setItem('episodeOnPlay', JSON.stringify(this.state.episodeOnPlay));
+    if (this.state.speed !== prevState.speed) {
       localStorage.setItem('speed', this.state.speed);
+    }
+    if (this.state.hidePlayer !== prevState.hidePlayer) {
       localStorage.setItem('hidePlayer', this.state.hidePlayer);
+    }
+    if (prevState.episodeOnPlay && this.state.episodeOnPlay.episodeId !== prevState.episodeOnPlay.episodeId) {
+      localStorage.setItem('episodeOnPlay', JSON.stringify(this.state.episodeOnPlay));
     }
   }
 
@@ -58,20 +61,6 @@ class App extends React.Component {
     });
   }
   // TBC: check if it is correct: this will trigger route change via componentDidUpdate() in Home.js, Search.js, Podcast.js, Episode.js, 404.js respectively.
-
-  updatePreviousFullQuery = () => {
-    this.setState({
-      previousFullQuery: this.state.currentFullQuery
-    });
-  }
-
-  updateKeywordsAndQueries = (keywords) => {
-    this.setState({
-      keywords: keywords,
-      currentFullQuery: keywords,
-      previousFullQuery: keywords
-    });
-  }
 
   updateEpisodeOnPlay = (episode) => {
     if (Object.entries(this.state.episodeOnPlay).length === 0) {
@@ -138,20 +127,16 @@ class App extends React.Component {
             <Route exact path="/" render={(props) => (
               <Home
                 {...props}
-                previousFullQuery={this.state.previousFullQuery}
                 currentFullQuery={this.state.currentFullQuery}
-                updatePreviousFullQuery={this.updatePreviousFullQuery}
               />)}
             />
             <Route path="/search/:keywords" render={(props) => (
               <Search
                 {...props}
-                previousFullQuery={this.state.previousFullQuery}
                 currentFullQuery={this.state.currentFullQuery}
                 episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                 playing={this.state.playing}
-                updateKeywordsAndQueries={this.updateKeywordsAndQueries}
-                updatePreviousFullQuery={this.updatePreviousFullQuery}
+                goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
                 updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                 updatePlaying={this.updatePlaying}
                 clearInputInHeader={this.clearInputInHeader}
@@ -160,33 +145,27 @@ class App extends React.Component {
             <Route path="/podcast/:podcastId" render={(props) => (
               <Podcast
                 {...props}
-                previousFullQuery={this.state.previousFullQuery}
                 currentFullQuery={this.state.currentFullQuery}
                 episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                 playing={this.state.playing}
                 updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                 updatePlaying={this.updatePlaying}
-                updatePreviousFullQuery={this.updatePreviousFullQuery}
               />)}
             />
             <Route path="/episode/:episodeId" render={(props) => (
               <Episode
                 {...props}
-                previousFullQuery={this.state.previousFullQuery}
                 currentFullQuery={this.state.currentFullQuery}
                 episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                 playing={this.state.playing}
                 updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                 updatePlaying={this.updatePlaying}
-                updatePreviousFullQuery={this.updatePreviousFullQuery}
               />)}
             />
             <Route render={(props) => (
               <NotFound
                 {...props}
-                previousFullQuery={this.state.previousFullQuery}
                 currentFullQuery={this.state.currentFullQuery}
-                updatePreviousFullQuery={this.updatePreviousFullQuery}
               />)}
             />
           </Switch>

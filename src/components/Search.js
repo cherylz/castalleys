@@ -40,14 +40,13 @@ class Search extends React.Component {
     console.log('i mounted');
     const keywords = this.props.match.params.keywords;
     this.callFullSearchEpisodes(keywords);
-    this.props.updateKeywordsAndQueries(keywords);
+    this.props.goToOrUpdateSearchPage(keywords);
   }
 
-  componentDidUpdate() {
-    if (this.props.previousFullQuery !== this.props.currentFullQuery) {
+  componentDidUpdate(prevProps) {
+    if (this.props.currentFullQuery !== prevProps.currentFullQuery) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);
-      this.props.updatePreviousFullQuery();
       this.setState({
         fullSearchPodcasts: [],
         fullSearchEpisodes: [],
