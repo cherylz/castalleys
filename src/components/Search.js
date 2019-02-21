@@ -17,11 +17,34 @@ class Search extends React.Component {
     calledFullSearchPodcasts: false
   };
 
-  loadMoreMatches = () => {
-    if (this.state.fliter === 'episodes' && this.state.fullSearchEpisodes.length <= this.state.totalEpisodeMatches) {
+  componentDidMount() {
+    console.log('i mounted');
+    const keywords = this.props.match.params.keywords;
+    this.callFullSearchEpisodes(keywords);
+    this.props.goToOrUpdateSearchPage(keywords);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentFullQuery && this.props.currentFullQuery !== prevProps.currentFullQuery) {
+      const keywords = this.props.currentFullQuery;
+      this.props.history.push(`/search/${keywords}`);
+      this.setState({
+        fullSearchPodcasts: [],
+        fullSearchEpisodes: [],
+        fliter: 'episodes',
+        calledFullSearchEpisodes: false,
+        calledFullSearchPodcasts: false
+      });
+      console.log('new full search in the same Search component');
       this.callFullSearchEpisodes(this.props.currentFullQuery);
     }
-    if (this.state.fliter === 'podcasts' && this.state.fullSearchPodcasts.length <= this.state.totalPodcastMatches) {
+  }
+
+  loadMoreMatches = () => {
+    if (this.state.fliter === 'episodes') {
+      this.callFullSearchEpisodes(this.props.currentFullQuery);
+    }
+    if (this.state.fliter === 'podcasts') {
       this.callFullSearchPodcasts(this.props.currentFullQuery);
     }
   }
@@ -54,29 +77,6 @@ class Search extends React.Component {
         }
       })
       .catch(err => console.log(err));
-  }
-
-  componentDidMount() {
-    console.log('i mounted');
-    const keywords = this.props.match.params.keywords;
-    this.callFullSearchEpisodes(keywords);
-    this.props.goToOrUpdateSearchPage(keywords);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.currentFullQuery && this.props.currentFullQuery !== prevProps.currentFullQuery) {
-      const keywords = this.props.currentFullQuery;
-      this.props.history.push(`/search/${keywords}`);
-      this.setState({
-        fullSearchPodcasts: [],
-        fullSearchEpisodes: [],
-        fliter: 'episodes',
-        calledFullSearchEpisodes: false,
-        calledFullSearchPodcasts: false
-      });
-      console.log('new full search in the same Search component');
-      this.callFullSearchEpisodes(this.props.currentFullQuery);
-    }
   }
 
   callFullSearchPodcasts = (keywords) => {
@@ -133,7 +133,27 @@ class Search extends React.Component {
     let renderPodcasts;
     let loadMoreBtn;
 
-    if (fullSearchEpisodes.length && fullSearchEpisodes.length <= this.state.totalEpisodeMatches) {
+    if (this.state.fliter === 'episodes' && fullSearchEpisodes.length < this.state.totalEpisodeMatches) {
+      loadMoreBtn = (
+        <button
+          className="load-more"
+          onClick={this.loadMoreMatches}
+        >
+          Load More
+        </button>
+      );
+    } else if (this.state.fliter === 'podcasts' && fullSearchPodcasts.length < this.state.totalPodcastMatches) {
+      loadMoreBtn = (
+        <button
+          className="load-more"
+          onClick={this.loadMoreMatches}
+        >
+          Load More
+        </button>
+      );
+    }
+
+    if (fullSearchEpisodes.length) {
       renderEpisodes = fullSearchEpisodes.map((episode) => (
         <EpisodeCardStyleB
           key={episode.id}
@@ -145,19 +165,11 @@ class Search extends React.Component {
           clearInputInHeader={this.props.clearInputInHeader}
         />
       ));
-      loadMoreBtn = (
-        <button
-          className="load-more"
-          onClick={this.loadMoreMatches}
-        >
-          Load More
-        </button>
-      );
     } else if (this.state.calledFullSearchEpisodes) {
       renderEpisodes = (<div className="no-match-prompt">Oops... No matched results found.</div>);
     }
 
-    if (fullSearchPodcasts.length && fullSearchPodcasts.length <= this.state.totalPodcastMatches) {
+    if (fullSearchPodcasts.length) {
       renderPodcasts = fullSearchPodcasts.map((match) => (
         <PodcastCardStyleC
           podcast={match}
@@ -165,20 +177,12 @@ class Search extends React.Component {
           clearInputInHeader={this.props.clearInputInHeader}
         />
       ));
-      loadMoreBtn = (
-        <button
-          className="load-more"
-          onClick={this.loadMoreMatches}
-        >
-          Load More
-        </button>
-      );
     } else if (this.state.calledFullSearchPodcasts) {
       renderPodcasts = (<div className="no-match-prompt">Oops... No matched results found.</div>);
     }
 
-    // important to assign value to matches after computation is done.
-    const matches = this.state.fliter === 'episodes' ?  renderEpisodes : renderPodcasts;
+    // important to assign value to `matches` after computation is done.
+    const matches = this.state.fliter === 'episodes' ? renderEpisodes : renderPodcasts;
 
     return (
       <div className="page-container">

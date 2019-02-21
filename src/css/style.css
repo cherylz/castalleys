@@ -398,7 +398,7 @@ header {
 
 .search-in-podcast {
   height: 30px;
-  padding-left: 3px;
+  padding-left: 5px;
   margin-top: 3px;
   margin-bottom: 10px;
   font-size: 1.6rem;
@@ -462,6 +462,12 @@ header {
   line-height: 2rem;
   max-height: 12rem;
   overflow: scroll;
+}
+
+button.load-more-btn {
+  margin-top: 20px;
+  font-family: 'Open Sans', sans-serif;
+  cursor: pointer;
 }
 
 /* ** Style AudioPlayer.js */
@@ -853,6 +859,11 @@ header {
 
   .desc {
     max-height: 24rem;
+  }
+
+  button.load-more-btn {
+    margin: 20px auto 0;
+    display: flex;
   }
 }
 

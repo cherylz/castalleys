@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { apiKey } from '../apiKey';
 import { msToDate } from '../helpers';
 
 // render user input
@@ -27,26 +26,8 @@ class PodcastCardStyleA extends React.Component {
   handleSearch = (e) => {
     const keywords = this.state.keywords;
     if (e.key === 'Enter' && keywords && keywords !== this.props.query) {
-      this.callInPodcastSearch(keywords);
+      this.props.callInPodcastSearch(keywords);
     }
-  }
-
-  callInPodcastSearch = (keywords) => {
-    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=0&ocid=${this.props.podcast.id}&safe_mode=1&q=%22${keywords}%22`;
-    const request = {
-      method: 'GET',
-      headers: {
-        "X-RapidAPI-Key": apiKey,
-        "Accept": "application/json"
-      }
-    };
-    fetch(endpoint, request)
-      .then(res => res.json())
-      .then(data => {
-        console.log(typeof(data));
-        this.props.updateQueryAndMatchedResults(keywords, data.results);
-      })
-      .catch(err => console.log(err));
   }
 
   createDescMarkup = () => {
@@ -59,6 +40,7 @@ class PodcastCardStyleA extends React.Component {
 
   render() {
     const { id, title, image:imageSrc, publisher, rss, total_episodes:totalEpisodes } = this.props.podcast;
+    const desc = this.descComponent();
     const website = this.props.podcast.website.replace('?utm_source=listennotes.com&utm_campaign=Listen+Notes&utm_medium=website', '');
     const itunes = `https://itunes.apple.com/podcast/id${this.props.podcast.itunes_id}`;
     const firstPublishDate = msToDate(this.props.podcast.earliest_pub_date_ms);
@@ -84,8 +66,6 @@ class PodcastCardStyleA extends React.Component {
         </Link>
       );
     }
-
-    const desc = this.descComponent();
 
     return (
       <div className="show">
