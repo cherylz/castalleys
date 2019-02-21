@@ -10,6 +10,7 @@ import NotFound from './NotFound';
 
 class App extends React.Component {
   state = {
+    customColor: '#ce0925',
     keywords: '',
     currentFullQuery: '',
     hidePlayer: true,
@@ -21,7 +22,13 @@ class App extends React.Component {
   componentDidMount() {
     const hidePlayerRef = JSON.parse(localStorage.getItem('hidePlayer'));
     const episodeOnPlayRef = JSON.parse(localStorage.getItem('episodeOnPlay'));
+    const customColorRef = localStorage.getItem('customColor');
     document.documentElement.style.setProperty('--custom-color', localStorage.getItem('customColor'));
+    if (customColorRef) {
+      this.setState({
+        customColor: localStorage.getItem('customColor')
+      });
+    }
     if (!hidePlayerRef && localStorage.getItem('episodeOnPlay')) {
       this.setState({
         hidePlayer: false,
@@ -31,16 +38,23 @@ class App extends React.Component {
     }
   }
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate(prevProps, prevState) {
+    console.log('componentDidUpdate in App.js');
     if (this.state.speed !== prevState.speed) {
       localStorage.setItem('speed', this.state.speed);
     }
     if (this.state.hidePlayer !== prevState.hidePlayer) {
       localStorage.setItem('hidePlayer', this.state.hidePlayer);
     }
-    if (prevState.episodeOnPlay && this.state.episodeOnPlay.episodeId !== prevState.episodeOnPlay.episodeId) {
+    if (!Object.keys(prevState.episodeOnPlay).length) {
+      localStorage.setItem('episodeOnPlay', JSON.stringify(this.state.episodeOnPlay));
+    } else if (this.state.episodeOnPlay.episodeId !== prevState.episodeOnPlay.episodeId) {
       localStorage.setItem('episodeOnPlay', JSON.stringify(this.state.episodeOnPlay));
     }
+  }
+
+  updateCustomColor = (customColor) => {
+    this.setState({ customColor });
   }
 
   updateKeywords = (keywords) => {
@@ -119,6 +133,8 @@ class App extends React.Component {
           <Header
             keywords={this.state.keywords}
             currentFullQuery={this.state.currentFullQuery}
+            customColor={this.state.customColor}
+            updateCustomColor={this.updateCustomColor}
             updateKeywords={this.updateKeywords}
             goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
             clearInputInHeader={this.clearInputInHeader}
@@ -128,6 +144,7 @@ class App extends React.Component {
               <Home
                 {...props}
                 currentFullQuery={this.state.currentFullQuery}
+                customColor={this.state.customColor}
               />)}
             />
             <Route path="/search/:keywords" render={(props) => (
@@ -174,6 +191,7 @@ class App extends React.Component {
             episodeOnPlay={this.state.episodeOnPlay}
             playing={this.state.playing}
             speed={this.state.speed}
+            customColor={this.state.customColor}
             onClick={this.updatePlaybackControls}
             removePlayer={this.removePlayer}
             onEnded={this.handleEnded}

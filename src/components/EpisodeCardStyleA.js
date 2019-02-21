@@ -4,6 +4,12 @@ import { Link } from 'react-router-dom';
 function EpisodeCardStyleA(props) {
   const { episodeTitle, episodeId, image, audio, date, duration } = props.episode;
   const desc = descComponent();
+  const playIcon = (
+    <svg onClick={handleClick} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+  );
+  const pauseIcon = (
+    <svg onClick={handleClick} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16h2V8H9v8zm3-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-4h2V8h-2v8z"/></svg>
+  );
   let episodeStyle;
   let renderTitle;
   let renderDesc;
@@ -25,10 +31,10 @@ function EpisodeCardStyleA(props) {
 
   if (audio) {
     toggleIcon = episodeId !== props.episodeOnPlayId ?
-        'play_circle_outline' :
+        playIcon :
         props.playing ?
-          'pause_circle_outline' :
-          'play_circle_outline';
+          pauseIcon :
+          playIcon;
   }
 
   function createDescMarkup() {
@@ -61,15 +67,9 @@ function EpisodeCardStyleA(props) {
       <p className="date">{date}</p>
       <div className="episode-controls">
         <span className="episode-play-group">
-          <i
-            className="material-icons"
-            onClick={handleClick}
-          >
-            {toggleIcon}
-          </i>
+          {toggleIcon}
           <span className="duration">{duration}</span>
         </span>
-        {/*<i className="material-icons">favorite_border</i><i className="material-icons">playlist_add</i>*/}
       </div>
       {renderDesc}
     </div>

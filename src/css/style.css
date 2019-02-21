@@ -64,7 +64,7 @@ button:hover {
   }
 }
 
-.material-icons {
+svg {
   cursor: pointer;
 }
 
@@ -160,7 +160,11 @@ footer {
 }
 
 #email {
-  line-height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+#email > svg {
   margin-left: 5px;
 }
 
@@ -278,12 +282,12 @@ header {
   height: 60px;
   padding-left: 42px;
   padding-right: 42px;
+  display: flex;
+  align-items: center;
 }
 
-.customize-color > i:first-child {
-  line-height: 60px;
-  padding-left: 18px;
-  padding-right: 18px;
+.customize-color > svg {
+  margin: 18px;
 }
 
 .color-picker {
@@ -531,11 +535,13 @@ button.load-more-btn {
 }
 
 .playcontrols > * {
-  font-size: 3.6rem;
+  height: 3.6rem;
+  width: 3.6rem;
 }
 
-.playcontrols > i:nth-child(2) {
-  font-size: 4.2rem;
+.playcontrols > svg:nth-child(2) {
+  height: 4.2rem;
+  width: 4.2rem;
 }
 
 .tooltip {
@@ -729,7 +735,7 @@ button.load-more-btn {
   }
 
   .home-cover {
-    background: center / cover no-repeat url("./images/home-cover-bg.png");
+    background: center / cover no-repeat url("./images/home-cover-bg.jpg");
     height: 900px;
   }
 
@@ -864,6 +870,10 @@ button.load-more-btn {
   button.load-more-btn {
     margin: 20px auto 0;
     display: flex;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: hidden;
   }
 }
 
