@@ -35,6 +35,12 @@ class AudioPlayer extends React.Component {
     currentTime.textContent = formatSeconds(audio.currentTime);
   }
 
+  stopPlayingAndRemovePlayer = () => {
+    const audio = this.audio.current;
+    audio['pause']();
+    this.props.removePlayer();
+  }
+
   componentDidUpdate(prevProps) {
     console.log('componentDidUpdate in AudioPlayer.js');
     if (this.props.episodeOnPlay && !this.props.hidePlayer) {
@@ -94,7 +100,7 @@ class AudioPlayer extends React.Component {
                 <svg className="forward" data-skip="10" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24"><defs><path className="forward" d="M24 24H0V0h24v24z"/></defs><clipPath><use xlinkHref="#a" overflow="visible"/></clipPath><path className="forward" d="M4 13c0 4.4 3.6 8 8 8s8-3.6 8-8h-2c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6v4l5-5-5-5v4c-4.4 0-8 3.6-8 8zm6.8 3H10v-3.3L9 13v-.7l1.8-.6h.1V16zm4.3-1.8c0 .3 0 .6-.1.8l-.3.6s-.3.3-.5.3-.4.1-.6.1-.4 0-.6-.1-.3-.2-.5-.3-.2-.3-.3-.6-.1-.5-.1-.8v-.7c0-.3 0-.6.1-.8l.3-.6s.3-.3.5-.3.4-.1.6-.1.4 0 .6.1.3.2.5.3.2.3.3.6.1.5.1.8v.7zm-.8-.8v-.5s-.1-.2-.1-.3-.1-.1-.2-.2-.2-.1-.3-.1-.2 0-.3.1l-.2.2s-.1.2-.1.3v2s.1.2.1.3.1.1.2.2.2.1.3.1.2 0 .3-.1l.2-.2s.1-.2.1-.3v-1.5z" clipPath="url(#b)" fill={this.props.customColor}/></svg>
               </span>
               <div className="tooltip">
-                <svg className="remove" onClick={this.props.removePlayer} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path className="remove" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"/><path className="remove" fill="none" d="M0 0h24v24H0V0z"/></svg>
+                <svg className="remove" onClick={this.stopPlayingAndRemovePlayer} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path className="remove" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"/><path className="remove" fill="none" d="M0 0h24v24H0V0z"/></svg>
                 <span className="tooltiptext">remove</span>
               </div>
             </div>
