@@ -17,35 +17,57 @@ class Podcast extends React.Component {
     searchingInPodcast: false
   }
 
+  searchPodcast = (podcastId) => {
+    const endpoint = `https://api.listennotes.com/api/v1/podcasts/${podcastId}?sort=recent_first`;
+    const request = {
+      method: 'GET',
+      headers: {
+        "X-RapidAPI-Key": apiKey,
+        "Accept": "application/json"
+      }
+    };
+    fetch(endpoint, request)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        const {episodes, next_episode_pub_date, ...rest} = data;
+        this.setState({
+          podcast: rest,
+          episodes: episodes,
+          offsetPubDate: next_episode_pub_date
+        });
+      })
+      .catch(err => console.log(err));
+  }
+
   componentDidMount() {
     const id = this.props.match.params.podcastId;
     if (id.length === 32) {
-      const endpoint = `https://api.listennotes.com/api/v1/podcasts/${id}?sort=recent_first`;
-      const request = {
-        method: 'GET',
-        headers: {
-          "X-RapidAPI-Key": apiKey,
-          "Accept": "application/json"
-        }
-      };
-      fetch(endpoint, request)
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          const {episodes, next_episode_pub_date, ...rest} = data;
-          this.setState({
-            podcast: rest,
-            episodes: episodes,
-            offsetPubDate: next_episode_pub_date
-          });
-        })
-        .catch(err => console.log(err));
+      this.searchPodcast(id);
     } else {
       this.props.history.push(`/404`);
     }
   }
 
   componentDidUpdate(prevProps) {
+    //console.log(prevProps);
+    //console.log(prevProps.match.params.podcastId);
+    //console.log(this.props.match.params.podcastId);
+
+    if (this.props.match.params.podcastId !== prevProps.match.params.podcastId) {
+      this.setState({
+        podcast: {},
+        episodes: [],
+        offsetPubDate: 0,
+        query: '',
+        offsetMatches: 0,
+        totalMatches: 0,
+        matchedEpisodes: [],
+        searchingInPodcast: false
+      });
+      this.searchPodcast(this.props.match.params.podcastId);
+      console.log('calling api~~~');
+    }
     if (this.props.currentFullQuery !== prevProps.currentFullQuery) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);

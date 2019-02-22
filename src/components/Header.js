@@ -83,7 +83,6 @@ class Header extends React.Component {
     });
     this.props.clearInputInHeader();
   }
-
   customizeColor = (e) => {
     const customColor = e.target.dataset.value;
     document.documentElement.style.setProperty('--custom-color', customColor);
