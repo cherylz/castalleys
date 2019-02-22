@@ -23,6 +23,7 @@ ol, ul {
 
 @font-face {
   font-family: 'Noto Serif';
+  font-display: auto;
   font-style: normal;
   font-weight: 400;
   src: url('./fonts/noto-serif-v6-latin-regular.eot'); /* IE9 Compat Modes */
@@ -36,6 +37,7 @@ ol, ul {
 
 @font-face {
   font-family: 'Open Sans';
+  font-display: auto;
   font-style: normal;
   font-weight: 400;
   src: url('./fonts/open-sans-v15-latin-regular.eot'); /* IE9 Compat Modes */
@@ -49,6 +51,7 @@ ol, ul {
 
 @font-face {
   font-family: 'Carter One';
+  font-display: auto;
   font-style: normal;
   font-weight: 400;
   src: url('./fonts/carter-one-v10-latin-regular.eot'); /* IE9 Compat Modes */
@@ -62,6 +65,7 @@ ol, ul {
 
 @font-face {
   font-family: 'Rubik';
+  font-display: auto;
   font-style: normal;
   font-weight: 300;
   src: url('./fonts/rubik-v7-latin-300.eot'); /* IE9 Compat Modes */
@@ -75,6 +79,7 @@ ol, ul {
 
 @font-face {
   font-family: 'Rubik';
+  font-display: auto;
   font-style: normal;
   font-weight: 400;
   src: url('./fonts/rubik-v7-latin-regular.eot'); /* IE9 Compat Modes */
@@ -88,6 +93,7 @@ ol, ul {
 
 @font-face {
   font-family: 'Rubik';
+  font-display: auto;
   font-style: normal;
   font-weight: 700;
   src: url('./fonts/rubik-v7-latin-700.eot'); /* IE9 Compat Modes */
@@ -150,7 +156,7 @@ svg {
   cursor: pointer;
 }
 
-.material-icons.cursor-none {
+.cursor-none {
   cursor: text;
 }
 
@@ -822,7 +828,7 @@ button.load-more-btn {
   }
 
   .not-found-cover {
-    background: center / cover no-repeat url("./images/404-cover-bg.png");
+    background: center / cover no-repeat url("./images/404-cover-bg.jpg");
     height: 900px;
   }
 
@@ -865,12 +871,13 @@ button.load-more-btn {
   }
 
   .home-cover {
-    background: center / cover no-repeat url("./images/home-cover-md.png");
+    background: center / cover no-repeat url("./images/home-cover-md.jpg");
     height: 800px;
+    align-items: flex-start;
   }
 
   .not-found-cover {
-    background: center / cover no-repeat url("./images/404-cover-md.png");
+    background: center / cover no-repeat url("./images/404-cover-md.jpg");
     height: 800px;
   }
 
@@ -961,7 +968,7 @@ button.load-more-btn {
 
 @media (max-width: 480px) {
   .home-cover {
-    background: center / cover no-repeat url("./images/home-cover-sm.png");
+    background: center / cover no-repeat url("./images/home-cover-sm.jpg");
     height: 640px;
   }
 
@@ -970,7 +977,7 @@ button.load-more-btn {
   }
 
   .not-found-cover {
-    background: center / cover no-repeat url("./images/404-cover-sm.png");
+    background: center / cover no-repeat url("./images/404-cover-sm.jpg");
     height: 640px;
   }
 

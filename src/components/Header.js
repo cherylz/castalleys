@@ -126,6 +126,7 @@ class Header extends React.Component {
               onChange={this.handleKeywordsChange}
               onKeyUp={this.handleKeyUp}
               type="text"
+              aria-label="input area for search"
               placeholder="search podcasts"
               className="navbar-search-box"
             />

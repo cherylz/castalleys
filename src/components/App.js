@@ -33,13 +33,16 @@ class App extends React.Component {
       this.setState({
         hidePlayer: false,
         episodeOnPlay: episodeOnPlayRef,
-        speed: JSON.parse(localStorage.getItem('speed'))
+        speed: JSON.parse(localStorage.getItem('speed')) || 1
       });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     console.log('componentDidUpdate in App.js');
+    if (localStorage.getItem('speed') === 'null') {
+      localStorage.setItem('speed', this.state.speed);
+    }
     if (this.state.speed !== prevState.speed) {
       localStorage.setItem('speed', this.state.speed);
     }
