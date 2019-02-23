@@ -135,23 +135,6 @@ button:hover {
   color: var(--custom-color);
 }
 
-.shake:hover {
-  animation: shake-left-right 0.5s;
-  transform: translate(0, 0);
-}
-
-@keyframes shake-left-right {
-  10%,
-  60% {
-    transform: translate(-1px, 0);
-  }
-
-  30%,
-  90% {
-    transform: translate(1px, 0);
-  }
-}
-
 svg {
   cursor: pointer;
 }
@@ -390,12 +373,6 @@ header {
   border-radius: 0 0 5% 5%;
 }
 
-.customize-color:hover .color-picker,
-.customize-color:active .color-picker {
-  visibility: visible;
-  opacity: 1;
-}
-
 .color-picker > * {
   line-height: 36px;
   display: flex;
@@ -588,7 +565,7 @@ button.load-more-btn {
   display: flex;
 }
 
-.episode-info > img {
+.episode-info > *:first-child {
   margin-right: 8px;
 }
 
@@ -629,29 +606,6 @@ button.load-more-btn {
 .playcontrols > svg:nth-child(2) {
   height: 4.2rem;
   width: 4.2rem;
-}
-
-.tooltip {
-  visibility: hidden;
-  position: relative;
-  display: inline-block;
-}
-
-.player-controls:hover .tooltip {
-  visibility: visible;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  color: grey;
-  text-align: center;
-  top: 5px;
-  position: absolute;
-  z-index: 1;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
 }
 
 .progressbar {
@@ -958,10 +912,6 @@ button.load-more-btn {
     margin: 20px auto 0;
     display: flex;
   }
-
-  .tooltip:hover .tooltiptext {
-    visibility: hidden;
-  }
 }
 
 @media (max-width: 480px) {
@@ -992,5 +942,72 @@ button.load-more-btn {
 
   .not-found-cover > span:first-child {
     margin-top: 420px;
+  }
+}
+
+@media (any-hover: hover) {
+  .shake:hover {
+    animation: shake-left-right 0.5s;
+    transform: translate(0, 0);
+  }
+
+  @keyframes shake-left-right {
+    10%,
+    60% {
+      transform: translate(-1px, 0);
+    }
+
+    30%,
+    90% {
+      transform: translate(1px, 0);
+    }
+  }
+
+  .customize-color:hover .color-picker,
+  .customize-color:active .color-picker {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    position: relative;
+    display: inline-block;
+  }
+
+  .player-controls:hover .tooltip {
+    visibility: visible;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    color: grey;
+    text-align: center;
+    top: 5px;
+    position: absolute;
+    z-index: 1;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+}
+
+@media (any-hover: none) {
+  .navbar > div {
+    border-left: none;
+  }
+
+  .navbar > .customize-color {
+    display: none;
+  }
+
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip .tooltiptext {
+    display: none;
   }
 }
