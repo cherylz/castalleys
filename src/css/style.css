@@ -192,6 +192,12 @@ svg {
   margin-bottom: 3px;
 }
 
+/* Webkit / Chrome Specific CSS to remove tap
+highlight color when responding to touch */
+.prevent-tap-hl {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Style Home.js */
 
 .home-cover {
@@ -233,6 +239,7 @@ footer {
 #email {
   display: flex;
   align-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #email > svg {
@@ -298,6 +305,7 @@ header {
   font-family: 'Carter One', sans-serif;
   padding-left: 18px;
   padding-right: 18px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .navbar-logo-bg {
@@ -355,6 +363,7 @@ header {
   padding-right: 42px;
   display: flex;
   align-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .customize-color > svg {
@@ -584,6 +593,7 @@ button.load-more-btn {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 5px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .speed {

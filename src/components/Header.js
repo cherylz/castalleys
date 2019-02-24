@@ -113,7 +113,7 @@ class Header extends React.Component {
           <div>
             <Link
               to="/"
-              onClick={this.props.clearInputInHeader}
+              onClick={this.resetSearchbar}
             >
               <span className="navbar-logo navbar-logo-bg">CastAlleys</span>
               <span className="navbar-logo navbar-logo-sm">C</span>

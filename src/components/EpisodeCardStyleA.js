@@ -66,7 +66,7 @@ function EpisodeCardStyleA(props) {
       {renderTitle}
       <p className="date">{date}</p>
       <div className="episode-controls">
-        <span className="episode-play-group">
+        <span className="episode-play-group prevent-tap-hl">
           {toggleIcon}
           <span className="duration">{duration}</span>
         </span>
