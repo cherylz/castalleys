@@ -14,11 +14,18 @@ class AudioPlayer extends React.Component {
       this.props.onClick('playPause');
     } else if (e.target.className === 'speed') {
       this.props.onClick('speed');
-    } else if (e.target.className.baseVal === 'replay' || e.target.className.baseVal === 'forward') {
-      console.log(audio.currentTime);
-      console.log(parseFloat(e.target.dataset.skip));
-      console.log(audio.currentTime + parseFloat(e.target.dataset.skip));
-      audio.currentTime += parseFloat(e.target.dataset.skip);
+    } else if (e.target.className.baseVal === 'replay') {
+      if (audio.currentTime <= 10) {
+        audio.currentTime = 0;
+      } else {
+        audio.currentTime += parseFloat(e.target.dataset.skip);
+      }
+    } else if (e.target.className.baseVal === 'forward') {
+      if (audio.currentTime + 10 > audio.duration) {
+        audio.currentTime = audio.duration;
+      } else {
+        audio.currentTime += parseFloat(e.target.dataset.skip);
+      }
     }
   }
 
