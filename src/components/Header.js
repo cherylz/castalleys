@@ -81,7 +81,7 @@ class Header extends React.Component {
       typeaheadPodcasts: [],
       hasMatches: true
     });
-    this.props.clearInputInHeader();
+    this.props.clearKeywordsAndCurrentFullQuery();
   }
   customizeColor = (e) => {
     const customColor = e.target.dataset.value;

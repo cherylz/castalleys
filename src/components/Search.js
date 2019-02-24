@@ -18,13 +18,29 @@ class Search extends React.Component {
   };
 
   componentDidMount() {
-    console.log('i mounted');
+    console.log('Search.js mounted');
     const keywords = this.props.match.params.keywords;
     this.callFullSearchEpisodes(keywords);
     this.props.goToOrUpdateSearchPage(keywords);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
+    // handle a marginal case: update the actual duration of an episode if that episode happens to be the one stored in local storage
+    if (!prevState.fullSearchEpisodes.length && this.props.episodeOnPlayId) {
+      const ids = this.state.fullSearchEpisodes.map(item => item.id);
+      if (ids.indexOf(this.props.episodeOnPlayId) !== -1) {
+        const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(item => {
+          if (item.id === this.props.episodeOnPlayId) {
+            item.audio_length = this.props.episodeOnPlayDuration;
+          }
+          return item;
+        });
+        this.setState({
+          fullSearchEpisodes: fullSearchEpisodesWithActualDuration
+        });
+      }
+    }
+    // handle new search of episodes in the same Search.js component, i.e. user presses the return key with new keywords in the search bar of Header.js while on the search page
     if (prevProps.currentFullQuery && this.props.currentFullQuery !== prevProps.currentFullQuery) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);
@@ -37,15 +53,6 @@ class Search extends React.Component {
       });
       console.log('new full search in the same Search component');
       this.callFullSearchEpisodes(this.props.currentFullQuery);
-    }
-  }
-
-  loadMoreMatches = () => {
-    if (this.state.fliter === 'episodes') {
-      this.callFullSearchEpisodes(this.props.currentFullQuery);
-    }
-    if (this.state.fliter === 'podcasts') {
-      this.callFullSearchPodcasts(this.props.currentFullQuery);
     }
   }
 
@@ -124,6 +131,44 @@ class Search extends React.Component {
     }
   }
 
+  updateEpisodeOnPlayAndMaybeActualDuration = (episode) => {
+    // Step 1: update the actual duration of the episode on play in this.state.fullSearchEpisodes
+    const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(item => {
+      if (item.id === episode.episodeId) {
+        item.audio_length = episode.duration;
+      }
+      return item;
+    });
+    this.setState({
+      fullSearchEpisodes: fullSearchEpisodesWithActualDuration
+    });
+    // Step 2: update the episode on play with actual duration in this.state.epsidoeOnDisplay of App.js
+    this.props.updateEpisodeOnPlay(episode);
+  }
+
+  updateActualDuration = (duration, episodeId) => {
+    // the duration passed in is in HH:MM:SS format
+    const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(item => {
+      if (item.id === episodeId) {
+        item.audio_length = duration;
+      }
+      return item;
+    });
+    this.setState({
+      fullSearchEpisodes: fullSearchEpisodesWithActualDuration
+    });
+    this.props.updateActualDurationOfEpisodeOnPlay(duration);
+  }
+
+  loadMoreMatches = () => {
+    if (this.state.fliter === 'episodes') {
+      this.callFullSearchEpisodes(this.props.currentFullQuery);
+    }
+    if (this.state.fliter === 'podcasts') {
+      this.callFullSearchPodcasts(this.props.currentFullQuery);
+    }
+  }
+
   render() {
     const episodesActive = this.state.fliter === 'episodes' ? 'active' : '';
     const podcastsActive = this.state.fliter === 'episodes' ? '' : 'active';
@@ -160,9 +205,10 @@ class Search extends React.Component {
           episode={episode}
           episodeOnPlayId={this.props.episodeOnPlayId}
           playing={this.props.playing}
-          updateEpisodeOnPlay={this.props.updateEpisodeOnPlay}
+          updateEpisodeOnPlayAndMaybeActualDuration={this.updateEpisodeOnPlayAndMaybeActualDuration}
+          updateActualDuration={this.updateActualDuration}
           updatePlaying={this.props.updatePlaying}
-          clearInputInHeader={this.props.clearInputInHeader}
+          clearKeywordsAndCurrentFullQuery={this.props.clearKeywordsAndCurrentFullQuery}
         />
       ));
     } else if (this.state.calledFullSearchEpisodes) {
@@ -174,7 +220,7 @@ class Search extends React.Component {
         <PodcastCardStyleC
           podcast={match}
           key={match.id}
-          clearInputInHeader={this.props.clearInputInHeader}
+          clearKeywordsAndCurrentFullQuery={this.props.clearKeywordsAndCurrentFullQuery}
         />
       ));
     } else if (this.state.calledFullSearchPodcasts) {

@@ -64,16 +64,16 @@ class App extends React.Component {
     this.setState({ keywords });
   }
 
-  clearInputInHeader = () => {
-    if (this.state.keywords) {
-      this.setState({
-        keywords: ''
-      });
-    }
+  clearKeywordsAndCurrentFullQuery = () => {
+    this.setState({
+      keywords: '',
+      currentFullQuery: ''
+    });
   }
 
   goToOrUpdateSearchPage = (keywords) => {
     this.setState({
+      keywords,
       currentFullQuery: keywords
     });
   }
@@ -88,6 +88,14 @@ class App extends React.Component {
     this.setState({
       episodeOnPlay: episode,
       playing: true
+    });
+  }
+
+  updateActualDurationOfEpisodeOnPlay = (duration) => {
+    const episodeOnPlayWithActualDuration = {...this.state.episodeOnPlay};
+    episodeOnPlayWithActualDuration.duration = duration;
+    this.setState({
+      episodeOnPlay: episodeOnPlayWithActualDuration
     });
   }
 
@@ -140,7 +148,7 @@ class App extends React.Component {
             updateCustomColor={this.updateCustomColor}
             updateKeywords={this.updateKeywords}
             goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
-            clearInputInHeader={this.clearInputInHeader}
+            clearKeywordsAndCurrentFullQuery={this.clearKeywordsAndCurrentFullQuery}
           />
           <Switch>
             <Route exact path="/" render={(props) => (
@@ -155,11 +163,13 @@ class App extends React.Component {
                 {...props}
                 currentFullQuery={this.state.currentFullQuery}
                 episodeOnPlayId={this.state.episodeOnPlay.episodeId}
+                episodeOnPlayDuration={this.state.episodeOnPlay.duration}
                 playing={this.state.playing}
                 goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
                 updateEpisodeOnPlay={this.updateEpisodeOnPlay}
+                updateActualDurationOfEpisodeOnPlay={this.updateActualDurationOfEpisodeOnPlay}
                 updatePlaying={this.updatePlaying}
-                clearInputInHeader={this.clearInputInHeader}
+                clearKeywordsAndCurrentFullQuery={this.clearKeywordsAndCurrentFullQuery}
               />)}
             />
             <Route path="/podcast/:podcastId" render={(props) => (
@@ -167,8 +177,10 @@ class App extends React.Component {
                 {...props}
                 currentFullQuery={this.state.currentFullQuery}
                 episodeOnPlayId={this.state.episodeOnPlay.episodeId}
+                episodeOnPlayDuration={this.state.episodeOnPlay.duration}
                 playing={this.state.playing}
                 updateEpisodeOnPlay={this.updateEpisodeOnPlay}
+                updateActualDurationOfEpisodeOnPlay={this.updateActualDurationOfEpisodeOnPlay}
                 updatePlaying={this.updatePlaying}
               />)}
             />
@@ -198,7 +210,7 @@ class App extends React.Component {
             onClick={this.updatePlaybackControls}
             removePlayer={this.removePlayer}
             onEnded={this.handleEnded}
-            clearInputInHeader={this.clearInputInHeader}
+            clearKeywordsAndCurrentFullQuery={this.clearKeywordsAndCurrentFullQuery}
           />
         </div>
       </BrowserRouter>

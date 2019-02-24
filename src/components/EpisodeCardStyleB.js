@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { msToDate } from '../helpers';
+import { msToDate, formatSeconds } from '../helpers';
 
 function EpisodeCardStyleB(props) {
+
+  let audioRef = React.createRef();
 
   function createEpisodeTitleMarkup() {
     return {__html: props.episode.title_highlighted};
@@ -66,33 +68,38 @@ function EpisodeCardStyleB(props) {
 
   function handleClick() {
     if (episodeId !== props.episodeOnPlayId) {
+      const actualDuration = audioRef.current.duration ? formatSeconds(audioRef.current.duration) : props.episode.audio_length; // fallback: use original audio length in case audioRef.current.duration returns NaN for unknown reasons.
       const episodeOnPlay = {
         podcastTitle: props.episode.podcast_title_original,
         episodeTitle: props.episode.title_original,
-        duration: props.episode.audio_length,
+        duration: actualDuration,
         podcastId,
         episodeId,
         image,
         audio
       };
-      props.updateEpisodeOnPlay(episodeOnPlay);
+      props.updateEpisodeOnPlayAndMaybeActualDuration(episodeOnPlay);
     } else {
-      props.updatePlaying();
+      props.updatePlaying(); //TBC: if the locally stored episode happens to be the one being clicked after refreshing the page. let's try the error.
+      if (audioRef.current.duration && formatSeconds(audioRef.current.duration) !== props.episode.audio_length) {
+        props.updateActualDuration(formatSeconds(audioRef.current.duration),  episodeId);
+      }
     }
+    //console.log(audioRef.current.duration);
   }
 
   return (
     <div className="episode-preview">
       <Link
         to={`/podcast/${podcastId}`}
-        onClick={props.clearInputInHeader}
+        onClick={props.clearKeywordsAndCurrentFullQuery}
       >
         <img className="artwork-md" src={image} alt="podcast artwork" />
       </Link>
       <div>
         <Link
           to={`/episode/${episodeId}`}
-          onClick={props.clearInputInHeader}
+          onClick={props.clearKeywordsAndCurrentFullQuery}
           className="title5"
         >
           {episodeTitle}
@@ -101,7 +108,7 @@ function EpisodeCardStyleB(props) {
           From{' '}
           <Link
             to={`/podcast/${podcastId}` }
-            onClick={props.clearInputInHeader}
+            onClick={props.clearKeywordsAndCurrentFullQuery}
           >
             {podcastTitle}
           </Link>
@@ -120,6 +127,7 @@ function EpisodeCardStyleB(props) {
           <span><b>Transcripts</b></span>: ...{transcripts}...
         </div>
       </div>
+      <audio src={audio} ref={audioRef}></audio>
     </div>
   )
 }

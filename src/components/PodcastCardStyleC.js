@@ -14,14 +14,14 @@ function PodcastCardStyleC(props) {
       <div className="show-preview">
         <Link
           to={`/podcast/${id}`}
-          onClick={props.clearInputInHeader}
+          onClick={props.clearKeywordsAndCurrentFullQuery}
         >
           <img className="artwork-md" src={image} alt="podcast artwork" />
         </Link>
         <div className="align">
           <Link
             to={`/podcast/${id}`}
-            onClick={props.clearInputInHeader}
+            onClick={props.clearKeywordsAndCurrentFullQuery}
             className="title3"
           >
             {title}

@@ -15,6 +15,9 @@ class AudioPlayer extends React.Component {
     } else if (e.target.className === 'speed') {
       this.props.onClick('speed');
     } else if (e.target.className.baseVal === 'replay' || e.target.className.baseVal === 'forward') {
+      console.log(audio.currentTime);
+      console.log(parseFloat(e.target.dataset.skip));
+      console.log(audio.currentTime + parseFloat(e.target.dataset.skip));
       audio.currentTime += parseFloat(e.target.dataset.skip);
     }
   }
@@ -50,6 +53,13 @@ class AudioPlayer extends React.Component {
       if (this.props.speed !== prevProps.speed) {
         audio.playbackRate = this.props.speed;
       }
+      /*
+      if (!Object.keys(prevProps.episodeOnPlay).length || this.props.episodeOnPlay.episodeId !== prevProps.episodeOnPlay.episodeId) {
+        if (this.audio.current && this.audio.current.duration) {
+          this.props.updateActualDuration(formatSeconds(this.audio.current.duration));
+        }
+      }
+      */
     }
   }
 
@@ -62,21 +72,21 @@ class AudioPlayer extends React.Component {
       (<svg className="playPause" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path className="playPause" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill={this.props.customColor}/><path className="playPause" d="M0 0h24v24H0z" fill="none"/></svg>) :
       (<svg className="playPause" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path className="playPause" d="M8 5v14l11-7z" fill={this.props.customColor}/><path className="playPause" d="M0 0h24v24H0z" fill="none"/></svg>);
     let mousedown = false;
-    const totalTime = duration; // tbc: duration got from API call doesn't always equal to the actual duration // this could be slow and show NaN at the beginning -> const totalTime = this.audio.current ? formatSeconds(this.audio.current.duration) : duration;
+
     return (
       <div className={displayAndStyle}>
         <div className="player">
           <div className="episode-info">
           <Link
             to={`/episode/${episodeId}`}
-            onClick={this.props.clearInputInHeader}
+            onClick={this.props.clearKeywordsAndCurrentFullQuery}
           >
             <img className="artwork-in-player" src={image} alt="podcast artwork" />
           </Link>
             <div className="titles-in-player">
               <Link
                 to={`/episode/${episodeId}`}
-                onClick={this.props.clearInputInHeader}
+                onClick={this.props.clearKeywordsAndCurrentFullQuery}
                 className="title1"
               >
                 {episodeTitle}
@@ -84,7 +94,7 @@ class AudioPlayer extends React.Component {
               <br />
               <Link
                 to={`/podcast/${podcastId}`}
-                onClick={this.props.clearInputInHeader}
+                onClick={this.props.clearKeywordsAndCurrentFullQuery}
                 className="title2"
               >
                 {podcastTitle}
@@ -125,7 +135,7 @@ class AudioPlayer extends React.Component {
               </div>
               <div className="timer">
                 <span ref={this.currentTime} id="time-elapsed">--:--:--</span>
-                <span id="total-time">{totalTime}</span>
+                <span id="total-time">{duration}</span>
               </div>
             </div>
           </div>
