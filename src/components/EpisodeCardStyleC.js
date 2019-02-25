@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { msToDate } from '../helpers';
+import { formatSeconds } from '../helpers';
 
 function EpisodeCardStyleC(props) {
-  const { podcast_title_original:podcastTitle, podcast_id:podcastId, id:episodeId, image, audio, audio_length } = props.episode;
+  let audioRef = React.createRef();
+
+  const { podcast_title_original:podcastTitle, podcast_id:podcastId, id:episodeId, image, audio, duration, date } = props.episode;
   const episodeTitle = episodeTitleComponent();
   const desc = descComponent();
   const transcripts = transcriptsComponent();
-  const date = msToDate(props.episode.pub_date_ms);
-  const duration = audio ? audio_length : '(no audio)';
   const playIcon = (
     <svg onClick={handleClick} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
   );
@@ -48,10 +48,26 @@ function EpisodeCardStyleC(props) {
 
   function handleClick() {
     if (episodeId !== props.episodeOnPlayId) {
-      const episodeOnPlay = { podcastId, podcastTitle, image, episodeId, episodeTitle, audio, duration };
-      props.updateEpisodeOnPlay(episodeOnPlay);
+      // fallback: use original audio length in case audioRef.current.duration returns NaN for unknown reasons.
+      const actualDuration = audioRef.current.duration ? formatSeconds(audioRef.current.duration) : props.episode.duration;
+      const episodeOnPlay = {
+        episodeTitle: props.episode.title_original,
+        duration: actualDuration,
+        podcastId,
+        podcastTitle,
+        image,
+        episodeId,
+        audio
+      };
+      console.log('sunny');
+      console.log(episodeOnPlay);
+      props.updateEpisodeOnPlayAndMaybeActualDuration(episodeOnPlay);
     } else {
       props.updatePlaying();
+      // fallback: in case audioRef.current.duration returns NaN on first click, we still have the chance to update the actual duration on subsequent clicks.
+      if (audioRef.current.duration && formatSeconds(audioRef.current.duration) !== props.episode.duration) {
+        props.updateActualDuration(formatSeconds(audioRef.current.duration), episodeId);
+      }
     }
   }
 
@@ -73,6 +89,7 @@ function EpisodeCardStyleC(props) {
       <div>
         <span><b>Transcripts</b></span>: ...{transcripts}...
       </div>
+      <audio src={audio} ref={audioRef}></audio>
     </div>
   )
 }

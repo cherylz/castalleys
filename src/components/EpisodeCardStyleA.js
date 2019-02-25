@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { formatSeconds } from '../helpers';
 
 function EpisodeCardStyleA(props) {
+  let audioRef = React.createRef();
+
   const { episodeTitle, episodeId, image, audio, date, duration } = props.episode;
   const desc = descComponent();
   const playIcon = (
@@ -46,18 +49,24 @@ function EpisodeCardStyleA(props) {
 
   function handleClick() {
     if (episodeId !== props.episodeOnPlayId) {
+       // fallback: use original audio length in case audioRef.current.duration returns NaN for unknown reasons.
+      const actualDuration = audioRef.current.duration ? formatSeconds(audioRef.current.duration) : props.episode.duration;
       const episodeOnPlay = {
         podcastId: props.podcastId,
         podcastTitle: props.podcastTitle,
+        duration: actualDuration,
         image,
         episodeId,
         episodeTitle,
-        audio,
-        duration
+        audio
       };
-      props.updateEpisodeOnPlay(episodeOnPlay);
+      props.updateEpisodeOnPlayAndMaybeActualDuration(episodeOnPlay);
     } else {
       props.updatePlaying();
+      // fallback: in case audioRef.current.duration returns NaN on first click, we still have the chance to update the actual duration on subsequent clicks.
+      if (audioRef.current.duration && formatSeconds(audioRef.current.duration) !== props.episode.duration) {
+        props.updateActualDuration(formatSeconds(audioRef.current.duration), episodeId);
+      }
     }
   }
 
@@ -72,6 +81,7 @@ function EpisodeCardStyleA(props) {
         </span>
       </div>
       {renderDesc}
+      <audio src={audio} ref={audioRef}></audio>
     </div>
   )
 }

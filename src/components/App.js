@@ -189,8 +189,10 @@ class App extends React.Component {
                 {...props}
                 currentFullQuery={this.state.currentFullQuery}
                 episodeOnPlayId={this.state.episodeOnPlay.episodeId}
+                episodeOnPlayDuration={this.state.episodeOnPlay.duration}
                 playing={this.state.playing}
                 updateEpisodeOnPlay={this.updateEpisodeOnPlay}
+                updateActualDurationOfEpisodeOnPlay={this.updateActualDurationOfEpisodeOnPlay}
                 updatePlaying={this.updatePlaying}
               />)}
             />

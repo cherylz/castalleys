@@ -68,7 +68,8 @@ function EpisodeCardStyleB(props) {
 
   function handleClick() {
     if (episodeId !== props.episodeOnPlayId) {
-      const actualDuration = audioRef.current.duration ? formatSeconds(audioRef.current.duration) : props.episode.audio_length; // fallback: use original audio length in case audioRef.current.duration returns NaN for unknown reasons.
+       // fallback: use original audio length in case audioRef.current.duration returns NaN for unknown reasons.
+      const actualDuration = audioRef.current.duration ? formatSeconds(audioRef.current.duration) : props.episode.audio_length;
       const episodeOnPlay = {
         podcastTitle: props.episode.podcast_title_original,
         episodeTitle: props.episode.title_original,
@@ -80,7 +81,8 @@ function EpisodeCardStyleB(props) {
       };
       props.updateEpisodeOnPlayAndMaybeActualDuration(episodeOnPlay);
     } else {
-      props.updatePlaying(); //TBC: if the locally stored episode happens to be the one being clicked after refreshing the page. let's try the error.
+      props.updatePlaying();
+      // fallback: in case audioRef.current.duration returns NaN on first click, we still have the chance to update the actual duration on subsequent clicks.
       if (audioRef.current.duration && formatSeconds(audioRef.current.duration) !== props.episode.audio_length) {
         props.updateActualDuration(formatSeconds(audioRef.current.duration),  episodeId);
       }

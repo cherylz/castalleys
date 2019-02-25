@@ -26,9 +26,14 @@ class Episode extends React.Component {
         .then(data => {
           console.log(data);
           const {podcast, ...rest} = data;
+          const processedEpisode = {...rest};
+          delete processedEpisode.audio_length;
+          delete processedEpisode.pub_date_ms;
+          processedEpisode.duration = rest.audio ? formatSeconds(rest.audio_length) : '(no audio)';
+          processedEpisode.date = msToDate(rest.pub_date_ms);
           this.setState({
             podcast: podcast,
-            episode: rest
+            episode: processedEpisode
           });
         })
         .catch(err => console.log(err));
@@ -37,11 +42,42 @@ class Episode extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
+    // handle a marginal case: update the actual duration of an episode if that episode happens to be the one stored in local storage
+    if (!Object.keys(prevState.episode).length && this.props.episodeOnPlayId) {
+      if (this.state.episode.id === this.props.episodeOnPlayId) {
+        const episodeWithActualDuration = {...this.state.episode};
+        episodeWithActualDuration.duration = this.props.episodeOnPlayDuration;
+        this.setState({
+          episode: episodeWithActualDuration
+        });
+      }
+    }
     if (this.props.currentFullQuery !== prevProps.currentFullQuery) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);
     }
+  }
+
+  updateEpisodeOnPlayAndMaybeActualDuration = (episode) => {
+    // Step 1: update the actual duration of the episode on play in this.state.episode
+    const episodeWithActualDuration = {...this.state.episode};
+    episodeWithActualDuration.duration = episode.duration;
+    this.setState({
+      episode: episodeWithActualDuration
+    });
+    // Step 2: update the episode on play with actual duration in this.state.epsidoeOnDisplay of App.js
+    this.props.updateEpisodeOnPlay(episode);
+  }
+
+  updateActualDuration = (duration, episodeId) => {
+    // the duration passed in is in HH:MM:SS format
+    const episodeWithActualDuration = {...this.state.episode};
+    episodeWithActualDuration.duration = duration;
+    this.setState({
+      episode: episodeWithActualDuration
+    });
+    this.props.updateActualDurationOfEpisodeOnPlay(duration);
   }
 
   render() {
@@ -61,12 +97,8 @@ class Episode extends React.Component {
       );
     }
     if (Object.keys(episode).length) {
-      const { id:episodeId, image, audio, title:episodeTitle, description:desc } = episode;
-      const date = msToDate(episode.pub_date_ms);
-      const duration = !audio ?
-        '(no audio)' :
-        formatSeconds(episode.audio_length);
-      const processedEpisode = { episodeTitle, episodeId, image, audio, desc, date, duration };
+      const { title:episodeTitle, id:episodeId, description:desc, image, audio, date, duration } = episode;
+      const processedEpisode = { episodeTitle, episodeId, desc, image, audio, date, duration };
       renderEpisodeInfo = (
         <EpisodeCardStyleA
           episodeOnWhichPage='episode'
@@ -75,7 +107,8 @@ class Episode extends React.Component {
           episode={processedEpisode}
           episodeOnPlayId={this.props.episodeOnPlayId}
           playing={this.props.playing}
-          updateEpisodeOnPlay={this.props.updateEpisodeOnPlay}
+          updateEpisodeOnPlayAndMaybeActualDuration={this.updateEpisodeOnPlayAndMaybeActualDuration}
+          updateActualDuration={this.updateActualDuration}
           updatePlaying={this.props.updatePlaying}
         />
       );
