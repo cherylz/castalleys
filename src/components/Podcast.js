@@ -143,6 +143,7 @@ class Podcast extends React.Component {
     let renderPodcastInfo;
     let renderEpisodesInfo;
     let loadMoreBtn;
+    let loadingPromptWhenNeeded = (<div className="loading-prompt">Loading... Good things worth waiting :)</div>);
 
     if (!this.state.searchingInPodcast && this.state.episodes.length < this.state.podcast.total_episodes) {
       loadMoreBtn = (
@@ -165,6 +166,7 @@ class Podcast extends React.Component {
     }
 
     if (Object.keys(this.state.podcast).length) {
+      loadingPromptWhenNeeded = '';
       renderPodcastInfo = (
         <PodcastCardStyleA
           podcastOnWhichPage='podcast'
@@ -217,11 +219,10 @@ class Podcast extends React.Component {
           {renderPodcastInfo}
           <div className="episodes">
             {renderEpisodesInfo}
-            <div>
-              {loadMoreBtn}
-            </div>
+            {loadMoreBtn}
           </div>
         </div>
+        {loadingPromptWhenNeeded}
       </div>
     )
   }

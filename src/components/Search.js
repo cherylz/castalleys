@@ -174,8 +174,8 @@ class Search extends React.Component {
     const podcastsActive = this.state.fliter === 'episodes' ? '' : 'active';
     const fullSearchEpisodes = this.state.fullSearchEpisodes;
     const fullSearchPodcasts = this.state.fullSearchPodcasts;
-    let renderEpisodes;
-    let renderPodcasts;
+    let renderEpisodes = (<div className="no-match-prompt">Searching :)</div>);
+    let renderPodcasts = (<div className="no-match-prompt">Searching :)</div>);
     let loadMoreBtn;
 
     if (this.state.fliter === 'episodes' && fullSearchEpisodes.length < this.state.totalEpisodeMatches) {

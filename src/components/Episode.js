@@ -49,7 +49,10 @@ class Episode extends React.Component {
     const podcast = this.state.podcast;
     let renderPodcastInfo;
     let renderEpisodeInfo;
+    let loadingPromptWhenNeeded = (<div className="loading-prompt">Loading... Good things worth waiting :)</div>);
+
     if (Object.keys(podcast).length) {
+      loadingPromptWhenNeeded = '';
       renderPodcastInfo = (
         <PodcastCardStyleA
           podcastOnWhichPage='episode'
@@ -85,6 +88,7 @@ class Episode extends React.Component {
             {renderEpisodeInfo}
           </div>
         </div>
+        {loadingPromptWhenNeeded}
       </div>
     )
   }

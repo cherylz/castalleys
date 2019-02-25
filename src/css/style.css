@@ -489,9 +489,21 @@ header {
 .episodes {
   display: flex;
   flex-direction: column;
-  padding: 30px 40px;
   background-color: #fff;
   margin-right: 25px;
+}
+
+.episodes > * {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.episodes > *:first-child {
+  margin-top: 30px;
+}
+
+.episodes > *:last-child {
+  margin-bottom: 30px;
 }
 
 .episode {
@@ -543,9 +555,19 @@ header {
 }
 
 button.load-more-btn {
-  margin-top: 20px;
   font-family: 'Open Sans', sans-serif;
+  font-size: 1.4rem;
+  font-weight: bold;
+  border: 1px solid var(--custom-color);
   cursor: pointer;
+  margin-top: 20px;
+  outline: 0;
+}
+
+.loading-prompt {
+  padding-left: 25px;
+  padding-top: 20px;
+  font-size: 1.4rem;
 }
 
 /* ** Style AudioPlayer.js */
@@ -658,6 +680,7 @@ button.load-more-btn {
 
 .no-match-prompt {
   font-size: 1.4rem;
+  margin-top: 20px;
   margin-left: 20px;
 }
 
@@ -910,8 +933,11 @@ button.load-more-btn {
   .episodes {
     margin-left: 5px;
     margin-right: 5px;
-    padding-left: 25px;
-    padding-right: 25px;
+  }
+
+  .episodes > * {
+    margin-left: 25px;
+    margin-right: 25px;
   }
 
   .desc {
