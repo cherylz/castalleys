@@ -110,7 +110,8 @@ class Podcast extends React.Component {
   }
 
   callInPodcastSearch = (keywords) => {
-    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=${this.state.offsetMatches}&ocid=${this.state.podcast.id}&safe_mode=1&q=%22${keywords}%22`;
+    const offset = this.state.query === keywords ? this.state.offsetMatches : 0;
+    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=${offset}&ocid=${this.state.podcast.id}&safe_mode=1&q=%22${keywords}%22`;
     const request = {
       method: 'GET',
       headers: {
@@ -137,10 +138,17 @@ class Podcast extends React.Component {
             matchedEpisodes: processedEpisodes,
             searchingInPodcast: true
           });
-        } else {
+        } else if (this.state.query === keywords) {
           this.setState({
             matchedEpisodes: [...this.state.matchedEpisodes, ...processedEpisodes],
             offsetMatches: data.next_offset
+          });
+        } else if (this.state.query !== keywords) {
+          this.setState({
+            query: keywords,
+            offsetMatches: data.next_offset,
+            totalMatches: data.total,
+            matchedEpisodes: processedEpisodes
           });
         }
       })
@@ -194,7 +202,7 @@ class Podcast extends React.Component {
   loadMoreMatches = () => {
     if (!this.state.searchingInPodcast) {
       const id = this.props.match.params.podcastId;
-      const endpoint = `https://listennotes.p.rapidapi.com/api/v1/podcasts/${id}?next_episode_pub_date=${this.state.offsetPubDate}&sort=recent_first`;
+      const endpoint = `https://api.listennotes.com/api/v1/podcasts/${id}?next_episode_pub_date=${this.state.offsetPubDate}&sort=recent_first`;
       const request = {
         method: 'GET',
         headers: {
@@ -228,6 +236,8 @@ class Podcast extends React.Component {
   resetSearch = () => {
     this.setState({
       query: '',
+      offsetMatches: 0,
+      totalMatches: 0,
       matchedEpisodes: [],
       searchingInPodcast: false
     });
