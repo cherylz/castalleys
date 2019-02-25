@@ -18,7 +18,9 @@ class Podcast extends React.Component {
   }
 
   searchPodcast = (podcastId) => {
-    const endpoint = `https://api.listennotes.com/api/v1/podcasts/${podcastId}?sort=recent_first`;
+    const endpoint = this.state.episodes.length === 0 ?
+      `https://api.listennotes.com/api/v1/podcasts/${podcastId}?sort=recent_first` :
+      `https://api.listennotes.com/api/v1/podcasts/${podcastId}?next_episode_pub_date=${this.state.offsetPubDate}&sort=recent_first`;
     const request = {
       method: 'GET',
       headers: {
@@ -39,11 +41,18 @@ class Podcast extends React.Component {
           processedEpisode.date = msToDate(episode.pub_date_ms);
           return processedEpisode;
         });
-        this.setState({
-          podcast: rest,
-          episodes: processedEpisodes,
-          offsetPubDate: next_episode_pub_date
-        });
+        if (this.state.episodes.length === 0) {
+          this.setState({
+            podcast: rest,
+            episodes: processedEpisodes,
+            offsetPubDate: next_episode_pub_date
+          });
+        } else {
+          this.setState({
+            episodes: [...this.state.episodes, ...processedEpisodes],
+            offsetPubDate: next_episode_pub_date
+          });
+        }
       })
       .catch(err => console.log(err));
   }
@@ -201,33 +210,8 @@ class Podcast extends React.Component {
 
   loadMoreMatches = () => {
     if (!this.state.searchingInPodcast) {
-      const id = this.props.match.params.podcastId;
-      const endpoint = `https://api.listennotes.com/api/v1/podcasts/${id}?next_episode_pub_date=${this.state.offsetPubDate}&sort=recent_first`;
-      const request = {
-        method: 'GET',
-        headers: {
-          "X-RapidAPI-Key": apiKey,
-          "Accept": "application/json"
-        }
-      };
-      fetch(endpoint, request)
-        .then(res => res.json())
-        .then(data => {
-          const { episodes, next_episode_pub_date } = data;
-          const processedEpisodes = episodes.map(episode => {
-            const processedEpisode = {...episode};
-            delete processedEpisode.audio_length;
-            delete processedEpisode.pub_date_ms;
-            processedEpisode.duration = episode.audio ? formatSeconds(episode.audio_length) : '(no audio)';
-            processedEpisode.date = msToDate(episode.pub_date_ms);
-            return processedEpisode;
-          });
-          this.setState({
-            episodes: [...this.state.episodes, ...processedEpisodes],
-            offsetPubDate: next_episode_pub_date
-          });
-        })
-        .catch(err => console.log(err));
+      const podcastId = this.props.match.params.podcastId;
+      this.searchPodcast(podcastId);
     } else {
       this.callInPodcastSearch(this.state.query);
     }
