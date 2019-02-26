@@ -9,7 +9,12 @@ function PodcastCardStyleC(props) {
       </div>
     );
   } else {
-    const { id, image, title_original:title, publisher_original:publisher } = props.podcast;
+    const {
+      id,
+      image,
+      title_original: title,
+      publisher_original: publisher
+    } = props.podcast;
     return (
       <div className="show-preview">
         <Link
@@ -29,7 +34,7 @@ function PodcastCardStyleC(props) {
           <p className="title4">{publisher}</p>
         </div>
       </div>
-    )
+    );
   }
 }
 

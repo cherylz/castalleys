@@ -7,12 +7,13 @@ class NotFound extends React.Component {
       this.props.history.push(`/search/${keywords}`);
     }
   }
+
   render() {
     return (
       <div className="not-found-cover">
         <span>Oops! Page not found.</span>
       </div>
-    )
+    );
   }
 }
 

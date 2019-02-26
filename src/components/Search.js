@@ -1,7 +1,6 @@
 import React from 'react';
 import PodcastCardStyleC from './PodcastCardStyleC';
 import EpisodeCardStyleB from './EpisodeCardStyleB';
-// import { typeaheadPodcasts, fullSearchPodcasts, fullSearchEpisodes } from '../sample-responses';
 import { apiKey } from '../apiKey';
 
 class Search extends React.Component {
@@ -18,7 +17,6 @@ class Search extends React.Component {
   };
 
   componentDidMount() {
-    console.log('Search.js mounted');
     const keywords = this.props.match.params.keywords;
     this.callFullSearchEpisodes(keywords);
     this.props.goToOrUpdateSearchPage(keywords);
@@ -29,19 +27,24 @@ class Search extends React.Component {
     if (!prevState.fullSearchEpisodes.length && this.props.episodeOnPlayId) {
       const ids = this.state.fullSearchEpisodes.map(item => item.id);
       if (ids.indexOf(this.props.episodeOnPlayId) !== -1) {
-        const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(item => {
-          if (item.id === this.props.episodeOnPlayId) {
-            item.audio_length = this.props.episodeOnPlayDuration;
+        const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(
+          item => {
+            if (item.id === this.props.episodeOnPlayId) {
+              item.audio_length = this.props.episodeOnPlayDuration;
+            }
+            return item;
           }
-          return item;
-        });
+        );
         this.setState({
           fullSearchEpisodes: fullSearchEpisodesWithActualDuration
         });
       }
     }
     // handle new search of episodes in the same Search.js component, i.e. user presses the return key with new keywords in the search bar of Header.js while on the search page
-    if (prevProps.currentFullQuery && this.props.currentFullQuery !== prevProps.currentFullQuery) {
+    if (
+      prevProps.currentFullQuery &&
+      this.props.currentFullQuery !== prevProps.currentFullQuery
+    ) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);
       this.setState({
@@ -51,24 +54,24 @@ class Search extends React.Component {
         calledFullSearchEpisodes: false,
         calledFullSearchPodcasts: false
       });
-      console.log('new full search in the same Search component');
       this.callFullSearchEpisodes(this.props.currentFullQuery);
     }
   }
 
-  callFullSearchEpisodes = (keywords) => {
-    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=${this.state.offsetEpisodes}&safe_mode=1&q=%22${keywords}%22`;
+  callFullSearchEpisodes = keywords => {
+    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=${
+      this.state.offsetEpisodes
+    }&safe_mode=1&q=%22${keywords}%22`;
     const request = {
       method: 'GET',
       headers: {
-        "X-RapidAPI-Key": apiKey,
-        "Accept": "application/json"
+        'X-RapidAPI-Key': apiKey,
+        Accept: 'application/json'
       }
     };
     fetch(endpoint, request)
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         if (!this.state.fullSearchEpisodes.length) {
           this.setState({
             fullSearchEpisodes: [...data.results],
@@ -78,27 +81,31 @@ class Search extends React.Component {
           });
         } else {
           this.setState({
-            fullSearchEpisodes: [...this.state.fullSearchEpisodes, ...data.results],
+            fullSearchEpisodes: [
+              ...this.state.fullSearchEpisodes,
+              ...data.results
+            ],
             offsetEpisodes: data.next_offset
           });
         }
       })
       .catch(err => console.log(err));
-  }
+  };
 
-  callFullSearchPodcasts = (keywords) => {
-    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=podcast&offset=${this.state.offsetPodcasts}&safe_mode=1&q=%22${keywords}%22`;
+  callFullSearchPodcasts = keywords => {
+    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=podcast&offset=${
+      this.state.offsetPodcasts
+    }&safe_mode=1&q=%22${keywords}%22`;
     const request = {
       method: 'GET',
       headers: {
-        "X-RapidAPI-Key": apiKey,
-        "Accept": "application/json"
+        'X-RapidAPI-Key': apiKey,
+        Accept: 'application/json'
       }
     };
     fetch(endpoint, request)
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         if (!this.state.fullSearchPodcasts.length) {
           this.setState({
             fullSearchPodcasts: [...data.results],
@@ -108,16 +115,19 @@ class Search extends React.Component {
           });
         } else {
           this.setState({
-            fullSearchPodcasts: [...this.state.fullSearchPodcasts, ...data.results],
+            fullSearchPodcasts: [
+              ...this.state.fullSearchPodcasts,
+              ...data.results
+            ],
             offsetPodcasts: data.next_offset
           });
         }
       })
       .catch(err => console.log(err));
-  }
+  };
 
-  handleFilterChange = (e) => {
-    if (e.target.id === "episodes") {
+  handleFilterChange = e => {
+    if (e.target.id === 'episodes') {
       this.setState({
         fliter: 'episodes'
       });
@@ -129,36 +139,40 @@ class Search extends React.Component {
         this.callFullSearchPodcasts(this.props.currentFullQuery);
       }
     }
-  }
+  };
 
-  updateEpisodeOnPlayAndMaybeActualDuration = (episode) => {
+  updateEpisodeOnPlayAndMaybeActualDuration = episode => {
     // Step 1: update the actual duration of the episode on play in this.state.fullSearchEpisodes
-    const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(item => {
-      if (item.id === episode.episodeId) {
-        item.audio_length = episode.duration;
+    const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(
+      item => {
+        if (item.id === episode.episodeId) {
+          item.audio_length = episode.duration;
+        }
+        return item;
       }
-      return item;
-    });
+    );
     this.setState({
       fullSearchEpisodes: fullSearchEpisodesWithActualDuration
     });
     // Step 2: update the episode on play with actual duration in this.state.epsidoeOnDisplay of App.js
     this.props.updateEpisodeOnPlay(episode);
-  }
+  };
 
   updateActualDuration = (duration, episodeId) => {
     // the duration passed in is in HH:MM:SS format
-    const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(item => {
-      if (item.id === episodeId) {
-        item.audio_length = duration;
+    const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(
+      item => {
+        if (item.id === episodeId) {
+          item.audio_length = duration;
+        }
+        return item;
       }
-      return item;
-    });
+    );
     this.setState({
       fullSearchEpisodes: fullSearchEpisodesWithActualDuration
     });
     this.props.updateActualDurationOfEpisodeOnPlay(duration);
-  }
+  };
 
   loadMoreMatches = () => {
     if (this.state.fliter === 'episodes') {
@@ -167,68 +181,79 @@ class Search extends React.Component {
     if (this.state.fliter === 'podcasts') {
       this.callFullSearchPodcasts(this.props.currentFullQuery);
     }
-  }
+  };
 
   render() {
     const episodesActive = this.state.fliter === 'episodes' ? 'active' : '';
     const podcastsActive = this.state.fliter === 'episodes' ? '' : 'active';
     const fullSearchEpisodes = this.state.fullSearchEpisodes;
     const fullSearchPodcasts = this.state.fullSearchPodcasts;
-    let renderEpisodes = (<div className="no-match-prompt">Searching :)</div>);
-    let renderPodcasts = (<div className="no-match-prompt">Searching :)</div>);
+    let renderEpisodes = <div className="no-match-prompt">Searching :)</div>;
+    let renderPodcasts = <div className="no-match-prompt">Searching :)</div>;
     let loadMoreBtn;
 
-    if (this.state.fliter === 'episodes' && fullSearchEpisodes.length < this.state.totalEpisodeMatches) {
+    if (
+      this.state.fliter === 'episodes' &&
+      fullSearchEpisodes.length < this.state.totalEpisodeMatches
+    ) {
       loadMoreBtn = (
-        <button
-          className="load-more"
-          onClick={this.loadMoreMatches}
-        >
+        <button className="load-more" onClick={this.loadMoreMatches}>
           Load More
         </button>
       );
-    } else if (this.state.fliter === 'podcasts' && fullSearchPodcasts.length < this.state.totalPodcastMatches) {
+    } else if (
+      this.state.fliter === 'podcasts' &&
+      fullSearchPodcasts.length < this.state.totalPodcastMatches
+    ) {
       loadMoreBtn = (
-        <button
-          className="load-more"
-          onClick={this.loadMoreMatches}
-        >
+        <button className="load-more" onClick={this.loadMoreMatches}>
           Load More
         </button>
       );
     }
 
     if (fullSearchEpisodes.length) {
-      renderEpisodes = fullSearchEpisodes.map((episode) => (
+      renderEpisodes = fullSearchEpisodes.map(episode => (
         <EpisodeCardStyleB
           key={episode.id}
           episode={episode}
           episodeOnPlayId={this.props.episodeOnPlayId}
           playing={this.props.playing}
-          updateEpisodeOnPlayAndMaybeActualDuration={this.updateEpisodeOnPlayAndMaybeActualDuration}
+          updateEpisodeOnPlayAndMaybeActualDuration={
+            this.updateEpisodeOnPlayAndMaybeActualDuration
+          }
           updateActualDuration={this.updateActualDuration}
           updatePlaying={this.props.updatePlaying}
-          clearKeywordsAndCurrentFullQuery={this.props.clearKeywordsAndCurrentFullQuery}
+          clearKeywordsAndCurrentFullQuery={
+            this.props.clearKeywordsAndCurrentFullQuery
+          }
         />
       ));
     } else if (this.state.calledFullSearchEpisodes) {
-      renderEpisodes = (<div className="no-match-prompt">Oops... No matched results found.</div>);
+      renderEpisodes = (
+        <div className="no-match-prompt">Oops... No matched results found.</div>
+      );
     }
 
     if (fullSearchPodcasts.length) {
-      renderPodcasts = fullSearchPodcasts.map((match) => (
+      renderPodcasts = fullSearchPodcasts.map(match => (
         <PodcastCardStyleC
           podcast={match}
           key={match.id}
-          clearKeywordsAndCurrentFullQuery={this.props.clearKeywordsAndCurrentFullQuery}
+          clearKeywordsAndCurrentFullQuery={
+            this.props.clearKeywordsAndCurrentFullQuery
+          }
         />
       ));
     } else if (this.state.calledFullSearchPodcasts) {
-      renderPodcasts = (<div className="no-match-prompt">Oops... No matched results found.</div>);
+      renderPodcasts = (
+        <div className="no-match-prompt">Oops... No matched results found.</div>
+      );
     }
 
-    // important to assign value to `matches` after computation is done.
-    const matches = this.state.fliter === 'episodes' ? renderEpisodes : renderPodcasts;
+    // important to assign value to `matches` after the computation of renderEpisodes and renderPodcasts is done.
+    const matches =
+      this.state.fliter === 'episodes' ? renderEpisodes : renderPodcasts;
 
     return (
       <div className="page-container">
@@ -250,15 +275,11 @@ class Search extends React.Component {
               Podcasts
             </button>
           </div>
-          <div className="matched-results">
-            {matches}
-          </div>
-          <div>
-            {loadMoreBtn}
-          </div>
+          <div className="matched-results">{matches}</div>
+          <div>{loadMoreBtn}</div>
         </div>
       </div>
-    )
+    );
   }
 }
 

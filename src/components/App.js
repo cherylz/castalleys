@@ -23,7 +23,10 @@ class App extends React.Component {
     const hidePlayerRef = JSON.parse(localStorage.getItem('hidePlayer'));
     const episodeOnPlayRef = JSON.parse(localStorage.getItem('episodeOnPlay'));
     const customColorRef = localStorage.getItem('customColor');
-    document.documentElement.style.setProperty('--custom-color', localStorage.getItem('customColor'));
+    document.documentElement.style.setProperty(
+      '--custom-color',
+      localStorage.getItem('customColor')
+    );
     if (customColorRef) {
       this.setState({
         customColor: localStorage.getItem('customColor')
@@ -39,7 +42,6 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('componentDidUpdate in App.js');
     if (localStorage.getItem('speed') === 'null') {
       localStorage.setItem('speed', this.state.speed);
     }
@@ -50,36 +52,44 @@ class App extends React.Component {
       localStorage.setItem('hidePlayer', this.state.hidePlayer);
     }
     if (!Object.keys(prevState.episodeOnPlay).length) {
-      localStorage.setItem('episodeOnPlay', JSON.stringify(this.state.episodeOnPlay));
-    } else if (this.state.episodeOnPlay.episodeId !== prevState.episodeOnPlay.episodeId) {
-      localStorage.setItem('episodeOnPlay', JSON.stringify(this.state.episodeOnPlay));
+      localStorage.setItem(
+        'episodeOnPlay',
+        JSON.stringify(this.state.episodeOnPlay)
+      );
+    } else if (
+      this.state.episodeOnPlay.episodeId !== prevState.episodeOnPlay.episodeId
+    ) {
+      localStorage.setItem(
+        'episodeOnPlay',
+        JSON.stringify(this.state.episodeOnPlay)
+      );
     }
   }
 
-  updateCustomColor = (customColor) => {
+  updateCustomColor = customColor => {
     this.setState({ customColor });
-  }
+  };
 
-  updateKeywords = (keywords) => {
+  updateKeywords = keywords => {
     this.setState({ keywords });
-  }
+  };
 
   clearKeywordsAndCurrentFullQuery = () => {
     this.setState({
       keywords: '',
       currentFullQuery: ''
     });
-  }
+  };
 
-  goToOrUpdateSearchPage = (keywords) => {
+  // trigger route change via componentDidUpdate() in Home.js, Search.js, Podcast.js, Episode.js, NotFound.js respectively.
+  goToOrUpdateSearchPage = keywords => {
     this.setState({
       keywords,
       currentFullQuery: keywords
     });
-  }
-  // TBC: check if it is correct: this will trigger route change via componentDidUpdate() in Home.js, Search.js, Podcast.js, Episode.js, 404.js respectively.
+  };
 
-  updateEpisodeOnPlay = (episode) => {
+  updateEpisodeOnPlay = episode => {
     if (Object.entries(this.state.episodeOnPlay).length === 0) {
       this.setState({
         hidePlayer: false
@@ -89,23 +99,23 @@ class App extends React.Component {
       episodeOnPlay: episode,
       playing: true
     });
-  }
+  };
 
-  updateActualDurationOfEpisodeOnPlay = (duration) => {
-    const episodeOnPlayWithActualDuration = {...this.state.episodeOnPlay};
+  updateActualDurationOfEpisodeOnPlay = duration => {
+    const episodeOnPlayWithActualDuration = { ...this.state.episodeOnPlay };
     episodeOnPlayWithActualDuration.duration = duration;
     this.setState({
       episodeOnPlay: episodeOnPlayWithActualDuration
     });
-  }
+  };
 
   updatePlaying = () => {
     this.setState({
       playing: !this.state.playing
     });
-  }
+  };
 
-  updatePlaybackControls = (userCommand) => {
+  updatePlaybackControls = userCommand => {
     if (userCommand === 'playPause') {
       this.setState({
         playing: !this.state.playing
@@ -121,13 +131,13 @@ class App extends React.Component {
         });
       }
     }
-  }
+  };
 
   handleEnded = () => {
     this.setState({
       playing: false
     });
-  }
+  };
 
   removePlayer = () => {
     this.setState({
@@ -135,7 +145,7 @@ class App extends React.Component {
       episodeOnPlay: {},
       playing: false
     });
-  }
+  };
 
   render() {
     return (
@@ -148,59 +158,84 @@ class App extends React.Component {
             updateCustomColor={this.updateCustomColor}
             updateKeywords={this.updateKeywords}
             goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
-            clearKeywordsAndCurrentFullQuery={this.clearKeywordsAndCurrentFullQuery}
+            clearKeywordsAndCurrentFullQuery={
+              this.clearKeywordsAndCurrentFullQuery
+            }
           />
           <Switch>
-            <Route exact path="/" render={(props) => (
-              <Home
-                {...props}
-                currentFullQuery={this.state.currentFullQuery}
-                customColor={this.state.customColor}
-              />)}
+            <Route
+              exact
+              path="/"
+              render={props => (
+                <Home
+                  {...props}
+                  currentFullQuery={this.state.currentFullQuery}
+                  customColor={this.state.customColor}
+                />
+              )}
             />
-            <Route path="/search/:keywords" render={(props) => (
-              <Search
-                {...props}
-                currentFullQuery={this.state.currentFullQuery}
-                episodeOnPlayId={this.state.episodeOnPlay.episodeId}
-                episodeOnPlayDuration={this.state.episodeOnPlay.duration}
-                playing={this.state.playing}
-                goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
-                updateEpisodeOnPlay={this.updateEpisodeOnPlay}
-                updateActualDurationOfEpisodeOnPlay={this.updateActualDurationOfEpisodeOnPlay}
-                updatePlaying={this.updatePlaying}
-                clearKeywordsAndCurrentFullQuery={this.clearKeywordsAndCurrentFullQuery}
-              />)}
+            <Route
+              path="/search/:keywords"
+              render={props => (
+                <Search
+                  {...props}
+                  currentFullQuery={this.state.currentFullQuery}
+                  episodeOnPlayId={this.state.episodeOnPlay.episodeId}
+                  episodeOnPlayDuration={this.state.episodeOnPlay.duration}
+                  playing={this.state.playing}
+                  goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
+                  updateEpisodeOnPlay={this.updateEpisodeOnPlay}
+                  updateActualDurationOfEpisodeOnPlay={
+                    this.updateActualDurationOfEpisodeOnPlay
+                  }
+                  updatePlaying={this.updatePlaying}
+                  clearKeywordsAndCurrentFullQuery={
+                    this.clearKeywordsAndCurrentFullQuery
+                  }
+                />
+              )}
             />
-            <Route path="/podcast/:podcastId" render={(props) => (
-              <Podcast
-                {...props}
-                currentFullQuery={this.state.currentFullQuery}
-                episodeOnPlayId={this.state.episodeOnPlay.episodeId}
-                episodeOnPlayDuration={this.state.episodeOnPlay.duration}
-                playing={this.state.playing}
-                updateEpisodeOnPlay={this.updateEpisodeOnPlay}
-                updateActualDurationOfEpisodeOnPlay={this.updateActualDurationOfEpisodeOnPlay}
-                updatePlaying={this.updatePlaying}
-              />)}
+            <Route
+              path="/podcast/:podcastId"
+              render={props => (
+                <Podcast
+                  {...props}
+                  currentFullQuery={this.state.currentFullQuery}
+                  episodeOnPlayId={this.state.episodeOnPlay.episodeId}
+                  episodeOnPlayDuration={this.state.episodeOnPlay.duration}
+                  playing={this.state.playing}
+                  updateEpisodeOnPlay={this.updateEpisodeOnPlay}
+                  updateActualDurationOfEpisodeOnPlay={
+                    this.updateActualDurationOfEpisodeOnPlay
+                  }
+                  updatePlaying={this.updatePlaying}
+                />
+              )}
             />
-            <Route path="/episode/:episodeId" render={(props) => (
-              <Episode
-                {...props}
-                currentFullQuery={this.state.currentFullQuery}
-                episodeOnPlayId={this.state.episodeOnPlay.episodeId}
-                episodeOnPlayDuration={this.state.episodeOnPlay.duration}
-                playing={this.state.playing}
-                updateEpisodeOnPlay={this.updateEpisodeOnPlay}
-                updateActualDurationOfEpisodeOnPlay={this.updateActualDurationOfEpisodeOnPlay}
-                updatePlaying={this.updatePlaying}
-              />)}
+            <Route
+              path="/episode/:episodeId"
+              render={props => (
+                <Episode
+                  {...props}
+                  currentFullQuery={this.state.currentFullQuery}
+                  episodeOnPlayId={this.state.episodeOnPlay.episodeId}
+                  episodeOnPlayDuration={this.state.episodeOnPlay.duration}
+                  playing={this.state.playing}
+                  updateEpisodeOnPlay={this.updateEpisodeOnPlay}
+                  updateActualDurationOfEpisodeOnPlay={
+                    this.updateActualDurationOfEpisodeOnPlay
+                  }
+                  updatePlaying={this.updatePlaying}
+                />
+              )}
             />
-            <Route render={(props) => (
-              <NotFound
-                {...props}
-                currentFullQuery={this.state.currentFullQuery}
-              />)}
+            <Route
+              render={props => (
+                <NotFound
+                  {...props}
+                  currentFullQuery={this.state.currentFullQuery}
+                />
+              )}
             />
           </Switch>
           <AudioPlayer
@@ -212,11 +247,13 @@ class App extends React.Component {
             onClick={this.updatePlaybackControls}
             removePlayer={this.removePlayer}
             onEnded={this.handleEnded}
-            clearKeywordsAndCurrentFullQuery={this.clearKeywordsAndCurrentFullQuery}
+            clearKeywordsAndCurrentFullQuery={
+              this.clearKeywordsAndCurrentFullQuery
+            }
           />
         </div>
       </BrowserRouter>
-    )
+    );
   }
 }
 

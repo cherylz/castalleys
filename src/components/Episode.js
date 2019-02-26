@@ -8,7 +8,7 @@ class Episode extends React.Component {
   state = {
     podcast: {},
     episode: {}
-  }
+  };
 
   componentDidMount() {
     const id = this.props.match.params.episodeId;
@@ -17,19 +17,21 @@ class Episode extends React.Component {
       const request = {
         method: 'GET',
         headers: {
-          "X-RapidAPI-Key": apiKey,
-          "Accept": "application/json"
+          'X-RapidAPI-Key': apiKey,
+          Accept: 'application/json'
         }
       };
       fetch(endpoint, request)
         .then(res => res.json())
         .then(data => {
           console.log(data);
-          const {podcast, ...rest} = data;
-          const processedEpisode = {...rest};
+          const { podcast, ...rest } = data;
+          const processedEpisode = { ...rest };
           delete processedEpisode.audio_length;
           delete processedEpisode.pub_date_ms;
-          processedEpisode.duration = rest.audio ? formatSeconds(rest.audio_length) : '(no audio)';
+          processedEpisode.duration = rest.audio
+            ? formatSeconds(rest.audio_length)
+            : '(no audio)';
           processedEpisode.date = msToDate(rest.pub_date_ms);
           this.setState({
             podcast: podcast,
@@ -46,84 +48,104 @@ class Episode extends React.Component {
     // handle a marginal case: update the actual duration of an episode if that episode happens to be the one stored in local storage
     if (!Object.keys(prevState.episode).length && this.props.episodeOnPlayId) {
       if (this.state.episode.id === this.props.episodeOnPlayId) {
-        const episodeWithActualDuration = {...this.state.episode};
+        const episodeWithActualDuration = { ...this.state.episode };
         episodeWithActualDuration.duration = this.props.episodeOnPlayDuration;
         this.setState({
           episode: episodeWithActualDuration
         });
       }
     }
+    // handle new full search of episodes in the search bar of Header.js while the user is on Episode page and presses the return key
     if (this.props.currentFullQuery !== prevProps.currentFullQuery) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);
     }
   }
 
-  updateEpisodeOnPlayAndMaybeActualDuration = (episode) => {
+  updateEpisodeOnPlayAndMaybeActualDuration = episode => {
     // Step 1: update the actual duration of the episode on play in this.state.episode
-    const episodeWithActualDuration = {...this.state.episode};
+    const episodeWithActualDuration = { ...this.state.episode };
     episodeWithActualDuration.duration = episode.duration;
     this.setState({
       episode: episodeWithActualDuration
     });
     // Step 2: update the episode on play with actual duration in this.state.epsidoeOnDisplay of App.js
     this.props.updateEpisodeOnPlay(episode);
-  }
+  };
 
   updateActualDuration = (duration, episodeId) => {
     // the duration passed in is in HH:MM:SS format
-    const episodeWithActualDuration = {...this.state.episode};
+    const episodeWithActualDuration = { ...this.state.episode };
     episodeWithActualDuration.duration = duration;
     this.setState({
       episode: episodeWithActualDuration
     });
     this.props.updateActualDurationOfEpisodeOnPlay(duration);
-  }
+  };
 
   render() {
     const episode = this.state.episode;
     const podcast = this.state.podcast;
     let renderPodcastInfo;
     let renderEpisodeInfo;
-    let loadingPromptWhenNeeded = (<div className="loading-prompt">Loading... Good things worth waiting :)</div>);
+    let loadingPromptWhenNeeded = (
+      <div className="loading-prompt">
+        Loading... Good things are worth waiting for :)
+      </div>
+    );
 
     if (Object.keys(podcast).length) {
       loadingPromptWhenNeeded = '';
       renderPodcastInfo = (
-        <PodcastCardStyleA
-          podcastOnWhichPage='episode'
-          podcast={podcast}
-        />
+        <PodcastCardStyleA podcastOnWhichPage="episode" podcast={podcast} />
       );
     }
+
     if (Object.keys(episode).length) {
-      const { title:episodeTitle, id:episodeId, description:desc, image, audio, date, duration } = episode;
-      const processedEpisode = { episodeTitle, episodeId, desc, image, audio, date, duration };
+      const {
+        title: episodeTitle,
+        id: episodeId,
+        description: desc,
+        image,
+        audio,
+        date,
+        duration
+      } = episode;
+      const processedEpisode = {
+        episodeTitle,
+        episodeId,
+        desc,
+        image,
+        audio,
+        date,
+        duration
+      };
       renderEpisodeInfo = (
         <EpisodeCardStyleA
-          episodeOnWhichPage='episode'
+          episodeOnWhichPage="episode"
           podcastId={podcast.id}
           podcastTitle={podcast.title}
           episode={processedEpisode}
           episodeOnPlayId={this.props.episodeOnPlayId}
           playing={this.props.playing}
-          updateEpisodeOnPlayAndMaybeActualDuration={this.updateEpisodeOnPlayAndMaybeActualDuration}
+          updateEpisodeOnPlayAndMaybeActualDuration={
+            this.updateEpisodeOnPlayAndMaybeActualDuration
+          }
           updateActualDuration={this.updateActualDuration}
           updatePlaying={this.props.updatePlaying}
         />
       );
     }
+
     return (
       <div className="page-container">
         <div className="podcast-episode-container">
           {renderPodcastInfo}
-          <div className="episodes">
-            {renderEpisodeInfo}
-          </div>
+          <div className="episodes">{renderEpisodeInfo}</div>
         </div>
         {loadingPromptWhenNeeded}
       </div>
-    )
+    );
   }
 }
 

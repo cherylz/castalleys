@@ -198,69 +198,6 @@ highlight color when responding to touch */
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Style Home.js */
-
-.home-cover {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: 'Rubik', sans-serif;
-}
-
-.home-cover > * {
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-.home-cover > span:first-child {
-  font-size: 6rem;
-  font-weight: 700;
-  margin-top: 320px;
-  margin-bottom: 20px;
-}
-
-.home-cover > span:last-child {
-  font-size: 2.4rem;
-  font-weight: 300;
-}
-
-footer {
-  margin-top: 40px;
-  margin-bottom: 130px;
-  font-family: 'Rubik', sans-serif;
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-#email {
-  display: flex;
-  align-items: center;
-  -webkit-tap-highlight-color: transparent;
-}
-
-#email > svg {
-  margin-left: 5px;
-}
-
-/* Style NotFound.js */
-
-.not-found-cover {
-  display: flex;
-  justify-content: center;
-  font-family: 'Rubik', sans-serif;
-}
-
-.not-found-cover > span:first-child {
-  font-size: 4rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 330px 20px 0 20px;
-}
-
 /* Style Header.js */
 
 header {
@@ -419,6 +356,160 @@ header {
   background-color: #604c8d;
 }
 
+/* Style AudioPlayer.js */
+
+.wrapper {
+  width: 100%;
+  height: 90px;
+  position: fixed;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.player {
+  max-width: 1200px;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.episode-info {
+  margin-left: 30px;
+  flex: 0 0 278px;
+  border-right: 1px solid #dbdbdb;
+  display: flex;
+}
+
+.episode-info > *:first-child {
+  margin-right: 8px;
+}
+
+.artwork-in-player {
+  height: 50px;
+}
+
+.player-controls {
+  margin-right: 30px;
+  margin-left: 60px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.main-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.speed {
+  font-size: 1.4rem;
+  cursor: pointer;
+  font-weight: 700;
+  width: 40px;
+}
+
+.playcontrols {
+  display: flex;
+  align-items: center;
+}
+
+.playcontrols > * {
+  height: 3.6rem;
+  width: 3.6rem;
+}
+
+.playcontrols > svg:nth-child(2) {
+  height: 4.2rem;
+  width: 4.2rem;
+}
+
+.progressbar {
+  height: 2px;
+  background-color: #dbdbdb;
+  display: flex;
+  cursor: ew-resize;
+}
+
+.progressbar-filled {
+  width: 50%; /* to-do: seems like nothing is different when removing it. or 0%? */
+  background-color: var(--custom-color);
+  flex: 0;
+  flex-basis: 0%;
+}
+
+.timer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+  font-size: 1.2rem;
+}
+
+/* Style Home.js */
+
+.home-cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Rubik', sans-serif;
+}
+
+.home-cover > * {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.home-cover > span:first-child {
+  font-size: 6rem;
+  font-weight: 700;
+  margin-top: 320px;
+  margin-bottom: 20px;
+}
+
+.home-cover > span:last-child {
+  font-size: 2.4rem;
+  font-weight: 300;
+}
+
+footer {
+  margin-top: 40px;
+  margin-bottom: 130px;
+  font-family: 'Rubik', sans-serif;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#email {
+  display: flex;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#email > svg {
+  margin-left: 5px;
+}
+
+/* Style NotFound.js */
+
+.not-found-cover {
+  display: flex;
+  justify-content: center;
+  font-family: 'Rubik', sans-serif;
+}
+
+.not-found-cover > span:first-child {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 330px 20px 0 20px;
+}
+
 /* Style Podcast.js & Episode.js */
 
 .podcast-episode-container {
@@ -448,19 +539,6 @@ header {
   width: 150px;
   height: 150px;
 }
-
-/*
-.subscribe-btn {
-  background-color: #000;
-  color: #fff;
-  font-family: 'Open Sans', sans-serif;
-  text-transform: uppercase;
-  border-radius: 8px;
-  width: 100px;
-  outline: 0;
-  cursor: pointer;
-}
-*/
 
 .podcast-links {
   margin-top: 3px;
@@ -568,97 +646,6 @@ button.load-more-btn {
   padding-left: 25px;
   padding-top: 20px;
   font-size: 1.4rem;
-}
-
-/* ** Style AudioPlayer.js */
-
-.wrapper {
-  width: 100%;
-  height: 90px;
-  position: fixed;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.9);
-}
-
-.player {
-  max-width: 1200px;
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-}
-
-.episode-info {
-  margin-left: 30px;
-  flex: 0 0 278px;
-  border-right: 1px solid #dbdbdb;
-  display: flex;
-}
-
-.episode-info > *:first-child {
-  margin-right: 8px;
-}
-
-.artwork-in-player {
-  height: 50px;
-}
-
-.player-controls {
-  margin-right: 30px;
-  margin-left: 60px;
-  font-family: 'Open Sans', sans-serif;
-}
-
-.main-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.speed {
-  font-size: 1.4rem;
-  cursor: pointer;
-  font-weight: 700;
-  width: 40px;
-}
-
-.playcontrols {
-  display: flex;
-  align-items: center;
-}
-
-.playcontrols > * {
-  height: 3.6rem;
-  width: 3.6rem;
-}
-
-.playcontrols > svg:nth-child(2) {
-  height: 4.2rem;
-  width: 4.2rem;
-}
-
-.progressbar {
-  height: 2px;
-  background-color: #dbdbdb;
-  display: flex;
-  cursor: ew-resize;
-}
-
-.progressbar-filled {
-  width: 50%; /* to-do: seems like nothing is different when removing it. or 0%? */
-  background-color: var(--custom-color);
-  flex: 0;
-  flex-basis: 0%;
-}
-
-.timer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 2px;
-  font-size: 1.2rem;
 }
 
 /* Style Search.js */
