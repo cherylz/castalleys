@@ -128,7 +128,11 @@ class Header extends React.Component {
       <header>
         <div className="navbar">
           <div>
-            <Link to="/" onClick={this.resetSearchbar}>
+            <Link
+              to="/"
+              className="prevent-tap-hl"
+              onClick={this.resetSearchbar}
+            >
               <span className="navbar-logo navbar-logo-bg">CastAlleys</span>
               <span className="navbar-logo navbar-logo-sm">C</span>
             </Link>
@@ -141,7 +145,7 @@ class Header extends React.Component {
               type="text"
               aria-label="input area for search"
               placeholder="search podcasts"
-              className="navbar-search-box"
+              className="navbar-search-box prevent-tap-hl"
             />
             <div className={displayAndStyle}>
               {renderPrompt}

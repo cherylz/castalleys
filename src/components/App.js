@@ -20,23 +20,33 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    const hidePlayerRef = JSON.parse(localStorage.getItem('hidePlayer'));
-    const episodeOnPlayRef = JSON.parse(localStorage.getItem('episodeOnPlay'));
     const customColorRef = localStorage.getItem('customColor');
-    document.documentElement.style.setProperty(
-      '--custom-color',
-      localStorage.getItem('customColor')
-    );
+    const hidePlayerRef = localStorage.getItem('hidePlayer');
+    const episodeOnPlayRef = localStorage.getItem('episodeOnPlay');
+    const speedRef = localStorage.getItem('speed');
+
     if (customColorRef) {
-      this.setState({
-        customColor: localStorage.getItem('customColor')
-      });
+      document.documentElement.style.setProperty(
+        '--custom-color',
+        customColorRef
+      );
+      this.setState({ customColor: customColorRef });
     }
-    if (!hidePlayerRef && localStorage.getItem('episodeOnPlay')) {
+
+    if (
+      hidePlayerRef === 'false' &&
+      episodeOnPlayRef !== null &&
+      episodeOnPlayRef !== '{}'
+    ) {
       this.setState({
         hidePlayer: false,
-        episodeOnPlay: episodeOnPlayRef,
-        speed: JSON.parse(localStorage.getItem('speed')) || 1
+        episodeOnPlay: JSON.parse(episodeOnPlayRef)
+      });
+    }
+
+    if (speedRef) {
+      this.setState({
+        speed: JSON.parse(speedRef)
       });
     }
   }
@@ -51,11 +61,15 @@ class App extends React.Component {
     if (this.state.hidePlayer !== prevState.hidePlayer) {
       localStorage.setItem('hidePlayer', this.state.hidePlayer);
     }
-    if (!Object.keys(prevState.episodeOnPlay).length) {
+    if (
+      !Object.keys(prevState.episodeOnPlay).length &&
+      Object.keys(this.state.episodeOnPlay).length
+    ) {
       localStorage.setItem(
         'episodeOnPlay',
         JSON.stringify(this.state.episodeOnPlay)
       );
+      localStorage.setItem('speed', this.state.speed);
     } else if (
       this.state.episodeOnPlay.episodeId !== prevState.episodeOnPlay.episodeId
     ) {
