@@ -24,7 +24,6 @@ class Episode extends React.Component {
       fetch(endpoint, request)
         .then(res => res.json())
         .then(data => {
-          console.log(data);
           const { podcast, ...rest } = data;
           const processedEpisode = { ...rest };
           delete processedEpisode.audio_length;

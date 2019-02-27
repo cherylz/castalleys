@@ -20,7 +20,7 @@ class Podcast extends React.Component {
   componentDidMount() {
     const id = this.props.match.params.podcastId;
     if (id.length === 32) {
-      this.searchPodcast(id);
+      this.searchPodcast(id, 'first round');
     } else {
       this.props.history.push(`/404`);
     }
@@ -76,7 +76,7 @@ class Podcast extends React.Component {
         matchedEpisodes: [],
         searchingInPodcast: false
       });
-      this.searchPodcast(this.props.match.params.podcastId);
+      this.searchPodcast(this.props.match.params.podcastId, 'first round');
     }
     // handle new full search of episodes in the search bar of Header.js while the user is on Podcast page and presses the return key
     if (this.props.currentFullQuery !== prevProps.currentFullQuery) {
@@ -85,9 +85,9 @@ class Podcast extends React.Component {
     }
   }
 
-  searchPodcast = podcastId => {
+  searchPodcast = (podcastId, status) => {
     const endpoint =
-      this.state.episodes.length === 0
+      status === 'first round'
         ? `https://api.listennotes.com/api/v1/podcasts/${podcastId}?sort=recent_first`
         : `https://api.listennotes.com/api/v1/podcasts/${podcastId}?next_episode_pub_date=${
             this.state.offsetPubDate
@@ -129,8 +129,8 @@ class Podcast extends React.Component {
       .catch(err => console.log(err));
   };
 
-  callInPodcastSearch = keywords => {
-    const offset = this.state.query === keywords ? this.state.offsetMatches : 0;
+  callInPodcastSearch = (keywords, status) => {
+    const offset = status === 'first round' ? 0 : this.state.offsetMatches;
     const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=${offset}&ocid=${
       this.state.podcast.id
     }&safe_mode=1&q=%22${keywords}%22`;
@@ -232,9 +232,9 @@ class Podcast extends React.Component {
   loadMoreMatches = () => {
     if (!this.state.searchingInPodcast) {
       const podcastId = this.props.match.params.podcastId;
-      this.searchPodcast(podcastId);
+      this.searchPodcast(podcastId, '');
     } else {
-      this.callInPodcastSearch(this.state.query);
+      this.callInPodcastSearch(this.state.query, '');
     }
   };
 

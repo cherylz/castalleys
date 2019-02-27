@@ -18,7 +18,7 @@ class PodcastCardStyleA extends React.Component {
   handleSearch = e => {
     const keywords = this.state.keywords;
     if (e.key === 'Enter' && keywords && keywords !== this.props.query) {
-      this.props.callInPodcastSearch(keywords);
+      this.props.callInPodcastSearch(keywords, 'first round');
     }
   };
 

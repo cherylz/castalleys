@@ -18,7 +18,7 @@ class Search extends React.Component {
 
   componentDidMount() {
     const keywords = this.props.match.params.keywords;
-    this.callFullSearchEpisodes(keywords);
+    this.callFullSearchEpisodes(keywords, 'first round');
     this.props.goToOrUpdateSearchPage(keywords);
   }
 
@@ -50,18 +50,25 @@ class Search extends React.Component {
       this.setState({
         fullSearchPodcasts: [],
         fullSearchEpisodes: [],
+        offsetEpisodes: 0,
+        totalEpisodeMatches: 0,
+        offsetPodcasts: 0,
+        totalPodcastMatches: 0,
         fliter: 'episodes',
         calledFullSearchEpisodes: false,
         calledFullSearchPodcasts: false
       });
-      this.callFullSearchEpisodes(this.props.currentFullQuery);
+      this.callFullSearchEpisodes(this.props.currentFullQuery, 'first round');
     }
   }
 
-  callFullSearchEpisodes = keywords => {
-    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=${
-      this.state.offsetEpisodes
-    }&safe_mode=1&q=%22${keywords}%22`;
+  callFullSearchEpisodes = (keywords, status) => {
+    const endpoint =
+      status === 'first round'
+        ? `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=0&safe_mode=1&q=%22${keywords}%22`
+        : `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=${
+            this.state.offsetEpisodes
+          }&safe_mode=1&q=%22${keywords}%22`;
     const request = {
       method: 'GET',
       headers: {
@@ -176,7 +183,7 @@ class Search extends React.Component {
 
   loadMoreMatches = () => {
     if (this.state.fliter === 'episodes') {
-      this.callFullSearchEpisodes(this.props.currentFullQuery);
+      this.callFullSearchEpisodes(this.props.currentFullQuery, '');
     }
     if (this.state.fliter === 'podcasts') {
       this.callFullSearchPodcasts(this.props.currentFullQuery);
