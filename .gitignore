@@ -14,6 +14,9 @@
 # production
 /build
 
+# deployment
+/.netlify
+
 # misc
 .DS_Store
 .env.local

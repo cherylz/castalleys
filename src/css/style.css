@@ -192,6 +192,19 @@ svg {
   margin-bottom: 3px;
 }
 
+/* to handle html contained in the responses
+of api calls */
+.inline {
+  display: inline !important;
+}
+
+/* to handle images in the description area
+of an episode */
+.inline img {
+  width: 100%;
+  height: auto;
+}
+
 /* Webkit / Chrome Specific CSS to remove tap
 highlight color when responding to touch */
 .prevent-tap-hl {
@@ -739,10 +752,6 @@ button.load-more-btn {
 }
 
 /* Style EpisodeCardStyleB.js */
-
-.inline {
-  display: inline !important;
-}
 
 .episode-preview {
   display: flex;
