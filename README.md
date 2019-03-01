@@ -24,7 +24,6 @@
 * [Features](https://github.com/cherylz/castalleys#features)
 * [Wireframes](https://github.com/cherylz/castalleys#wireframes)
 * [General Approach](https://github.com/cherylz/castalleys#general-approach)
-* [Major hurdles I overcame](https://github.com/cherylz/castalleys#major-hurdles-i-overcame)
 
 ## What Users Can Do with CastAlleys
 
