@@ -1,10 +1,26 @@
-# CastAlleys — A simple and clean podcast player
+# CastAlleys — A Simple and Clean Podcast Player
 
 [castalleys.com](https://castalleys.com)
 
-(to be completed: table of contents, screenshots of the app)
+![Screenshot of the app](https://lh3.googleusercontent.com/yi5WvD56gL_e1xrVhts9hU_QML-5HXzGeY01YdjQMfwZjedr36vQdsQsWfv2_TL8QaL10U-zApo2y4Tl16iHqgm5HuM0VCwVgT2qVXzTxWhNfgNoqtqcUFmXeQG04DOaXJPNoooUeRoGogrsvJCCMXszWKEBmkIFt9q_AFxJ9GsQcfM9lm1MrUjxEM2swy026-AKBwiCR2c-aLPRVX9q1uccjN9VwrPtgT-zD-eqRvnpGbSdNesvaCT3sw6FJb4WoX0wNnoF9L_Od9lwfd3RrB26iyBscYWqNYgsJ-io13bnD_NTLTxpbKVY6SS0KgHNeUcgREMOhWGvj02J9xVLT4poBu9NDnrv_xX5UIIx8AWCaVQqpWFZI5zzBJ1BUO7h-JSvc9vkFGn1p8piBRN26M4bIDLhnimWjSRqrS2qdPQLiihsXETc7wAZzE4QjOadZGH1nnNtXA0bUo8-d7zUM4igPnixym4d3nC7UdjYxtlDnvmKQvBLLFIsFzG_zY2CGdnwgtAwjl_8YsB1JF9pUexOxNVuyZKkaAKwj7eBlEKiX0C8ZxXUfQF6d2xad1SPK-GyvGl91iRm1i23_9zF-z9QfHUIZmKnAppEWu7n5LR-rabPiTuNIMvLCOhfHJJRjf2sSao6RaJq0DWLP3H2Hv8_pQsuPfNg=w1892-h1084-no)
 
-## What users can do with CastAlleys
+### Table of Contents
+
+[What Users Can Do with CastAlleys](https://github.com/cherylz/castalleys#what-users-can-do-with-castalleys)
+[Technologies](https://github.com/cherylz/castalleys#technologies)
+[Installation](https://github.com/cherylz/castalleys#installation)
+[Credits](https://github.com/cherylz/castalleys#credits)
+[Inspirations](https://github.com/cherylz/castalleys#inspirations)
+[Get Support](https://github.com/cherylz/castalleys#get-support)
+[Behind the Scenes](https://github.com/cherylz/castalleys#behind-the-scenes)
+* [Why I Built CastAlleys](https://github.com/cherylz/castalleys#why-i-built-castalleys)
+* [User Stories](https://github.com/cherylz/castalleys#user-stories)
+* [Features](https://github.com/cherylz/castalleys#features)
+* [Wireframes](https://github.com/cherylz/castalleys#wireframes)
+* [General Approach](https://github.com/cherylz/castalleys#general-approach)
+* [Major hurdles I overcame](https://github.com/cherylz/castalleys#major-hurdles-i-overcame)
+
+## What Users Can Do with CastAlleys
 
 Just search for what you want to listen to and you are ready to play the show. You can use it on your phone without having to download an extra app since it's a progressive web app. To add some fun when enjoying its simplicity, you can choose what color you want the app in (only applicable to non-touchscreen users at this moment).
 
@@ -19,8 +35,7 @@ Just search for what you want to listen to and you are ready to play the show. Y
 
 * Run `npm install` to install all the dependencies.
 * Get your freemium X-RapidAPI-Key from https://rapidapi.com/ to be able to call the [ListenNotes API](https://rapidapi.com/listennotes/api/listennotes).
-* Create a file named `apiKey.js` in the `src` folder. Paste this line `export const apiKey = "key";
-` in the file and replace "key" with your key grabbed from the previous step.
+* Create a file named `apiKey.js` in the `src` folder. Paste this line `export const apiKey = "key";` into the file and replace the string key with your key grabbed from the previous step.
 * Run `npm start` to make edits in the development mode.
 
 ## Credits
@@ -36,19 +51,25 @@ Thank you,
 * the team behind [React](https://reactjs.org/), for sharing how to [think in React](https://reactjs.org/docs/thinking-in-react.html).
 * the team behind [React Router](https://reacttraining.com/react-router/), for sharing [Learn Once, Route Anywhere](https://www.youtube.com/watch?v=Mf0Fy8iHp8k).
 * [Canva](https://canva.com), for offering free visual design templates.
+* [Justin Avery](https://twitter.com/justinavery), for making [Am I Responsive](http://ami.responsivedesign.is/) to check and present responsive designs.
 
 ## Inspirations
 The navigation bar is inspired by https://www.patagonia.com/. The homepage cover image is inspired by https://www.spotify.com/.
 
-## Get support
+## Get Support
 
 If you have questions on how to get the app up and running or want to say hi, please [shoot me an email](mailto:czcodes@gmail.com).
 
-## Behind the scenes
+## Behind the Scenes
 
-### Why I built CastAlleys
+### Why I Built CastAlleys
 
 CastAlleys was built as a capstone project for an online coding bootcamp ([Altcademy](https://www.altcademy.com/)) I enrolled. My goals for this project were to build something at least I would use (I like podcasts) and something that allowed me to practice what I had learned and challenged me to learn more.
+
+### User Stories
+
+* Some podcast listeners who use computers more often than mobile phones want to search and play a show directly from their computer, without the need to take out their phone, unlock the screen and open an app. They will find CastAlleys handy to use since it is optimized for web users.
+* There are also podcast listeners who want to keep their mobile apps to the minimum. They can use CastAlleys on their phone's home screen without downloading it since it is a progressive web app.
 
 ### Features
 
@@ -60,29 +81,22 @@ CastAlleys was built as a capstone project for an online coding bootcamp ([Altca
 * Podcast page view.
 * Episode page view.
 
-### User stories
-
-* Some podcast listeners who use computers more often than mobile phones want to search and play a show directly from their computer, without the need to take out their phone, unlock the screen and open an app. They will find CastAlleys handy to use since it is optimized for web users.
-* There are also podcast listeners who want to keep their mobile apps to the minimum. They can use CastAlleys on their phone's home screen without downloading it since it is a progressive web app.
-
 ### Wireframes
 
 In case you are interested in checking out wireframes, here are the sketches of the main interfaces I made with pen and paper for large screens: https://drive.google.com/drive/folders/10Y-2lI5bnXj8i2oV2Je0K8V1IdShHSvk?usp=sharing. For small screens, I coded the design.
 
-### General approach
+### General Approach
 
-##### Planning
+#### Planning
 
-Steps: generate the idea, plan for the scope of work and timeline, make wireframes for main pages, plan for the component hierarchy in React, and set up the file structure based on the hierarchy.
+* Steps: generate the idea, plan for the scope of work and timeline, make wireframes for main pages, plan for the component hierarchy in React, and set up the file structure based on the hierarchy.
 
-##### Building
+#### Building
 
-Major steps: Build a static version. Then move on to build an interactive version by adding features one at a time.
+* Major steps: Build a static version. Then move on to build an interactive version by adding features one at a time.
+* For each major step, repeat the process of 'build, test, deploy, debug, commit to GitHub'.
 
-For each major step, repeat the process of 'build, test, deploy, debug, commit to GitHub'.
+#### Quality
 
-##### Quality
-
-For improving the app quality, [Lighthouse](https://developers.google.com/web/tools/lighthouse/) was used to audit pages.
-
-For improving the code quality, [ESLint with Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb) and [Prettier](https://prettier.io/) were used.
+* For improving the app quality, [Lighthouse](https://developers.google.com/web/tools/lighthouse/) was used to audit pages.
+* For improving the code quality, [ESLint with Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb) and [Prettier](https://prettier.io/) were used.
