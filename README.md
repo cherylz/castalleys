@@ -2,16 +2,22 @@
 
 [castalleys.com](https://castalleys.com)
 
-![Screenshot of the app](https://lh3.googleusercontent.com/yi5WvD56gL_e1xrVhts9hU_QML-5HXzGeY01YdjQMfwZjedr36vQdsQsWfv2_TL8QaL10U-zApo2y4Tl16iHqgm5HuM0VCwVgT2qVXzTxWhNfgNoqtqcUFmXeQG04DOaXJPNoooUeRoGogrsvJCCMXszWKEBmkIFt9q_AFxJ9GsQcfM9lm1MrUjxEM2swy026-AKBwiCR2c-aLPRVX9q1uccjN9VwrPtgT-zD-eqRvnpGbSdNesvaCT3sw6FJb4WoX0wNnoF9L_Od9lwfd3RrB26iyBscYWqNYgsJ-io13bnD_NTLTxpbKVY6SS0KgHNeUcgREMOhWGvj02J9xVLT4poBu9NDnrv_xX5UIIx8AWCaVQqpWFZI5zzBJ1BUO7h-JSvc9vkFGn1p8piBRN26M4bIDLhnimWjSRqrS2qdPQLiihsXETc7wAZzE4QjOadZGH1nnNtXA0bUo8-d7zUM4igPnixym4d3nC7UdjYxtlDnvmKQvBLLFIsFzG_zY2CGdnwgtAwjl_8YsB1JF9pUexOxNVuyZKkaAKwj7eBlEKiX0C8ZxXUfQF6d2xad1SPK-GyvGl91iRm1i23_9zF-z9QfHUIZmKnAppEWu7n5LR-rabPiTuNIMvLCOhfHJJRjf2sSao6RaJq0DWLP3H2Hv8_pQsuPfNg=w1892-h1084-no)
+![Screenshot of the app](https://i.ibb.co/NW4Nf7D/app-screenshot.jpg)
 
 ### Table of Contents
 
 [What Users Can Do with CastAlleys](https://github.com/cherylz/castalleys#what-users-can-do-with-castalleys)
+
 [Technologies](https://github.com/cherylz/castalleys#technologies)
+
 [Installation](https://github.com/cherylz/castalleys#installation)
+
 [Credits](https://github.com/cherylz/castalleys#credits)
+
 [Inspirations](https://github.com/cherylz/castalleys#inspirations)
+
 [Get Support](https://github.com/cherylz/castalleys#get-support)
+
 [Behind the Scenes](https://github.com/cherylz/castalleys#behind-the-scenes)
 * [Why I Built CastAlleys](https://github.com/cherylz/castalleys#why-i-built-castalleys)
 * [User Stories](https://github.com/cherylz/castalleys#user-stories)
