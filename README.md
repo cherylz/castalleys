@@ -47,7 +47,7 @@ Just search for what you want to listen to and you are ready to play the show. Y
 
 There are many free resources that helped me learn new things and solve problems for building this project, as well as the paid resources. Below are my thanks to some of the free resource providers.
 
-_If you are reading this and you are learning to code, I hope the info below can save you some time of searching for free and good resources. Shoot me an email if you want to know about the paid resources._
+_If you are reading this and you are learning to code, I hope the info below can save you some time of searching for free and good resources. [Shoot me an email](mailto:czcodes@gmail.com) if you want to know about the paid resources._
 
 Thank you,
 * [Wenbin Fang](https://www.listennotes.com/@wenbin/), for making [Listen Notes](https://www.listennotes.com/api/) - the podcast search & directory API.
