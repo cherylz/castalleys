@@ -72,7 +72,7 @@ class Episode extends React.Component {
     this.props.updateEpisodeOnPlay(episode);
   };
 
-  updateActualDuration = (duration, episodeId) => {
+  updateActualDuration = (duration) => {
     // the duration passed in is in HH:MM:SS format
     const episodeWithActualDuration = { ...this.state.episode };
     episodeWithActualDuration.duration = duration;

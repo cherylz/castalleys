@@ -98,10 +98,14 @@ function EpisodeCardStyleA(props) {
         audioRef.current.duration &&
         formatSeconds(audioRef.current.duration) !== props.episode.duration
       ) {
-        props.updateActualDuration(
-          formatSeconds(audioRef.current.duration),
-          episodeId
-        );
+        if (props.episodeOnWhichPage === 'podcast') {
+          props.updateActualDuration(
+            formatSeconds(audioRef.current.duration),
+            episodeId
+          );
+        } else if (props.episodeOnWhichPage === 'episode') {
+          props.updateActualDuration(formatSeconds(audioRef.current.duration));
+        }
       }
     }
   }
