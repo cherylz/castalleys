@@ -10,12 +10,6 @@ class Header extends React.Component {
     this.delayedCallback = _.debounce(this.callAjax, 500);
   }
 
-  state = {
-    hideSearchbarResults: true,
-    typeaheadPodcasts: [],
-    hasMatches: true
-  };
-
   customizeColor = e => {
     const customColor = e.target.dataset.value;
     document.documentElement.style.setProperty('--custom-color', customColor);
@@ -36,18 +30,8 @@ class Header extends React.Component {
       fetch(endpoint, request)
         .then(res => res.json())
         .then(data => {
-          this.setState({
-            typeaheadPodcasts: [...data.podcasts]
-          });
-          if (this.state.typeaheadPodcasts.length) {
-            this.setState({
-              hasMatches: true
-            });
-          } else {
-            this.setState({
-              hasMatches: false
-            });
-          }
+          const hasMatches = data.podcasts.length ? true : false;
+          this.props.updateTypeaheadSearch(data.podcasts, hasMatches);
         })
         .catch(err => console.log(err));
     }
@@ -57,16 +41,9 @@ class Header extends React.Component {
     const keywords = e.target.value;
     this.props.updateKeywords(keywords);
     if (keywords === '') {
-      this.setState({
-        hideSearchbarResults: true,
-        typeaheadPodcasts: [],
-        hasMatches: true
-      });
+      this.props.cleanTypeaheadSearch();
     } else {
-      this.setState({
-        hideSearchbarResults: false,
-        typeaheadPodcasts: []
-      });
+      this.props.activateSearchbar();
     }
     this.delayedCallback(keywords); // only when we keep this function call outside the above conditional statement, the call with keywords being empty won't be called after user clears the input.
   };
@@ -78,48 +55,69 @@ class Header extends React.Component {
       keywords &&
       keywords !== this.props.currentFullQuery
     ) {
-      this.setState({
-        hideSearchbarResults: true,
-        typeaheadPodcasts: [],
-        hasMatches: true
-      });
+      this.props.cleanTypeaheadSearch();
       this.props.goToOrUpdateSearchPage(keywords);
     }
   };
 
-  resetSearchbar = () => {
-    this.setState({
-      hideSearchbarResults: true,
-      typeaheadPodcasts: [],
-      hasMatches: true
-    });
-    this.props.clearKeywordsAndCurrentFullQuery();
-  };
-
   render() {
-    const displayAndStyle = this.state.hideSearchbarResults
+    const displayAndStyle = this.props.hideSearchbarResults
       ? 'matched-container1 hidden'
       : 'matched-container1';
-    const renderPrompt = this.state.hasMatches ? (
-      <div>
-        Top matched podcasts for "{this.props.keywords}". Press{' '}
-        <code>return</code> to check matched episodes and more podcasts.
-      </div>
-    ) : (
-      <div>
-        Oops, no matched podcast found. Press <code>return</code> to check
-        matched episodes. Good luck!
-      </div>
-    );
-    const matchedPodcasts = this.state.typeaheadPodcasts;
-    let renderMatches;
+    const matchedPodcasts = this.props.typeaheadPodcasts;
+    const keywords = this.props.keywords;
+    const currentFullQuery = this.props.currentFullQuery;
 
+    let renderPrompt;
+    if (keywords) {
+      if (this.props.hasMatches) {
+        if (matchedPodcasts.length) {
+          if (keywords === currentFullQuery) {
+            renderPrompt = (
+              <div>
+                Top matched podcasts for "{this.props.keywords}". Check on the
+                page below to see matched episodes and more matched podcasts.
+              </div>
+            );
+          } else {
+            renderPrompt = (
+              <div>
+                Top matched podcasts for "{this.props.keywords}". Press{' '}
+                <code>return</code> to check matched episodes and more podcasts.
+              </div>
+            );
+          }
+        } else {
+          renderPrompt = (
+            <div>Searching podcasts for "{this.props.keywords}".</div>
+          );
+        }
+      } else {
+        if (keywords === currentFullQuery) {
+          renderPrompt = (
+            <div>
+              Oops. No matched podcast found. Check on the page below to see
+              matched episodes if any. Good luck!
+            </div>
+          );
+        } else {
+          renderPrompt = (
+            <div>
+              Oops. No matched podcast found. Press <code>return</code> to check
+              matched episodes. Good luck!
+            </div>
+          );
+        }
+      }
+    }
+
+    let renderMatches;
     if (matchedPodcasts && matchedPodcasts.length) {
       renderMatches = matchedPodcasts.map(podcast => (
         <PodcastCardStyleB
           key={podcast.id}
           podcast={podcast}
-          resetSearchbar={this.resetSearchbar}
+          resetSearchbar={this.props.resetSearchbar}
         />
       ));
     }
@@ -131,7 +129,7 @@ class Header extends React.Component {
             <Link
               to="/"
               className="prevent-tap-hl"
-              onClick={this.resetSearchbar}
+              onClick={this.props.resetSearchbar}
             >
               <span className="navbar-logo navbar-logo-bg">CastAlleys</span>
               <span className="navbar-logo navbar-logo-sm">C</span>

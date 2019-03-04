@@ -125,8 +125,12 @@ class Podcast extends React.Component {
             offsetPubDate: next_episode_pub_date
           });
         }
+        this.setState({ searchingForMore: false });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        this.setState({ searchingForMore: false });
+      });
   };
 
   callInPodcastSearch = (keywords, status) => {
@@ -178,8 +182,12 @@ class Podcast extends React.Component {
             matchedEpisodes: processedEpisodes
           });
         }
+        this.setState({ searchingForMore: false });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        this.setState({ searchingForMore: false });
+      });
   };
 
   updateEpisodeOnPlayAndMaybeActualDuration = episode => {
@@ -230,6 +238,7 @@ class Podcast extends React.Component {
   };
 
   loadMoreMatches = () => {
+    this.setState({ searchingForMore: true });
     if (!this.state.searchingInPodcast) {
       const podcastId = this.props.match.params.podcastId;
       this.searchPodcast(podcastId, '');
@@ -262,7 +271,9 @@ class Podcast extends React.Component {
       !this.state.searchingInPodcast &&
       this.state.episodes.length < this.state.podcast.total_episodes
     ) {
-      loadMoreBtn = (
+      loadMoreBtn = this.state.searchingForMore ? (
+        <button className="load-more-btn disable-load">Loading</button>
+      ) : (
         <button className="load-more-btn" onClick={this.loadMoreMatches}>
           Load More
         </button>
@@ -271,7 +282,9 @@ class Podcast extends React.Component {
       this.state.searchingInPodcast &&
       this.state.matchedEpisodes.length < this.state.totalMatches
     ) {
-      loadMoreBtn = (
+      loadMoreBtn = this.state.searchingForMore ? (
+        <button className="load-more-btn disable-load">Loading</button>
+      ) : (
         <button className="load-more-btn" onClick={this.loadMoreMatches}>
           Load More
         </button>

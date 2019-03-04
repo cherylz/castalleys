@@ -51,7 +51,7 @@ _If you are reading this and you are learning to code, I hope the info below can
 
 Thank you,
 * [Wenbin Fang](https://www.listennotes.com/@wenbin/), for making [Listen Notes](https://www.listennotes.com/api/) - the podcast search & directory API.
-* [Wes Bos](https://wesbos.com/), for teaching [ES6](https://es6.io/) and explaining how to [build 30 things with vanilla Javascript](https://javascript30.com/).
+* [Wes Bos](https://wesbos.com/), for teaching how to [build 30 things with vanilla Javascript](https://javascript30.com/).
 * [Wes Bos](https://wesbos.com/) and [Scott Tolinski](https://www.scotttolinski.com/), for hosting [Syntax.fm](http://syntax.fm/) and talking about [Pre-launch Checklist](https://syntax.fm/show/088/pre-launch-checklist) and [Workflows](https://syntax.fm/show/051/our-workflows-design-development-git-and-deployment).
 * the team behind [React](https://reactjs.org/), for sharing how to [think in React](https://reactjs.org/docs/thinking-in-react.html).
 * the team behind [React Router](https://reacttraining.com/react-router/), for sharing [Learn Once, Route Anywhere](https://www.youtube.com/watch?v=Mf0Fy8iHp8k).

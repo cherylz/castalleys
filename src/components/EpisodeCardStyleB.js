@@ -146,26 +146,20 @@ function EpisodeCardStyleB(props) {
 
   return (
     <div className="episode-preview">
-      <Link
-        to={`/podcast/${podcastId}`}
-        onClick={props.clearKeywordsAndCurrentFullQuery}
-      >
+      <Link to={`/podcast/${podcastId}`} onClick={props.resetSearchbar}>
         <img className="artwork-md" src={image} alt="podcast artwork" />
       </Link>
       <div>
         <Link
           to={`/episode/${episodeId}`}
-          onClick={props.clearKeywordsAndCurrentFullQuery}
+          onClick={props.resetSearchbar}
           className="title5"
         >
           {episodeTitle}
         </Link>
         <div>
           From{' '}
-          <Link
-            to={`/podcast/${podcastId}`}
-            onClick={props.clearKeywordsAndCurrentFullQuery}
-          >
+          <Link to={`/podcast/${podcastId}`} onClick={props.resetSearchbar}>
             {podcastTitle}
           </Link>{' '}
           by <span>{publisher}</span>

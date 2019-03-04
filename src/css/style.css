@@ -171,6 +171,14 @@ button:hover {
   color: var(--custom-color);
 }
 
+button.disable-load {
+  cursor: wait;
+}
+
+button.disable-load:hover {
+  color: #000;
+}
+
 svg {
   cursor: pointer;
 }
@@ -682,7 +690,7 @@ footer {
   overflow: scroll;
 }
 
-button.load-more-btn {
+.load-more-btn {
   font-family: 'Open Sans', sans-serif;
   font-size: 1.4rem;
   font-weight: bold;
@@ -988,7 +996,7 @@ button.load-more-btn {
     max-height: 24rem;
   }
 
-  button.load-more-btn {
+  .load-more-btn {
     margin: 20px auto 0;
     display: flex;
   }

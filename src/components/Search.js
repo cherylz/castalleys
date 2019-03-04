@@ -13,7 +13,8 @@ class Search extends React.Component {
     totalPodcastMatches: 0,
     fliter: 'episodes',
     calledFullSearchEpisodes: false,
-    calledFullSearchPodcasts: false
+    calledFullSearchPodcasts: false,
+    searchingForMore: false
   };
 
   componentDidMount() {
@@ -95,8 +96,12 @@ class Search extends React.Component {
             offsetEpisodes: data.next_offset
           });
         }
+        this.setState({ searchingForMore: false });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        this.setState({ searchingForMore: false });
+      });
   };
 
   callFullSearchPodcasts = keywords => {
@@ -129,8 +134,12 @@ class Search extends React.Component {
             offsetPodcasts: data.next_offset
           });
         }
+        this.setState({ searchingForMore: false });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        this.setState({ searchingForMore: false });
+      });
   };
 
   handleFilterChange = e => {
@@ -182,6 +191,7 @@ class Search extends React.Component {
   };
 
   loadMoreMatches = () => {
+    this.setState({ searchingForMore: true });
     if (this.state.fliter === 'episodes') {
       this.callFullSearchEpisodes(this.props.currentFullQuery, '');
     }
@@ -203,7 +213,9 @@ class Search extends React.Component {
       this.state.fliter === 'episodes' &&
       fullSearchEpisodes.length < this.state.totalEpisodeMatches
     ) {
-      loadMoreBtn = (
+      loadMoreBtn = this.state.searchingForMore ? (
+        <button className="load-more disable-load">Loading</button>
+      ) : (
         <button className="load-more" onClick={this.loadMoreMatches}>
           Load More
         </button>
@@ -212,7 +224,9 @@ class Search extends React.Component {
       this.state.fliter === 'podcasts' &&
       fullSearchPodcasts.length < this.state.totalPodcastMatches
     ) {
-      loadMoreBtn = (
+      loadMoreBtn = this.state.searchingForMore ? (
+        <button className="load-more disable-load">Loading</button>
+      ) : (
         <button className="load-more" onClick={this.loadMoreMatches}>
           Load More
         </button>
@@ -231,14 +245,12 @@ class Search extends React.Component {
           }
           updateActualDuration={this.updateActualDuration}
           updatePlaying={this.props.updatePlaying}
-          clearKeywordsAndCurrentFullQuery={
-            this.props.clearKeywordsAndCurrentFullQuery
-          }
+          resetSearchbar={this.props.resetSearchbar}
         />
       ));
     } else if (this.state.calledFullSearchEpisodes) {
       renderEpisodes = (
-        <div className="no-match-prompt">Oops... No matched results found.</div>
+        <div className="no-match-prompt">Oops... No matched result found.</div>
       );
     }
 
@@ -247,14 +259,12 @@ class Search extends React.Component {
         <PodcastCardStyleC
           podcast={match}
           key={match.id}
-          clearKeywordsAndCurrentFullQuery={
-            this.props.clearKeywordsAndCurrentFullQuery
-          }
+          resetSearchbar={this.props.resetSearchbar}
         />
       ));
     } else if (this.state.calledFullSearchPodcasts) {
       renderPodcasts = (
-        <div className="no-match-prompt">Oops... No matched results found.</div>
+        <div className="no-match-prompt">Oops... No matched result found.</div>
       );
     }
 

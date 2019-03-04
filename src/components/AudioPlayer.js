@@ -119,7 +119,7 @@ class AudioPlayer extends React.Component {
             <div className="episode-info">
               <Link
                 to={`/episode/${episodeId}`}
-                onClick={this.props.clearKeywordsAndCurrentFullQuery}
+                onClick={this.props.resetSearchbar}
               >
                 <img
                   className="artwork-in-player"
@@ -130,7 +130,7 @@ class AudioPlayer extends React.Component {
               <div className="titles-in-player">
                 <Link
                   to={`/episode/${episodeId}`}
-                  onClick={this.props.clearKeywordsAndCurrentFullQuery}
+                  onClick={this.props.resetSearchbar}
                   className="title1"
                 >
                   {episodeTitle}
@@ -138,7 +138,7 @@ class AudioPlayer extends React.Component {
                 <br />
                 <Link
                   to={`/podcast/${podcastId}`}
-                  onClick={this.props.clearKeywordsAndCurrentFullQuery}
+                  onClick={this.props.resetSearchbar}
                   className="title2"
                 >
                   {podcastTitle}

@@ -11,6 +11,9 @@ import NotFound from './NotFound';
 class App extends React.Component {
   state = {
     customColor: '#ce0925',
+    hideSearchbarResults: true,
+    typeaheadPodcasts: [],
+    hasMatches: true,
     keywords: '',
     currentFullQuery: '',
     hidePlayer: true,
@@ -84,12 +87,35 @@ class App extends React.Component {
     this.setState({ customColor });
   };
 
+  activateSearchbar = () => {
+    this.setState({
+      hideSearchbarResults: false,
+      typeaheadPodcasts: [],
+      hasMatches: true
+    });
+  };
+
+  cleanTypeaheadSearch = () => {
+    this.setState({
+      hideSearchbarResults: true,
+      typeaheadPodcasts: [],
+      hasMatches: true
+    });
+  };
+
   updateKeywords = keywords => {
     this.setState({ keywords });
   };
 
-  clearKeywordsAndCurrentFullQuery = () => {
+  updateTypeaheadSearch = (typeaheadPodcasts, hasMatches) => {
+    this.setState({ typeaheadPodcasts, hasMatches });
+  };
+
+  resetSearchbar = () => {
     this.setState({
+      hideSearchbarResults: true,
+      typeaheadPodcasts: [],
+      hasMatches: true,
       keywords: '',
       currentFullQuery: ''
     });
@@ -166,15 +192,19 @@ class App extends React.Component {
       <BrowserRouter>
         <div>
           <Header
-            keywords={this.state.keywords}
-            currentFullQuery={this.state.currentFullQuery}
             customColor={this.state.customColor}
-            updateCustomColor={this.updateCustomColor}
+            hideSearchbarResults={this.state.hideSearchbarResults}
+            typeaheadPodcasts={this.state.typeaheadPodcasts}
+            keywords={this.state.keywords}
+            hasMatches={this.state.hasMatches}
+            currentFullQuery={this.state.currentFullQuery}
+            activateSearchbar={this.activateSearchbar}
+            cleanTypeaheadSearch={this.cleanTypeaheadSearch}
             updateKeywords={this.updateKeywords}
+            updateTypeaheadSearch={this.updateTypeaheadSearch}
             goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
-            clearKeywordsAndCurrentFullQuery={
-              this.clearKeywordsAndCurrentFullQuery
-            }
+            resetSearchbar={this.resetSearchbar}
+            updateCustomColor={this.updateCustomColor}
           />
           <Switch>
             <Route
@@ -203,9 +233,7 @@ class App extends React.Component {
                     this.updateActualDurationOfEpisodeOnPlay
                   }
                   updatePlaying={this.updatePlaying}
-                  clearKeywordsAndCurrentFullQuery={
-                    this.clearKeywordsAndCurrentFullQuery
-                  }
+                  resetSearchbar={this.resetSearchbar}
                 />
               )}
             />
@@ -261,9 +289,7 @@ class App extends React.Component {
             onClick={this.updatePlaybackControls}
             removePlayer={this.removePlayer}
             onEnded={this.handleEnded}
-            clearKeywordsAndCurrentFullQuery={
-              this.clearKeywordsAndCurrentFullQuery
-            }
+            resetSearchbar={this.resetSearchbar}
           />
         </div>
       </BrowserRouter>
