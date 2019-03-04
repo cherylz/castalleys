@@ -10,6 +10,16 @@ export function formatSeconds(timeInSeconds) {
   return pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2);
 }
 
+// convert hh:mm:ss in string to seconds in number
+export function convertTimeString(timeInString) {
+  const timeInArray = timeInString.split(':');
+  return (
+    parseInt(timeInArray[0]) * 3600 +
+    parseInt(timeInArray[1]) * 60 +
+    parseInt(timeInArray[2])
+  );
+}
+
 // format milliseconds to date format such as Fri, Dec 7, 2018
 export function msToDate(ms) {
   const date = new Date(ms);

@@ -147,6 +147,10 @@ class App extends React.Component {
     this.setState({
       episodeOnPlay: episodeOnPlayWithActualDuration
     });
+    localStorage.setItem(
+      'episodeOnPlay',
+      JSON.stringify(episodeOnPlayWithActualDuration)
+    );
   };
 
   updatePlaying = () => {

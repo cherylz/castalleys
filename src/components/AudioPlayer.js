@@ -1,20 +1,51 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatSeconds } from '../helpers';
+import { formatSeconds, convertTimeString } from '../helpers';
 
 class AudioPlayer extends React.Component {
   audio = React.createRef();
   progressBar = React.createRef();
-  progressBarFilled = React.createRef();
-  currentTime = React.createRef();
+
+  state = {
+    timePlayed: '--:--:--',
+    percent: 0,
+    playFromLastTime: false
+  };
+
+  componentDidMount() {
+    const timePlayedRef = localStorage.getItem('timePlayed');
+    const episodeOnPlayRef = localStorage.getItem('episodeOnPlay');
+    if (timePlayedRef && timePlayedRef !== '0' && episodeOnPlayRef) {
+      const duration = convertTimeString(JSON.parse(episodeOnPlayRef).duration);
+      const percent = (JSON.parse(timePlayedRef) / duration) * 100;
+      this.setState({
+        timePlayed: formatSeconds(JSON.parse(timePlayedRef)),
+        percent,
+        playFromLastTime: true
+      });
+    }
+  }
 
   componentDidUpdate(prevProps) {
     if (this.props.episodeOnPlay && !this.props.hidePlayer) {
       const audio = this.audio.current;
       const method = this.props.playing ? 'play' : 'pause';
       audio[method]();
+      if (this.state.playFromLastTime) {
+        // this is to trigger the execution of this.updateCurrentTime in the background to get two benefits: 1) pre-load the audio's current time, 2) set this.state.playFromLastTime to false timely so the current time won't be set to the stored time when the page is loaded with a stored episode on play but the user clicks another episode to play.
+        audio.currentTime = JSON.parse(localStorage.getItem('timePlayed'));
+      }
       if (this.props.speed !== prevProps.speed) {
         audio.playbackRate = this.props.speed;
+      }
+      if (
+        prevProps.episodeOnPlay.episodeId &&
+        this.props.episodeOnPlay.episodeId !== prevProps.episodeOnPlay.episodeId
+      ) {
+        this.setState({
+          timePlayed: '--:--:--',
+          percent: 0
+        });
       }
     }
   }
@@ -50,17 +81,32 @@ class AudioPlayer extends React.Component {
 
   updateCurrentTime = () => {
     const audio = this.audio.current;
-    const progressBarFilled = this.progressBarFilled.current;
-    const currentTime = this.currentTime.current;
-    const percent = (audio.currentTime / audio.duration) * 100;
-    progressBarFilled.style.flexBasis = `${percent}%`;
-    currentTime.textContent = formatSeconds(audio.currentTime);
+    if (this.state.playFromLastTime) {
+      // this is to update the current time of the audio based on the timePlayed stored in local storage from last time (if any) so that when the play button is clicked, the audio can play from the right position, instead of from the beginning.
+      audio.currentTime = JSON.parse(localStorage.getItem('timePlayed'));
+      this.setState({
+        playFromLastTime: false
+      });
+    } else {
+      const percent = (audio.currentTime / audio.duration) * 100 || 0;
+      this.setState({
+        timePlayed: formatSeconds(audio.currentTime),
+        percent
+      });
+      localStorage.setItem('timePlayed', audio.currentTime);
+    }
   };
 
   stopPlayingAndRemovePlayer = () => {
     const audio = this.audio.current;
     audio['pause']();
     this.props.removePlayer();
+    localStorage.removeItem('timePlayed');
+    this.setState({
+      timePlayed: '--:--:--',
+      percent: 0,
+      playFromLastTime: false
+    });
   };
 
   render() {
@@ -70,6 +116,8 @@ class AudioPlayer extends React.Component {
     ) {
       return null;
     } else {
+      const timePlayed = this.state.timePlayed;
+      const percent = this.state.percent;
       const speed = this.props.speed;
       const {
         image,
@@ -226,13 +274,13 @@ class AudioPlayer extends React.Component {
                   onMouseUp={() => (mousedown = false)}
                 >
                   <div
-                    ref={this.progressBarFilled}
                     className="progressbar-filled"
+                    style={{ flexBasis: percent + '%' }}
                   />
                 </div>
                 <div className="timer">
                   <span ref={this.currentTime} id="time-elapsed">
-                    --:--:--
+                    {timePlayed}
                   </span>
                   <span id="total-time">{duration}</span>
                 </div>
