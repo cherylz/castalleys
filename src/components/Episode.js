@@ -5,6 +5,11 @@ import { apiKey } from '../apiKey';
 import { formatSeconds, msToDate } from '../helpers';
 
 class Episode extends React.Component {
+  constructor(props) {
+    super(props);
+    this.fetchData = this.fetchData.bind(this);
+  }
+
   state = {
     podcast: {},
     episode: {}
@@ -21,23 +26,7 @@ class Episode extends React.Component {
           Accept: 'application/json'
         }
       };
-      fetch(endpoint, request)
-        .then(res => res.json())
-        .then(data => {
-          const { podcast, ...rest } = data;
-          const processedEpisode = { ...rest };
-          delete processedEpisode.audio_length;
-          delete processedEpisode.pub_date_ms;
-          processedEpisode.duration = rest.audio
-            ? formatSeconds(rest.audio_length)
-            : '(no audio)';
-          processedEpisode.date = msToDate(rest.pub_date_ms);
-          this.setState({
-            podcast: podcast,
-            episode: processedEpisode
-          });
-        })
-        .catch(err => console.log(err));
+      this.fetchData(endpoint, request);
     } else {
       this.props.history.push(`/404`);
     }
@@ -61,6 +50,28 @@ class Episode extends React.Component {
     }
   }
 
+  // notes to developers: here is the only place in this project that async/await is used for demo purpose. instead, promises is used to handle most of the api requests in this project. while i understand async/await is neat with solid reasons, in this particular case, i chose promises because with promises, i don't have to bind `this` in a constructor.
+  async fetchData(endpoint, request) {
+    try {
+      const res = await fetch(endpoint, request);
+      const data = await res.json();
+      const { podcast, ...rest } = data;
+      const processedEpisode = { ...rest };
+      delete processedEpisode.audio_length;
+      delete processedEpisode.pub_date_ms;
+      processedEpisode.duration = rest.audio
+        ? formatSeconds(rest.audio_length)
+        : '(no audio)';
+      processedEpisode.date = msToDate(rest.pub_date_ms);
+      this.setState({
+        podcast: podcast,
+        episode: processedEpisode
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   updateEpisodeOnPlayAndMaybeActualDuration = episode => {
     // Step 1: update the actual duration of the episode on play in this.state.episode
     const episodeWithActualDuration = { ...this.state.episode };
@@ -72,7 +83,7 @@ class Episode extends React.Component {
     this.props.updateEpisodeOnPlay(episode);
   };
 
-  updateActualDuration = (duration) => {
+  updateActualDuration = duration => {
     // the duration passed in is in HH:MM:SS format
     const episodeWithActualDuration = { ...this.state.episode };
     episodeWithActualDuration.duration = duration;
