@@ -31,12 +31,12 @@ class Podcast extends React.Component {
     if (!prevState.episodes.length && this.props.episodeOnPlayId) {
       const ids = this.state.episodes.map(item => item.id);
       if (ids.indexOf(this.props.episodeOnPlayId) !== -1) {
-        const episodesWithActualDuration = this.state.episodes.map(item => {
-          if (item.id === this.props.episodeOnPlayId) {
-            item.duration = this.props.episodeOnPlayDuration;
-          }
-          return item;
-        });
+        const episodesWithActualDuration = this.state.episodes.map(
+          item =>
+            item.id === this.props.episodeOnPlayId
+              ? { ...item, duration: this.props.episodeOnPlayDuration }
+              : item
+        );
         this.setState({
           episodes: episodesWithActualDuration
         });
@@ -50,12 +50,10 @@ class Podcast extends React.Component {
       const ids = this.state.matchedEpisodes.map(item => item.id);
       if (ids.indexOf(this.props.episodeOnPlayId) !== -1) {
         const episodesWithActualDuration = this.state.matchedEpisodes.map(
-          item => {
-            if (item.id === this.props.episodeOnPlayId) {
-              item.duration = this.props.episodeOnPlayDuration;
-            }
-            return item;
-          }
+          item =>
+            item.id === this.props.episodeOnPlayId
+              ? { ...item, duration: this.props.episodeOnPlayDuration }
+              : item
         );
         this.setState({
           matchedEpisodes: episodesWithActualDuration
@@ -104,14 +102,14 @@ class Podcast extends React.Component {
       .then(data => {
         const { episodes, next_episode_pub_date, ...rest } = data;
         const processedEpisodes = episodes.map(episode => {
-          const processedEpisode = { ...episode };
-          delete processedEpisode.audio_length;
-          delete processedEpisode.pub_date_ms;
-          processedEpisode.duration = episode.audio
-            ? formatSeconds(episode.audio_length)
-            : '(no audio)';
-          processedEpisode.date = msToDate(episode.pub_date_ms);
-          return processedEpisode;
+          const { audio_length, pub_date_ms, ...episodeParts } = episode;
+          return {
+            ...episodeParts,
+            duration: episode.audio
+              ? formatSeconds(audio_length)
+              : '(no audio)',
+            date: msToDate(pub_date_ms)
+          };
         });
         if (this.state.episodes.length === 0) {
           this.setState({
@@ -149,14 +147,12 @@ class Podcast extends React.Component {
       .then(res => res.json())
       .then(data => {
         const processedEpisodes = data.results.map(episode => {
-          const processedEpisode = { ...episode };
-          delete processedEpisode.audio_length;
-          delete processedEpisode.pub_date_ms;
-          processedEpisode.duration = episode.audio
-            ? episode.audio_length
-            : '(no audio)';
-          processedEpisode.date = msToDate(episode.pub_date_ms);
-          return processedEpisode;
+          const { audio_length, pub_date_ms, ...episodeParts } = episode;
+          return {
+            ...episodeParts,
+            duration: episode.audio ? audio_length : '(no audio)',
+            date: msToDate(pub_date_ms)
+          };
         });
         if (!this.state.searchingInPodcast) {
           this.setState({
@@ -195,12 +191,12 @@ class Podcast extends React.Component {
     const episodesToMap = this.state.searchingInPodcast
       ? this.state.matchedEpisodes
       : this.state.episodes;
-    const episodesWithActualDuration = episodesToMap.map(item => {
-      if (item.id === episode.episodeId) {
-        item.duration = episode.duration;
-      }
-      return item;
-    });
+    const episodesWithActualDuration = episodesToMap.map(
+      item =>
+        item.id === episode.episodeId
+          ? { ...item, duration: episode.duration }
+          : item
+    );
     if (!this.state.searchingInPodcast) {
       this.setState({
         episodes: episodesWithActualDuration
@@ -219,12 +215,9 @@ class Podcast extends React.Component {
     const episodesToMap = this.state.searchingInPodcast
       ? this.state.matchedEpisodes
       : this.state.episodes;
-    const episodesWithActualDuration = episodesToMap.map(item => {
-      if (item.id === episodeId) {
-        item.duration = duration;
-      }
-      return item;
-    });
+    const episodesWithActualDuration = episodesToMap.map(
+      item => (item.id === episodeId ? { ...item, duration } : item)
+    );
     if (!this.state.searchingInPodcast) {
       this.setState({
         episodes: episodesWithActualDuration

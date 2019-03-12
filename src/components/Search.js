@@ -29,12 +29,10 @@ class Search extends React.Component {
       const ids = this.state.fullSearchEpisodes.map(item => item.id);
       if (ids.indexOf(this.props.episodeOnPlayId) !== -1) {
         const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(
-          item => {
-            if (item.id === this.props.episodeOnPlayId) {
-              item.audio_length = this.props.episodeOnPlayDuration;
-            }
-            return item;
-          }
+          item =>
+            item.id === this.props.episodeOnPlayId
+              ? { ...item, audio_length: this.props.episodeOnPlayDuration }
+              : item
         );
         this.setState({
           fullSearchEpisodes: fullSearchEpisodesWithActualDuration
@@ -160,12 +158,10 @@ class Search extends React.Component {
   updateEpisodeOnPlayAndMaybeActualDuration = episode => {
     // Step 1: update the actual duration of the episode on play in this.state.fullSearchEpisodes
     const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(
-      item => {
-        if (item.id === episode.episodeId) {
-          item.audio_length = episode.duration;
-        }
-        return item;
-      }
+      item =>
+        item.id === episode.episodeId
+          ? { ...item, audio_length: episode.duration }
+          : item
     );
     this.setState({
       fullSearchEpisodes: fullSearchEpisodesWithActualDuration
@@ -177,12 +173,8 @@ class Search extends React.Component {
   updateActualDuration = (duration, episodeId) => {
     // the duration passed in is in HH:MM:SS format
     const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(
-      item => {
-        if (item.id === episodeId) {
-          item.audio_length = duration;
-        }
-        return item;
-      }
+      item =>
+        item.id === episodeId ? { ...item, audio_length: duration } : item
     );
     this.setState({
       fullSearchEpisodes: fullSearchEpisodesWithActualDuration

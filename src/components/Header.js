@@ -164,45 +164,55 @@ class Header extends React.Component {
               <path d="M0 0h24v24H0z" fill="none" />
             </svg>
             <div className="color-picker">
-              <div>
+              <div className="color-option">
                 <span
                   onClick={this.customizeColor}
                   data-value="#ce0925"
                   className="dot red"
-                />{' '}
-                Mars Red
+                />
+                <span onClick={this.customizeColor} data-value="#ce0925">
+                  Mars Red
+                </span>
               </div>
-              <div>
+              <div className="color-option">
                 <span
                   onClick={this.customizeColor}
                   data-value="#dd4124"
                   className="dot orange"
-                />{' '}
-                Warm Orange
+                />
+                <span onClick={this.customizeColor} data-value="#dd4124">
+                  Warm Orange
+                </span>
               </div>
-              <div>
+              <div className="color-option">
                 <span
                   onClick={this.customizeColor}
                   data-value="#009874"
                   className="dot emerald"
-                />{' '}
-                Lively Emerald
+                />
+                <span onClick={this.customizeColor} data-value="#009874">
+                  Lively Emerald
+                </span>
               </div>
-              <div>
+              <div className="color-option">
                 <span
                   onClick={this.customizeColor}
                   data-value="#ff6f61"
                   className="dot coral"
-                />{' '}
-                Playful Coral
+                />
+                <span onClick={this.customizeColor} data-value="#ff6f61">
+                  Playful Coral
+                </span>
               </div>
-              <div>
+              <div className="color-option">
                 <span
                   onClick={this.customizeColor}
                   data-value="#604c8d"
                   className="dot purple"
-                />{' '}
-                Mystical Purple
+                />
+                <span onClick={this.customizeColor} data-value="#604c8d">
+                  Mystical Purple
+                </span>
               </div>
             </div>
           </div>

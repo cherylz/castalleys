@@ -62,8 +62,8 @@ function EpisodeCardStyleA(props) {
       episodeId !== props.episodeOnPlayId
         ? playIcon
         : props.playing
-        ? pauseIcon
-        : playIcon;
+          ? pauseIcon
+          : playIcon;
   }
 
   function createDescMarkup() {

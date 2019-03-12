@@ -383,14 +383,20 @@ header {
   font-size: 1.2rem;
 }
 
+.color-option > * {
+  cursor: pointer;
+}
+
+.color-option > *:last-child {
+  padding-left: 6px;
+}
+
 .dot {
   height: 2rem;
   width: 2rem;
   border-radius: 50%;
   display: inline-block;
   margin-left: 10px;
-  margin-right: 6px;
-  cursor: pointer;
 }
 
 .dot.red {
