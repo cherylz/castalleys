@@ -15,7 +15,9 @@ class Home extends React.Component {
           <span>Just search and play.</span>
           <span>Wander around the alleys of podcasts.</span>
         </div>
-        <footer>
+        <footer
+          style={{ marginBottom: this.props.hidePlayer ? '50px' : '130px' }}
+        >
           <span>
             This is a fun project built by{' '}
             <a
