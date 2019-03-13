@@ -1,15 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import _ from 'lodash';
 import PodcastCardStyleB from './PodcastCardStyleB';
 import { apiKey } from '../apiKey';
 
 class Header extends React.Component {
-  constructor(props) {
-    super(props);
-    this.delayedCallback = _.debounce(this.callAjax, 500);
-  }
-
   customizeColor = e => {
     const customColor = e.target.dataset.value;
     document.documentElement.style.setProperty('--custom-color', customColor);
@@ -17,23 +11,26 @@ class Header extends React.Component {
     localStorage.setItem('customColor', customColor);
   };
 
-  callAjax = keywords => {
+  debouncedTypeaheadSearch = keywords => {
     if (keywords) {
-      const endpoint = `https://api.listennotes.com/api/v1/typeahead?show_podcasts=1&q=%22${keywords}%22`;
-      const request = {
-        method: 'GET',
-        headers: {
-          'X-RapidAPI-Key': apiKey,
-          Accept: 'application/json'
-        }
-      };
-      fetch(endpoint, request)
-        .then(res => res.json())
-        .then(data => {
-          const hasMatches = data.podcasts.length ? true : false;
-          this.props.updateTypeaheadSearch(data.podcasts, hasMatches);
-        })
-        .catch(err => console.log(err));
+      clearTimeout(this.lastCallTimer);
+      this.lastCallTimer = setTimeout(() => {
+        const endpoint = `https://api.listennotes.com/api/v1/typeahead?show_podcasts=1&q=%22${keywords}%22`;
+        const request = {
+          method: 'GET',
+          headers: {
+            'X-RapidAPI-Key': apiKey,
+            Accept: 'application/json'
+          }
+        };
+        fetch(endpoint, request)
+          .then(res => res.json())
+          .then(data => {
+            const hasMatches = data.podcasts.length ? true : false;
+            this.props.updateTypeaheadSearch(data.podcasts, hasMatches);
+          })
+          .catch(err => console.log(err));
+      }, 500);
     }
   };
 
@@ -45,7 +42,7 @@ class Header extends React.Component {
     } else {
       this.props.activateSearchbar();
     }
-    this.delayedCallback(keywords); // only when we keep this function call outside the above conditional statement, the call with keywords being empty won't be called after user clears the input.
+    this.debouncedTypeaheadSearch(keywords); // only when we keep this function call outside the above conditional statement, the call with keywords being empty won't be called after user clears the input.
   };
 
   handleKeyUp = e => {
