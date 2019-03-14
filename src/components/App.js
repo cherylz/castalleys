@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Header from './Header';
 import AudioPlayer from './AudioPlayer';
 import Home from './Home';
+import StarredPodcasts from './StarredPodcasts';
 import Search from './Search';
 import Podcast from './Podcast';
 import Episode from './Episode';
@@ -218,6 +219,15 @@ class App extends React.Component {
               )}
             />
             <Route
+              path="/me/starred-podcasts"
+              render={props => (
+                <StarredPodcasts
+                  {...props}
+                  currentFullQuery={this.state.currentFullQuery}
+                />
+              )}
+            />
+            <Route
               path="/search/:keywords"
               render={props => (
                 <Search
@@ -245,6 +255,7 @@ class App extends React.Component {
                   episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                   episodeOnPlayDuration={this.state.episodeOnPlay.duration}
                   playing={this.state.playing}
+                  customColor={this.state.customColor}
                   updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                   updateActualDurationOfEpisodeOnPlay={
                     this.updateActualDurationOfEpisodeOnPlay
@@ -262,6 +273,7 @@ class App extends React.Component {
                   episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                   episodeOnPlayDuration={this.state.episodeOnPlay.duration}
                   playing={this.state.playing}
+                  customColor={this.state.customColor}
                   updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                   updateActualDurationOfEpisodeOnPlay={
                     this.updateActualDurationOfEpisodeOnPlay

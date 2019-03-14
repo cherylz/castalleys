@@ -50,21 +50,67 @@ class Episode extends React.Component {
     }
   }
 
+  // it's exactly the same code as in Podcast.js
+  markStarredOrUnstarred = podcast => {
+    const starredPodcastsRef = localStorage.getItem('starredPodcasts');
+    if (starredPodcastsRef && starredPodcastsRef !== '[]') {
+      const starredPodcastsIds = JSON.parse(starredPodcastsRef).map(
+        podcast => podcast.id
+      );
+      return starredPodcastsIds.indexOf(podcast.id) !== -1
+        ? { ...podcast, starred: true }
+        : { ...podcast, starred: false };
+    }
+    return { ...podcast, starred: false };
+  };
+
+  // it's exactly the same code as in Podcast.js
+  starPodcast = () => {
+    // update the starred status in this.state.podcast
+    const starredPodcast = { ...this.state.podcast, starred: true };
+    this.setState({ podcast: starredPodcast });
+
+    // add the newly starred podcast to localStorage
+    const { image, title, description: desc, publisher, id } = starredPodcast;
+    const processedPodcast = { image, title, desc, publisher, id };
+    const starredPodcastsRef = localStorage.getItem('starredPodcasts');
+    if (starredPodcastsRef && starredPodcastsRef !== '[]') {
+      const updated = JSON.parse(starredPodcastsRef);
+      updated.push(processedPodcast);
+      localStorage.setItem('starredPodcasts', JSON.stringify(updated));
+    } else {
+      localStorage.setItem(
+        'starredPodcasts',
+        JSON.stringify(Array.of(processedPodcast))
+      );
+    }
+  };
+
+  // it's exactly the same code as in Podcast.js
+  unstarPodcast = () => {
+    // update the unstarred status in this.state.podcast
+    const unstarredPodcast = { ...this.state.podcast, starred: false };
+    this.setState({ podcast: unstarredPodcast });
+
+    // remove the unstarred podcast from localStorage
+    const lastStored = JSON.parse(localStorage.getItem('starredPodcasts'));
+    const updated = lastStored.filter(item => item.id !== unstarredPodcast.id);
+    localStorage.setItem('starredPodcasts', JSON.stringify(updated));
+  };
+
   // notes to developers: here is the only place in this project that async/await is used for demo purpose. instead, promises is used to handle most of the api requests in this project. while i understand async/await is neat with solid reasons, in this particular case, i chose promises because with promises, i don't have to bind `this` in a constructor.
   async fetchData(endpoint, request) {
     try {
       const res = await fetch(endpoint, request);
       const data = await res.json();
-      const { podcast, ...rest } = data;
-      const processedEpisode = { ...rest };
-      delete processedEpisode.audio_length;
-      delete processedEpisode.pub_date_ms;
-      processedEpisode.duration = rest.audio
-        ? formatSeconds(rest.audio_length)
-        : '(no audio)';
-      processedEpisode.date = msToDate(rest.pub_date_ms);
+      const { podcast, audio_length, pub_date_ms, ...rest } = data;
+      const processedEpisode = {
+        ...rest,
+        duration: rest.audio ? formatSeconds(audio_length) : '(no audio)',
+        date: msToDate(pub_date_ms)
+      };
       this.setState({
-        podcast: podcast,
+        podcast: this.markStarredOrUnstarred(podcast),
         episode: processedEpisode
       });
     } catch (err) {
@@ -107,7 +153,13 @@ class Episode extends React.Component {
     if (Object.keys(podcast).length) {
       loadingPromptWhenNeeded = '';
       renderPodcastInfo = (
-        <PodcastCardStyleA podcastOnWhichPage="episode" podcast={podcast} />
+        <PodcastCardStyleA
+          podcastOnWhichPage="episode"
+          podcast={podcast}
+          customColor={this.props.customColor}
+          starPodcast={this.starPodcast}
+          unstarPodcast={this.unstarPodcast}
+        />
       );
     }
 

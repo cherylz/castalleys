@@ -10,11 +10,11 @@ function PodcastCardStyleB(props) {
   } = props.podcast;
 
   return (
-    <div className="show-preview">
+    <div className="show-preview-1">
       <Link to={`/podcast/${id}`} onClick={props.resetSearchbar}>
         <img className="artwork-sm" src={image} alt="podcast artwork" />
       </Link>
-      <div>
+      <div className="show-preview-info">
         <Link
           to={`/podcast/${id}`}
           onClick={props.resetSearchbar}

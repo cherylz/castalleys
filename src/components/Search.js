@@ -102,6 +102,67 @@ class Search extends React.Component {
       });
   };
 
+  starPodcast = starredPodcast => {
+    // update the starred status in this.state.fullSearchPodcasts
+    const processedPodcasts = this.state.fullSearchPodcasts.map(
+      item => (item.id === starredPodcast.id ? starredPodcast : item)
+    );
+    this.setState({ fullSearchPodcasts: processedPodcasts });
+
+    // add the newly starred podcast to localStorage
+    const {
+      image,
+      title_original: title,
+      description_original: desc,
+      publisher_original: publisher,
+      id
+    } = starredPodcast;
+    const processedPodcast = { image, title, desc, publisher, id };
+    const starredPodcastsRef = localStorage.getItem('starredPodcasts');
+    if (starredPodcastsRef && starredPodcastsRef !== '[]') {
+      const updated = JSON.parse(starredPodcastsRef);
+      updated.push(processedPodcast);
+      localStorage.setItem('starredPodcasts', JSON.stringify(updated));
+    } else {
+      localStorage.setItem(
+        'starredPodcasts',
+        JSON.stringify(Array.of(processedPodcast))
+      );
+    }
+  };
+
+  unstarPodcast = unstarredPodcast => {
+    // update the unstarred status in this.state.fullSearchPodcasts
+    const processedPodcasts = this.state.fullSearchPodcasts.map(
+      item => (item.id === unstarredPodcast.id ? unstarredPodcast : item)
+    );
+    this.setState({ fullSearchPodcasts: processedPodcasts });
+
+    // remove the unstarred podcast from localStorage
+    const lastStored = JSON.parse(localStorage.getItem('starredPodcasts'));
+    const updated = lastStored.filter(item => item.id !== unstarredPodcast.id);
+    localStorage.setItem('starredPodcasts', JSON.stringify(updated));
+  };
+
+  markStarredOrUnstarred = podcasts => {
+    const starredPodcastsRef = localStorage.getItem('starredPodcasts');
+    if (starredPodcastsRef && starredPodcastsRef !== '[]') {
+      const starredPodcastsIds = JSON.parse(starredPodcastsRef).map(
+        podcast => podcast.id
+      );
+      return podcasts.map(
+        podcast =>
+          starredPodcastsIds.indexOf(podcast.id) !== -1
+            ? { ...podcast, starred: true }
+            : { ...podcast, starred: false }
+      );
+    } else {
+      return podcasts.map(podcast => {
+        return { ...podcast, starred: false };
+      });
+    }
+  };
+
   callFullSearchPodcasts = keywords => {
     const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=podcast&offset=${
       this.state.offsetPodcasts
@@ -118,7 +179,7 @@ class Search extends React.Component {
       .then(data => {
         if (!this.state.fullSearchPodcasts.length) {
           this.setState({
-            fullSearchPodcasts: [...data.results],
+            fullSearchPodcasts: this.markStarredOrUnstarred(data.results),
             offsetPodcasts: data.next_offset,
             totalPodcastMatches: data.total,
             calledFullSearchPodcasts: true
@@ -127,7 +188,7 @@ class Search extends React.Component {
           this.setState({
             fullSearchPodcasts: [
               ...this.state.fullSearchPodcasts,
-              ...data.results
+              ...this.markStarredOrUnstarred(data.results)
             ],
             offsetPodcasts: data.next_offset
           });
@@ -252,6 +313,8 @@ class Search extends React.Component {
           podcast={match}
           key={match.id}
           resetSearchbar={this.props.resetSearchbar}
+          starPodcast={this.starPodcast}
+          unstarPodcast={this.unstarPodcast}
         />
       ));
     } else if (this.state.calledFullSearchPodcasts) {

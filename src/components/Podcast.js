@@ -83,6 +83,54 @@ class Podcast extends React.Component {
     }
   }
 
+  // it's exactly the same code as in Episode.js
+  markStarredOrUnstarred = podcast => {
+    const starredPodcastsRef = localStorage.getItem('starredPodcasts');
+    if (starredPodcastsRef && starredPodcastsRef !== '[]') {
+      const starredPodcastsIds = JSON.parse(starredPodcastsRef).map(
+        podcast => podcast.id
+      );
+      return starredPodcastsIds.indexOf(podcast.id) !== -1
+        ? { ...podcast, starred: true }
+        : { ...podcast, starred: false };
+    }
+    return { ...podcast, starred: false };
+  };
+
+  // it's exactly the same code as in Episode.js
+  starPodcast = () => {
+    // update the starred status in this.state.podcast
+    const starredPodcast = { ...this.state.podcast, starred: true };
+    this.setState({ podcast: starredPodcast });
+
+    // add the newly starred podcast to localStorage
+    const { image, title, description: desc, publisher, id } = starredPodcast;
+    const processedPodcast = { image, title, desc, publisher, id };
+    const starredPodcastsRef = localStorage.getItem('starredPodcasts');
+    if (starredPodcastsRef && starredPodcastsRef !== '[]') {
+      const updated = JSON.parse(starredPodcastsRef);
+      updated.push(processedPodcast);
+      localStorage.setItem('starredPodcasts', JSON.stringify(updated));
+    } else {
+      localStorage.setItem(
+        'starredPodcasts',
+        JSON.stringify(Array.of(processedPodcast))
+      );
+    }
+  };
+
+  // it's exactly the same code as in Episode.js
+  unstarPodcast = () => {
+    // update the unstarred status in this.state.podcast
+    const unstarredPodcast = { ...this.state.podcast, starred: false };
+    this.setState({ podcast: unstarredPodcast });
+
+    // remove the unstarred podcast from localStorage
+    const lastStored = JSON.parse(localStorage.getItem('starredPodcasts'));
+    const updated = lastStored.filter(item => item.id !== unstarredPodcast.id);
+    localStorage.setItem('starredPodcasts', JSON.stringify(updated));
+  };
+
   searchPodcast = (podcastId, status) => {
     const endpoint =
       status === 'first round'
@@ -113,7 +161,7 @@ class Podcast extends React.Component {
         });
         if (this.state.episodes.length === 0) {
           this.setState({
-            podcast: rest,
+            podcast: this.markStarredOrUnstarred(rest),
             episodes: processedEpisodes,
             offsetPubDate: next_episode_pub_date
           });
@@ -291,9 +339,12 @@ class Podcast extends React.Component {
           podcastOnWhichPage="podcast"
           podcast={this.state.podcast}
           query={this.state.query}
+          customColor={this.props.customColor}
           callInPodcastSearch={this.callInPodcastSearch}
           updateQueryAndMatchedResults={this.updateQueryAndMatchedResults}
           resetSearch={this.resetSearch}
+          starPodcast={this.starPodcast}
+          unstarPodcast={this.unstarPodcast}
         />
       );
     }

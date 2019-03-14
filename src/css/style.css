@@ -773,16 +773,9 @@ footer {
 
 /* Style PodcastCardStyleB.js */
 
-.show-preview {
+.show-preview-1 {
   display: flex;
   margin: 20px;
-}
-
-.show-preview > div:last-child {
-  display: flex;
-  flex-direction: column;
-  padding-left: 30px;
-  width: 90%;
 }
 
 .artwork-sm {
@@ -790,15 +783,36 @@ footer {
   height: auto;
 }
 
+.show-preview-1 > .show-preview-info {
+  display: flex;
+  flex-direction: column;
+  padding-left: 30px;
+  width: 90%;
+}
+
 /* Style PodcastCardStyleC.js */
+
+.show-preview-2 {
+  display: flex;
+  align-items: center;
+  margin: 20px;
+}
+
+.show-preview-2 > div:first-child {
+  margin-right: 25px;
+}
 
 .artwork-md {
   width: 70px;
   height: auto;
 }
 
-.show-preview > .align {
+.show-preview-2 > .align {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  padding-left: 30px;
+  width: 90%;
 }
 
 /* Style EpisodeCardStyleB.js */
@@ -845,6 +859,94 @@ footer {
 
 .ln-search-highlight {
   background-color: #dbdbdb;
+}
+
+/* Sytle StarredPodcasts.js */
+.user-dashboard {
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-dashboard > * {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.dashboard-options {
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.dashboard-options > * {
+  text-decoration: none;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.6rem;
+  color: #808080;
+  margin: 20px 30px;
+}
+
+.dashboard-options > a:hover {
+  color: #808080;
+  font-weight: 700;
+}
+
+.dashboard-options > .active-option {
+  color: var(--custom-color);
+  font-weight: 700;
+}
+
+.dashboard-options > .active-option:hover {
+  color: var(--custom-color);
+}
+
+.dashboard-content {
+  min-height: 500px;
+}
+
+.dashboard-content > * {
+  margin: 30px 70px;
+}
+
+.dashboard-content > .no-match-prompt {
+  margin: 30px 30px;
+}
+
+.starred-podcast {
+  display: flex;
+  align-items: flex-start;
+}
+
+.artwork-in-starred {
+  width: 100px;
+  height: 100px;
+  border-radius: 6px;
+}
+
+.info-in-starred {
+  margin: 0 auto 0 20px;
+}
+
+.info-in-starred > * {
+  font-size: 1.4rem;
+  margin-bottom: 7px;
+}
+
+.info-in-starred > .extra-info {
+  display: flex;
+  align-items: center;
+}
+
+.desc-in-starred {
+  line-height: 2rem;
+  max-height: 12rem;
+  overflow: scroll;
+}
+
+.star-in-starred {
+  margin-left: 20px;
+  min-width: 24px;
+  min-height: 24px;
 }
 
 /* Make the website responsive */
@@ -898,14 +1000,24 @@ footer {
     margin-left: 25px;
   }
 
-  .show-preview {
+  .show-preview-1,
+  .show-preview-2 {
     margin: 10px;
     margin-left: 25px;
   }
 
-  .show-preview > div:last-child {
+  .show-preview-1 > .show-preview-info {
     padding-left: 10px;
     width: 80%;
+  }
+
+  .show-preview-2 > div:first-child {
+    margin-right: 10px;
+  }
+
+  .show-preview-2 > .align {
+    padding-left: 10px;
+    width: 60%;
   }
 
   .title3,
@@ -1005,6 +1117,23 @@ footer {
     margin: 20px auto 0;
     display: flex;
   }
+
+  .dashboard-content > * {
+    margin: 30px 20px;
+  }
+
+  .dashboard-content > .no-match-prompt {
+    margin: 30px 20px;
+  }
+
+  .artwork-in-starred {
+    width: 80px;
+    height: 80px;
+  }
+
+  .desc-in-starred {
+    font-size: 1.2rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1025,6 +1154,15 @@ footer {
   .not-found-cover > span:first-child {
     font-size: 3rem;
     margin-top: 300px;
+  }
+
+  .dashboard-options > * {
+    margin: 20px 7px;
+  }
+
+  .artwork-in-starred {
+    width: 50px;
+    height: 50px;
   }
 }
 
@@ -1074,7 +1212,7 @@ footer {
 
   .tooltip .tooltiptext {
     visibility: hidden;
-    color: grey;
+    color: #808080;
     text-align: center;
     top: 5px;
     position: absolute;
