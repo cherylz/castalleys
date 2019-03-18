@@ -227,7 +227,7 @@ class Search extends React.Component {
     this.setState({
       fullSearchEpisodes: fullSearchEpisodesWithActualDuration
     });
-    // Step 2: update the episode on play with actual duration in this.state.epsidoeOnDisplay of App.js and its fav status
+    // Step 2: update the episode on play with actual duration in this.state.epsidoeOnDisplay of App.js
     this.props.updateEpisodeOnPlay(episode);
   };
 

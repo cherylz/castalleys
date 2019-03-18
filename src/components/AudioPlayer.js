@@ -104,7 +104,6 @@ class AudioPlayer extends React.Component {
         percent
       });
       localStorage.setItem('timePlayed', audio.currentTime);
-      // TBC: If the episode on play is a fav-ed episode, do real-time update on the time played in both App's state and in localStorage
     }
   };
 

@@ -10,15 +10,6 @@ class FavoriteEpisodes extends React.Component {
     }
   }
 
-  //TBC
-  unFavEpisode = id => {
-    // update this.state.favedEpisodes in App.js and remove the un-favorited episode from localStorage
-    const updatedEpisodes = this.props.favedEpisodes.filter(
-      episode => episode.episodeId !== id
-    );
-    this.props.updateFavedEpisodes(updatedEpisodes);
-  };
-
   render() {
     const favedEpisodes = this.props.favedEpisodes;
     let renderFavedEpisodes = <div className="no-match-prompt">Loading...</div>;
