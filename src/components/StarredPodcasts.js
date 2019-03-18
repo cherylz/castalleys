@@ -48,6 +48,7 @@ class StarredPodcasts extends React.Component {
         <PodcastCardStyleD
           podcast={podcast}
           key={podcast.id}
+          customColor={this.props.customColor}
           unstarPodcast={this.unstarPodcast}
         />
       ));

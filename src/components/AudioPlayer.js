@@ -13,6 +13,7 @@ class AudioPlayer extends React.Component {
   };
 
   componentDidMount() {
+    // render the episode (time played, progress on progress bar) from last stored; set state playFromLastTime to true to trigger the execution of componentDidUpdate to update audio.currentTime
     const timePlayedRef = localStorage.getItem('timePlayed');
     const episodeOnPlayRef = localStorage.getItem('episodeOnPlay');
     if (timePlayedRef && timePlayedRef !== '0' && episodeOnPlayRef) {
@@ -50,6 +51,14 @@ class AudioPlayer extends React.Component {
     }
   }
 
+  favEpisode = () => {
+    this.props.addFavedEpisode(this.props.episodeOnPlay);
+  };
+
+  unFavEpisode = () => {
+    this.props.removeFavedEpisode(this.props.episodeOnPlay.episodeId);
+  };
+
   updatePlaybackControls = e => {
     const audio = this.audio.current;
     if (e.target.className.baseVal === 'playPause') {
@@ -79,6 +88,7 @@ class AudioPlayer extends React.Component {
     audio.currentTime = scrubTime;
   };
 
+  // update the time played of the episode on play and if applicable, also in playHistory in App.js and localStorage
   updateCurrentTime = () => {
     const audio = this.audio.current;
     if (this.state.playFromLastTime) {
@@ -94,6 +104,7 @@ class AudioPlayer extends React.Component {
         percent
       });
       localStorage.setItem('timePlayed', audio.currentTime);
+      // TBC: If the episode on play is a fav-ed episode, do real-time update on the time played in both App's state and in localStorage
     }
   };
 
@@ -159,6 +170,36 @@ class AudioPlayer extends React.Component {
           <path className="playPause" d="M0 0h24v24H0z" fill="none" />
         </svg>
       );
+      const toggleFavIcon = this.props.episodeOnPlayIsFaved ? (
+        <svg
+          onClick={this.unFavEpisode}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            fill={this.props.customColor}
+          />
+        </svg>
+      ) : (
+        <svg
+          onClick={this.favEpisode}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"
+            fill="#808080"
+          />
+        </svg>
+      );
+
       let mousedown = false;
 
       return (
@@ -194,96 +235,100 @@ class AudioPlayer extends React.Component {
               </div>
             </div>
             <div className="player-controls">
-              <div
-                className="main-controls"
-                onClick={this.updatePlaybackControls}
-              >
-                <span className="speed">{speed}x</span>
-                <span className="playcontrols">
-                  <svg
-                    className="replay"
-                    data-skip="-10"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <defs>
-                      <path className="replay" d="M0 0h24v24H0V0z" />
-                    </defs>
-                    <clipPath>
-                      <use xlinkHref="#a" overflow="visible" />
-                    </clipPath>
-                    <path
+              <div className="main-board">
+                <div
+                  className="main-controls"
+                  onClick={this.updatePlaybackControls}
+                >
+                  <span className="speed">{speed}x</span>
+                  <span className="playcontrols">
+                    <svg
                       className="replay"
-                      d="M12 5V1L7 6l5 5V7c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H4c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8zm-1.1 11H10v-3.3L9 13v-.7l1.8-.6h.1V16zm4.3-1.8c0 .3 0 .6-.1.8l-.3.6s-.3.3-.5.3-.4.1-.6.1-.4 0-.6-.1-.3-.2-.5-.3-.2-.3-.3-.6-.1-.5-.1-.8v-.7c0-.3 0-.6.1-.8l.3-.6s.3-.3.5-.3.4-.1.6-.1.4 0 .6.1c.2.1.3.2.5.3s.2.3.3.6.1.5.1.8v.7zm-.9-.8v-.5s-.1-.2-.1-.3-.1-.1-.2-.2-.2-.1-.3-.1-.2 0-.3.1l-.2.2s-.1.2-.1.3v2s.1.2.1.3.1.1.2.2.2.1.3.1.2 0 .3-.1l.2-.2s.1-.2.1-.3v-1.5z"
-                      clipPath="url(#b)"
-                      fill={this.props.customColor}
-                    />
-                  </svg>
-                  {togglePlayIcon}
-                  <svg
-                    className="forward"
-                    data-skip="10"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <defs>
-                      <path className="forward" d="M24 24H0V0h24v24z" />
-                    </defs>
-                    <clipPath>
-                      <use xlinkHref="#a" overflow="visible" />
-                    </clipPath>
-                    <path
+                      data-skip="-10"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <defs>
+                        <path className="replay" d="M0 0h24v24H0V0z" />
+                      </defs>
+                      <clipPath>
+                        <use xlinkHref="#a" overflow="visible" />
+                      </clipPath>
+                      <path
+                        className="replay"
+                        d="M12 5V1L7 6l5 5V7c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H4c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8zm-1.1 11H10v-3.3L9 13v-.7l1.8-.6h.1V16zm4.3-1.8c0 .3 0 .6-.1.8l-.3.6s-.3.3-.5.3-.4.1-.6.1-.4 0-.6-.1-.3-.2-.5-.3-.2-.3-.3-.6-.1-.5-.1-.8v-.7c0-.3 0-.6.1-.8l.3-.6s.3-.3.5-.3.4-.1.6-.1.4 0 .6.1c.2.1.3.2.5.3s.2.3.3.6.1.5.1.8v.7zm-.9-.8v-.5s-.1-.2-.1-.3-.1-.1-.2-.2-.2-.1-.3-.1-.2 0-.3.1l-.2.2s-.1.2-.1.3v2s.1.2.1.3.1.1.2.2.2.1.3.1.2 0 .3-.1l.2-.2s.1-.2.1-.3v-1.5z"
+                        clipPath="url(#b)"
+                        fill={this.props.customColor}
+                      />
+                    </svg>
+                    {togglePlayIcon}
+                    <svg
                       className="forward"
-                      d="M4 13c0 4.4 3.6 8 8 8s8-3.6 8-8h-2c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6v4l5-5-5-5v4c-4.4 0-8 3.6-8 8zm6.8 3H10v-3.3L9 13v-.7l1.8-.6h.1V16zm4.3-1.8c0 .3 0 .6-.1.8l-.3.6s-.3.3-.5.3-.4.1-.6.1-.4 0-.6-.1-.3-.2-.5-.3-.2-.3-.3-.6-.1-.5-.1-.8v-.7c0-.3 0-.6.1-.8l.3-.6s.3-.3.5-.3.4-.1.6-.1.4 0 .6.1.3.2.5.3.2.3.3.6.1.5.1.8v.7zm-.8-.8v-.5s-.1-.2-.1-.3-.1-.1-.2-.2-.2-.1-.3-.1-.2 0-.3.1l-.2.2s-.1.2-.1.3v2s.1.2.1.3.1.1.2.2.2.1.3.1.2 0 .3-.1l.2-.2s.1-.2.1-.3v-1.5z"
-                      clipPath="url(#b)"
-                      fill={this.props.customColor}
-                    />
-                  </svg>
-                </span>
-                <div className="tooltip">
-                  <svg
-                    className="remove"
-                    onClick={this.stopPlayingAndRemovePlayer}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
+                      data-skip="10"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <defs>
+                        <path className="forward" d="M24 24H0V0h24v24z" />
+                      </defs>
+                      <clipPath>
+                        <use xlinkHref="#a" overflow="visible" />
+                      </clipPath>
+                      <path
+                        className="forward"
+                        d="M4 13c0 4.4 3.6 8 8 8s8-3.6 8-8h-2c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6v4l5-5-5-5v4c-4.4 0-8 3.6-8 8zm6.8 3H10v-3.3L9 13v-.7l1.8-.6h.1V16zm4.3-1.8c0 .3 0 .6-.1.8l-.3.6s-.3.3-.5.3-.4.1-.6.1-.4 0-.6-.1-.3-.2-.5-.3-.2-.3-.3-.6-.1-.5-.1-.8v-.7c0-.3 0-.6.1-.8l.3-.6s.3-.3.5-.3.4-.1.6-.1.4 0 .6.1.3.2.5.3.2.3.3.6.1.5.1.8v.7zm-.8-.8v-.5s-.1-.2-.1-.3-.1-.1-.2-.2-.2-.1-.3-.1-.2 0-.3.1l-.2.2s-.1.2-.1.3v2s.1.2.1.3.1.1.2.2.2.1.3.1.2 0 .3-.1l.2-.2s.1-.2.1-.3v-1.5z"
+                        clipPath="url(#b)"
+                        fill={this.props.customColor}
+                      />
+                    </svg>
+                  </span>
+                  <div className="fav-in-player">{toggleFavIcon}</div>
+                </div>
+                <div className="progress">
+                  <div
+                    ref={this.progressBar}
+                    className="progressbar"
+                    onClick={this.scrub}
+                    onMouseMove={e => mousedown && this.scrub(e)}
+                    onMouseDown={() => (mousedown = true)}
+                    onMouseUp={() => (mousedown = false)}
                   >
-                    <path
-                      className="remove"
-                      d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"
+                    <div
+                      className="progressbar-filled"
+                      style={{ flexBasis: percent + '%' }}
                     />
-                    <path className="remove" fill="none" d="M0 0h24v24H0V0z" />
-                  </svg>
-                  <span className="tooltiptext">remove</span>
+                  </div>
+                  <div className="timer">
+                    <span ref={this.currentTime} id="time-elapsed">
+                      {timePlayed}
+                    </span>
+                    <span id="total-time">{duration}</span>
+                  </div>
                 </div>
               </div>
-              <div className="progress">
-                <div
-                  ref={this.progressBar}
-                  className="progressbar"
-                  onClick={this.scrub}
-                  onMouseMove={e => mousedown && this.scrub(e)}
-                  onMouseDown={() => (mousedown = true)}
-                  onMouseUp={() => (mousedown = false)}
+              <div className="tooltip">
+                <svg
+                  className="remove"
+                  onClick={this.stopPlayingAndRemovePlayer}
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
                 >
-                  <div
-                    className="progressbar-filled"
-                    style={{ flexBasis: percent + '%' }}
+                  <path
+                    className="remove"
+                    d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"
+                    fill="#808080"
                   />
-                </div>
-                <div className="timer">
-                  <span ref={this.currentTime} id="time-elapsed">
-                    {timePlayed}
-                  </span>
-                  <span id="total-time">{duration}</span>
-                </div>
+                  <path className="remove" fill="none" d="M0 0h24v24H0V0z" />
+                </svg>
+                <span className="tooltiptext">remove</span>
               </div>
             </div>
             <audio

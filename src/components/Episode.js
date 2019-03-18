@@ -182,6 +182,7 @@ class Episode extends React.Component {
         date,
         duration
       };
+      const faved = this.props.favedEpisodesIds.indexOf(episode.id) !== -1;
       renderEpisodeInfo = (
         <EpisodeCardStyleA
           episodeOnWhichPage="episode"
@@ -195,6 +196,10 @@ class Episode extends React.Component {
           }
           updateActualDuration={this.updateActualDuration}
           updatePlaying={this.props.updatePlaying}
+          customColor={this.props.customColor}
+          faved={faved}
+          favEpisode={this.props.addFavedEpisode}
+          unFavEpisode={this.props.removeFavedEpisode}
         />
       );
     }

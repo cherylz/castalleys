@@ -454,9 +454,16 @@ header {
 }
 
 .player-controls {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
   margin-right: 30px;
-  margin-left: 60px;
+  margin-left: 50px;
   font-family: 'Open Sans', sans-serif;
+}
+
+.main-board {
+  flex-grow: 1;
 }
 
 .main-controls {
@@ -469,8 +476,9 @@ header {
 
 .speed {
   font-size: 1.4rem;
-  cursor: pointer;
+  color: #808080;
   font-weight: 700;
+  cursor: pointer;
   width: 40px;
 }
 
@@ -487,6 +495,10 @@ header {
 .playcontrols > svg:nth-child(2) {
   height: 4.2rem;
   width: 4.2rem;
+}
+
+.fav-in-player {
+  margin-left: 16px;
 }
 
 .progressbar {
@@ -861,7 +873,64 @@ footer {
   background-color: #dbdbdb;
 }
 
-/* Sytle StarredPodcasts.js */
+/* Style EpisodeCardStyleD.js */
+
+.faved-episode {
+  display: flex;
+  margin: 20px;
+}
+
+.faved-episode > * {
+  margin-bottom: 7px;
+  font-size: 1.4rem;
+}
+
+.faved-episode > *:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 30px;
+  width: 90%;
+}
+
+.faved-episode > *:nth-child(2) > * {
+  margin-bottom: 10px;
+}
+
+.faved-episode > *:nth-child(2) > *:nth-child(3) {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.faved-episode > *:nth-child(2) > *:nth-child(3) > * {
+  margin-right: 5px;
+}
+
+.faved-episode > *:nth-child(2) > *:nth-child(3) > *:nth-child(2) {
+  margin-right: 10px;
+}
+
+.artwork-in-faved {
+  width: 100px;
+  height: auto;
+  border-radius: 6px;
+}
+
+.desc-in-faved {
+  line-height: 2rem;
+  max-height: 6rem;
+  overflow: scroll;
+  word-break: break-word;
+}
+
+.tooltip-in-faved {
+  display: flex;
+  position: relative;
+}
+
+/* Sytle the shared parts of StarredPodcasts.js, FavoriteEpisodes.js */
+
 .user-dashboard {
   width: 100%;
   background-color: #fff;
@@ -912,6 +981,8 @@ footer {
   margin: 30px 30px;
 }
 
+/* Style PodcastCardStyleD.js */
+
 .starred-podcast {
   display: flex;
   align-items: flex-start;
@@ -941,15 +1012,120 @@ footer {
   line-height: 2rem;
   max-height: 12rem;
   overflow: scroll;
+  word-break: break-word;
 }
 
-.star-in-starred {
+.tooltip-in-starred {
+  display: flex;
+  position: relative;
   margin-left: 20px;
   min-width: 24px;
   min-height: 24px;
 }
 
 /* Make the website responsive */
+
+@media (any-hover: hover) {
+  .shake:hover {
+    animation: shake-left-right 0.5s;
+    transform: translate(0, 0);
+  }
+
+  @keyframes shake-left-right {
+    10%,
+    60% {
+      transform: translate(-1px, 0);
+    }
+
+    30%,
+    90% {
+      transform: translate(1px, 0);
+    }
+  }
+
+  .customize-color:hover .color-picker,
+  .customize-color:active .color-picker {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    position: relative;
+    top: -13px;
+    margin-left: 40px;
+    margin-right: 20px;
+    display: inline-block;
+  }
+
+  .player-controls:hover .tooltip {
+    visibility: visible;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    color: #808080;
+    text-align: center;
+    top: 30px;
+    left: -5px;
+    position: absolute;
+    z-index: 1;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+
+  .tooltip-in-starred .tooltiptext-in-starred {
+    visibility: hidden;
+    color: #808080;
+    text-align: center;
+    top: 30px;
+    left: -3px;
+    position: absolute;
+  }
+
+  .tooltip-in-starred:hover .tooltiptext-in-starred {
+    visibility: visible;
+  }
+
+  .tooltip-in-faved .tooltiptext-in-faved {
+    visibility: hidden;
+    color: #808080;
+    top: 3px;
+    left: 27px;
+    position: absolute;
+  }
+
+  .tooltip-in-faved:hover .tooltiptext-in-faved {
+    visibility: visible;
+  }
+}
+
+@media (any-hover: none) {
+  .navbar > div {
+    border-left: none;
+  }
+
+  .navbar > .customize-color {
+    display: none;
+  }
+
+  .tooltip {
+    visibility: visible;
+    position: relative;
+    top: -13px;
+    margin-left: 40px;
+    margin-right: 20px;
+    display: inline-block;
+  }
+
+  .tooltip .tooltiptext,
+  .tooltip-in-starred .tooltiptext-in-starred,
+  .tooltip-in-faved .tooltiptext-in-faved {
+    display: none;
+  }
+}
 
 @media (min-width: 769px) {
   .navbar-logo-sm {
@@ -964,16 +1140,6 @@ footer {
   .not-found-cover {
     background: center / cover no-repeat url('./images/404-cover-bg.jpg');
     height: 900px;
-  }
-
-  .player-controls {
-    width: 600px;
-  }
-}
-
-@media (max-width: 1028px) {
-  .tooltip .tooltiptext {
-    display: none;
   }
 }
 
@@ -996,7 +1162,8 @@ footer {
     left: -80px;
   }
 
-  .episode-preview {
+  .episode-preview,
+  .faved-episode {
     margin-left: 25px;
   }
 
@@ -1037,7 +1204,7 @@ footer {
   }
 
   .episode-info {
-    padding-right: 10px;
+    padding-right: 20px;
     flex: 0 0 auto;
   }
 
@@ -1050,8 +1217,7 @@ footer {
   }
 
   .player-controls {
-    margin-left: 15px;
-    width: 90%;
+    margin-left: 30px;
   }
 
   #playPause {
@@ -1126,13 +1292,30 @@ footer {
     margin: 30px 20px;
   }
 
-  .artwork-in-starred {
+  .artwork-in-starred,
+  .artwork-in-faved {
     width: 80px;
-    height: 80px;
+    height: auto;
   }
 
-  .desc-in-starred {
+  .desc-in-starred,
+  .desc-in-faved {
     font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 580px) {
+  .episode-info {
+    padding-right: 10px;
+  }
+
+  .player-controls {
+    margin-left: 10px;
+  }
+
+  .tooltip {
+    margin-left: 13px;
+    margin-right: 0;
   }
 }
 
@@ -1160,9 +1343,43 @@ footer {
     margin: 20px 7px;
   }
 
-  .artwork-in-starred {
+  .artwork-in-starred,
+  .artwork-in-faved {
     width: 50px;
-    height: 50px;
+    height: auto;
+  }
+
+  .faved-episode > *:nth-child(2) {
+    margin-left: 13px;
+  }
+}
+
+/* For screen size of iPhone6/7/8 or below */
+@media (max-width: 375px) {
+  .episode-info {
+    margin-left: 10px;
+    padding-right: 5px;
+  }
+
+  .player-controls {
+    margin-right: 10px;
+  }
+
+  .playcontrols {
+    width: 85px;
+  }
+
+  .dashboard-content > * {
+    margin: 30px 5px;
+  }
+
+  .tooltip-in-starred {
+    margin-left: 0;
+  }
+
+  .fav-in-player > svg,
+  .tooltip > svg[class='remove'] {
+    width: 18px;
   }
 }
 
@@ -1173,72 +1390,5 @@ footer {
 
   .not-found-cover > span:first-child {
     margin-top: 420px;
-  }
-}
-
-@media (any-hover: hover) {
-  .shake:hover {
-    animation: shake-left-right 0.5s;
-    transform: translate(0, 0);
-  }
-
-  @keyframes shake-left-right {
-    10%,
-    60% {
-      transform: translate(-1px, 0);
-    }
-
-    30%,
-    90% {
-      transform: translate(1px, 0);
-    }
-  }
-
-  .customize-color:hover .color-picker,
-  .customize-color:active .color-picker {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .tooltip {
-    visibility: hidden;
-    position: relative;
-    display: inline-block;
-  }
-
-  .player-controls:hover .tooltip {
-    visibility: visible;
-  }
-
-  .tooltip .tooltiptext {
-    visibility: hidden;
-    color: #808080;
-    text-align: center;
-    top: 5px;
-    position: absolute;
-    z-index: 1;
-  }
-
-  .tooltip:hover .tooltiptext {
-    visibility: visible;
-  }
-}
-
-@media (any-hover: none) {
-  .navbar > div {
-    border-left: none;
-  }
-
-  .navbar > .customize-color {
-    display: none;
-  }
-
-  .tooltip {
-    position: relative;
-    display: inline-block;
-  }
-
-  .tooltip .tooltiptext {
-    display: none;
   }
 }

@@ -369,6 +369,7 @@ class Podcast extends React.Component {
           date,
           duration
         };
+        const faved = this.props.favedEpisodesIds.indexOf(episode.id) !== -1;
         return (
           <EpisodeCardStyleA
             key={episode.id}
@@ -383,6 +384,10 @@ class Podcast extends React.Component {
             }
             updateActualDuration={this.updateActualDuration}
             updatePlaying={this.props.updatePlaying}
+            customColor={this.props.customColor}
+            faved={faved}
+            favEpisode={this.props.addFavedEpisode}
+            unFavEpisode={this.props.removeFavedEpisode}
           />
         );
       });
@@ -390,19 +395,26 @@ class Podcast extends React.Component {
       this.state.searchingInPodcast &&
       this.state.matchedEpisodes.length
     ) {
-      renderEpisodesInfo = this.state.matchedEpisodes.map(episode => (
-        <EpisodeCardStyleC
-          key={episode.id}
-          episode={episode}
-          episodeOnPlayId={this.props.episodeOnPlayId}
-          playing={this.props.playing}
-          updateEpisodeOnPlayAndMaybeActualDuration={
-            this.updateEpisodeOnPlayAndMaybeActualDuration
-          }
-          updateActualDuration={this.updateActualDuration}
-          updatePlaying={this.props.updatePlaying}
-        />
-      ));
+      renderEpisodesInfo = this.state.matchedEpisodes.map(episode => {
+        const faved = this.props.favedEpisodesIds.indexOf(episode.id) !== -1;
+        return (
+          <EpisodeCardStyleC
+            key={episode.id}
+            episode={episode}
+            episodeOnPlayId={this.props.episodeOnPlayId}
+            playing={this.props.playing}
+            updateEpisodeOnPlayAndMaybeActualDuration={
+              this.updateEpisodeOnPlayAndMaybeActualDuration
+            }
+            updateActualDuration={this.updateActualDuration}
+            updatePlaying={this.props.updatePlaying}
+            customColor={this.props.customColor}
+            faved={faved}
+            favEpisode={this.props.addFavedEpisode}
+            unFavEpisode={this.props.removeFavedEpisode}
+          />
+        );
+      });
     } else if (
       this.state.searchingInPodcast &&
       !this.state.matchedEpisodes.length

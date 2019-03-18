@@ -4,6 +4,7 @@ import Header from './Header';
 import AudioPlayer from './AudioPlayer';
 import Home from './Home';
 import StarredPodcasts from './StarredPodcasts';
+import FavoriteEpisodes from './FavoriteEpisodes';
 import Search from './Search';
 import Podcast from './Podcast';
 import Episode from './Episode';
@@ -20,7 +21,8 @@ class App extends React.Component {
     hidePlayer: true,
     episodeOnPlay: {},
     playing: false,
-    speed: 1
+    speed: 1,
+    favedEpisodes: []
   };
 
   componentDidMount() {
@@ -28,6 +30,7 @@ class App extends React.Component {
     const hidePlayerRef = localStorage.getItem('hidePlayer');
     const episodeOnPlayRef = localStorage.getItem('episodeOnPlay');
     const speedRef = localStorage.getItem('speed');
+    const favedEpisodesRef = localStorage.getItem('favedEpisodes');
 
     if (customColorRef) {
       document.documentElement.style.setProperty(
@@ -51,6 +54,12 @@ class App extends React.Component {
     if (speedRef) {
       this.setState({
         speed: JSON.parse(speedRef)
+      });
+    }
+
+    if (favedEpisodesRef && favedEpisodesRef !== '[]') {
+      this.setState({
+        favedEpisodes: JSON.parse(favedEpisodesRef)
       });
     }
   }
@@ -130,6 +139,7 @@ class App extends React.Component {
     });
   };
 
+  // update the episode on play and the actual duration of the episode if audioRef.current.duration of the relevant child component doesn't return NaN for unknown reasons
   updateEpisodeOnPlay = episode => {
     if (Object.entries(this.state.episodeOnPlay).length === 0) {
       this.setState({
@@ -140,12 +150,45 @@ class App extends React.Component {
       episodeOnPlay: episode,
       playing: true
     });
+    // also update the actual duration in favedEpisodes if the episode is a fav-ed episode
+    const favedEpisodesIds = this.state.favedEpisodes.map(
+      item => item.episodeId
+    );
+    const episodeOnPlayIsFaved =
+      favedEpisodesIds.indexOf(episode.episodeId) !== -1;
+    if (episodeOnPlayIsFaved) {
+      const updated = this.state.favedEpisodes.map(
+        item =>
+          item.episodeId === episode.episodeId
+            ? { ...item, duration: episode.duration }
+            : item
+      );
+      this.setState({ favedEpisodes: updated });
+      localStorage.setItem('favedEpisodes', JSON.stringify(updated));
+    }
   };
 
+  // fallback: update the actual duration of the episode if audioRef.current.duration of the relevant child component returned NaN for unknown reasons on first click
   updateActualDurationOfEpisodeOnPlay = duration => {
     const episodeOnPlay = { ...this.state.episodeOnPlay, duration };
     this.setState({ episodeOnPlay });
     localStorage.setItem('episodeOnPlay', JSON.stringify(episodeOnPlay));
+    // also update the actual duration in favedEpisodes if the episode is a fav-ed episode
+    const favedEpisodesIds = this.state.favedEpisodes.map(
+      item => item.episodeId
+    );
+    const episodeOnPlayIsFaved =
+      favedEpisodesIds.indexOf(this.state.episodeOnPlay.episodeId) !== -1;
+    if (episodeOnPlayIsFaved) {
+      const updated = this.state.favedEpisodes.map(
+        item =>
+          item.episodeId === this.state.episodeOnPlay.episodeId
+            ? { ...item, duration }
+            : item
+      );
+      this.setState({ favedEpisodes: updated });
+      localStorage.setItem('favedEpisodes', JSON.stringify(updated));
+    }
   };
 
   updatePlaying = () => {
@@ -186,7 +229,26 @@ class App extends React.Component {
     });
   };
 
+  addFavedEpisode = episode => {
+    const updated = [...this.state.favedEpisodes, episode];
+    this.setState({ favedEpisodes: updated });
+    localStorage.setItem('favedEpisodes', JSON.stringify(updated));
+  };
+
+  removeFavedEpisode = id => {
+    const updated = this.state.favedEpisodes.filter(
+      item => item.episodeId !== id
+    );
+    this.setState({ favedEpisodes: updated });
+    localStorage.setItem('favedEpisodes', JSON.stringify(updated));
+  };
+
   render() {
+    const favedEpisodesIds = this.state.favedEpisodes.map(
+      item => item.episodeId
+    );
+    const episodeOnPlayIsFaved =
+      favedEpisodesIds.indexOf(this.state.episodeOnPlay.episodeId) !== -1;
     return (
       <BrowserRouter>
         <div>
@@ -224,6 +286,26 @@ class App extends React.Component {
                 <StarredPodcasts
                   {...props}
                   currentFullQuery={this.state.currentFullQuery}
+                  customColor={this.state.customColor}
+                />
+              )}
+            />
+            <Route
+              path="/me/favorite-episodes"
+              render={props => (
+                <FavoriteEpisodes
+                  {...props}
+                  currentFullQuery={this.state.currentFullQuery}
+                  customColor={this.state.customColor}
+                  episodeOnPlayId={this.state.episodeOnPlay.episodeId}
+                  playing={this.state.playing}
+                  updateEpisodeOnPlay={this.updateEpisodeOnPlay}
+                  updateActualDurationOfEpisodeOnPlay={
+                    this.updateActualDurationOfEpisodeOnPlay
+                  }
+                  updatePlaying={this.updatePlaying}
+                  favedEpisodes={this.state.favedEpisodes}
+                  removeFavedEpisode={this.removeFavedEpisode}
                 />
               )}
             />
@@ -236,6 +318,7 @@ class App extends React.Component {
                   episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                   episodeOnPlayDuration={this.state.episodeOnPlay.duration}
                   playing={this.state.playing}
+                  customColor={this.state.customColor}
                   goToOrUpdateSearchPage={this.goToOrUpdateSearchPage}
                   updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                   updateActualDurationOfEpisodeOnPlay={
@@ -243,6 +326,9 @@ class App extends React.Component {
                   }
                   updatePlaying={this.updatePlaying}
                   resetSearchbar={this.resetSearchbar}
+                  favedEpisodesIds={favedEpisodesIds}
+                  addFavedEpisode={this.addFavedEpisode}
+                  removeFavedEpisode={this.removeFavedEpisode}
                 />
               )}
             />
@@ -255,12 +341,15 @@ class App extends React.Component {
                   episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                   episodeOnPlayDuration={this.state.episodeOnPlay.duration}
                   playing={this.state.playing}
-                  customColor={this.state.customColor}
                   updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                   updateActualDurationOfEpisodeOnPlay={
                     this.updateActualDurationOfEpisodeOnPlay
                   }
                   updatePlaying={this.updatePlaying}
+                  customColor={this.state.customColor}
+                  favedEpisodesIds={favedEpisodesIds}
+                  addFavedEpisode={this.addFavedEpisode}
+                  removeFavedEpisode={this.removeFavedEpisode}
                 />
               )}
             />
@@ -273,12 +362,15 @@ class App extends React.Component {
                   episodeOnPlayId={this.state.episodeOnPlay.episodeId}
                   episodeOnPlayDuration={this.state.episodeOnPlay.duration}
                   playing={this.state.playing}
-                  customColor={this.state.customColor}
                   updateEpisodeOnPlay={this.updateEpisodeOnPlay}
                   updateActualDurationOfEpisodeOnPlay={
                     this.updateActualDurationOfEpisodeOnPlay
                   }
                   updatePlaying={this.updatePlaying}
+                  customColor={this.state.customColor}
+                  favedEpisodesIds={favedEpisodesIds}
+                  addFavedEpisode={this.addFavedEpisode}
+                  removeFavedEpisode={this.removeFavedEpisode}
                 />
               )}
             />
@@ -301,6 +393,9 @@ class App extends React.Component {
             removePlayer={this.removePlayer}
             onEnded={this.handleEnded}
             resetSearchbar={this.resetSearchbar}
+            episodeOnPlayIsFaved={episodeOnPlayIsFaved}
+            addFavedEpisode={this.addFavedEpisode}
+            removeFavedEpisode={this.removeFavedEpisode}
           />
         </div>
       </BrowserRouter>

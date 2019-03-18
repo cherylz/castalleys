@@ -80,7 +80,7 @@ class Search extends React.Component {
       .then(data => {
         if (!this.state.fullSearchEpisodes.length) {
           this.setState({
-            fullSearchEpisodes: [...data.results],
+            fullSearchEpisodes: data.results,
             offsetEpisodes: data.next_offset,
             totalEpisodeMatches: data.total,
             calledFullSearchEpisodes: true
@@ -227,7 +227,7 @@ class Search extends React.Component {
     this.setState({
       fullSearchEpisodes: fullSearchEpisodesWithActualDuration
     });
-    // Step 2: update the episode on play with actual duration in this.state.epsidoeOnDisplay of App.js
+    // Step 2: update the episode on play with actual duration in this.state.epsidoeOnDisplay of App.js and its fav status
     this.props.updateEpisodeOnPlay(episode);
   };
 
@@ -287,20 +287,27 @@ class Search extends React.Component {
     }
 
     if (fullSearchEpisodes.length) {
-      renderEpisodes = fullSearchEpisodes.map(episode => (
-        <EpisodeCardStyleB
-          key={episode.id}
-          episode={episode}
-          episodeOnPlayId={this.props.episodeOnPlayId}
-          playing={this.props.playing}
-          updateEpisodeOnPlayAndMaybeActualDuration={
-            this.updateEpisodeOnPlayAndMaybeActualDuration
-          }
-          updateActualDuration={this.updateActualDuration}
-          updatePlaying={this.props.updatePlaying}
-          resetSearchbar={this.props.resetSearchbar}
-        />
-      ));
+      renderEpisodes = fullSearchEpisodes.map(episode => {
+        const faved = this.props.favedEpisodesIds.indexOf(episode.id) !== -1;
+        return (
+          <EpisodeCardStyleB
+            key={episode.id}
+            episode={episode}
+            updateEpisodeOnPlayAndMaybeActualDuration={
+              this.updateEpisodeOnPlayAndMaybeActualDuration
+            }
+            updateActualDuration={this.updateActualDuration}
+            episodeOnPlayId={this.props.episodeOnPlayId}
+            playing={this.props.playing}
+            updatePlaying={this.props.updatePlaying}
+            resetSearchbar={this.props.resetSearchbar}
+            customColor={this.props.customColor}
+            faved={faved}
+            favEpisode={this.props.addFavedEpisode}
+            unFavEpisode={this.props.removeFavedEpisode}
+          />
+        );
+      });
     } else if (this.state.calledFullSearchEpisodes) {
       renderEpisodes = (
         <div className="no-match-prompt">Oops... No matched result found.</div>
