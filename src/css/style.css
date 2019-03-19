@@ -263,6 +263,7 @@ header {
   position: fixed;
   top: 0;
   background-color: rgba(255, 255, 255, 0.8);
+  z-index: 2; /* important to keep it as otherwise, the stars on Starred Podcast page and the hearts on Favorite Episodes page will float above the header when scrolling */
 }
 
 .navbar {
@@ -929,6 +930,65 @@ footer {
   position: relative;
 }
 
+/* Style EpisodeCardStyleE.js */
+
+.played {
+  display: flex;
+  margin: 20px;
+}
+
+.played > * {
+  margin-bottom: 7px;
+  font-size: 1.4rem;
+}
+
+.played > *:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 30px;
+  width: 90%;
+}
+
+.played > *:nth-child(2) > * {
+  margin-bottom: 10px;
+}
+
+.played > *:nth-child(2) > *:nth-child(3) {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.played > *:nth-child(2) > *:nth-child(3) > * {
+  margin-right: 5px;
+}
+
+.played > *:nth-child(2) > *:nth-child(3) > *:nth-child(2) {
+  margin-right: 10px;
+}
+
+.artwork-in-played {
+  width: 100px;
+  height: auto;
+  border-radius: 6px;
+}
+
+.desc-in-played {
+  line-height: 2rem;
+  max-height: 6rem;
+  overflow: scroll;
+  word-break: break-word;
+}
+
+.tooltip-in-played {
+  display: flex;
+  position: relative;
+  top: 22px;
+  margin-left: 20px;
+  margin-right: 24px;
+}
+
 /* Sytle the shared parts of StarredPodcasts.js, FavoriteEpisodes.js */
 
 .user-dashboard {
@@ -1069,7 +1129,6 @@ footer {
     top: 30px;
     left: -5px;
     position: absolute;
-    z-index: 1;
   }
 
   .tooltip:hover .tooltiptext {
@@ -1100,6 +1159,19 @@ footer {
   .tooltip-in-faved:hover .tooltiptext-in-faved {
     visibility: visible;
   }
+
+  .tooltip-in-played > .tooltiptext-in-played {
+    visibility: hidden;
+    color: #808080;
+    top: 30px;
+    left: -7px;
+    position: absolute;
+    font-size: 1.2rem;
+  }
+
+  .tooltip-in-played:hover .tooltiptext-in-played {
+    visibility: visible;
+  }
 }
 
 @media (any-hover: none) {
@@ -1122,7 +1194,8 @@ footer {
 
   .tooltip .tooltiptext,
   .tooltip-in-starred .tooltiptext-in-starred,
-  .tooltip-in-faved .tooltiptext-in-faved {
+  .tooltip-in-faved .tooltiptext-in-faved,
+  .tooltip-in-played .tooltiptext-in-played {
     display: none;
   }
 }
@@ -1163,7 +1236,8 @@ footer {
   }
 
   .episode-preview,
-  .faved-episode {
+  .faved-episode,
+  .played {
     margin-left: 25px;
   }
 
@@ -1293,13 +1367,15 @@ footer {
   }
 
   .artwork-in-starred,
-  .artwork-in-faved {
+  .artwork-in-faved,
+  .artwork-in-played {
     width: 80px;
     height: auto;
   }
 
   .desc-in-starred,
-  .desc-in-faved {
+  .desc-in-faved,
+  .desc-in-played {
     font-size: 1.2rem;
   }
 }
@@ -1315,6 +1391,12 @@ footer {
 
   .tooltip {
     margin-left: 13px;
+    margin-right: 0;
+  }
+
+  .tooltip-in-played {
+    top: 0;
+    margin-left: 0;
     margin-right: 0;
   }
 }
@@ -1344,12 +1426,19 @@ footer {
   }
 
   .artwork-in-starred,
-  .artwork-in-faved {
+  .artwork-in-faved,
+  .artwork-in-played {
     width: 50px;
     height: auto;
   }
 
-  .faved-episode > *:nth-child(2) {
+  .podcast-title-in-faved,
+  .podcast-title-in-played {
+    font-size: 1.2rem;
+  }
+
+  .faved-episode > *:nth-child(2),
+  .played > *:nth-child(2) {
     margin-left: 13px;
   }
 }

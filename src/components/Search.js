@@ -320,6 +320,7 @@ class Search extends React.Component {
           podcast={match}
           key={match.id}
           resetSearchbar={this.props.resetSearchbar}
+          customColor={this.props.customColor}
           starPodcast={this.starPodcast}
           unstarPodcast={this.unstarPodcast}
         />

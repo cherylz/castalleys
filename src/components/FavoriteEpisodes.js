@@ -45,7 +45,7 @@ class FavoriteEpisodes extends React.Component {
             <Link to="/me/favorite-episodes" className="active-option">
               Favorites
             </Link>
-            <Link to="/me/played-episodes">History</Link>
+            <Link to="/me/play-history">History</Link>
           </div>
           <div className="dashboard-content">{renderFavedEpisodes}</div>
         </div>

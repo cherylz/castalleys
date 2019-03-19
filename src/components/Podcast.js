@@ -258,23 +258,21 @@ class Podcast extends React.Component {
     this.props.updateEpisodeOnPlay(episode);
   };
 
-  updateActualDuration = (duration, episodeId) => {
+  updateActualDuration = duration => {
     // the duration passed in is in HH:MM:SS format
-    const episodesToMap = this.state.searchingInPodcast
-      ? this.state.matchedEpisodes
-      : this.state.episodes;
-    const episodesWithActualDuration = episodesToMap.map(
-      item => (item.id === episodeId ? { ...item, duration } : item)
-    );
-    if (!this.state.searchingInPodcast) {
-      this.setState({
-        episodes: episodesWithActualDuration
-      });
-    } else {
-      this.setState({
-        matchedEpisodes: episodesWithActualDuration
-      });
+    // update the actual duration in this.state.episodes and this.state.matchedEpisodes if applicable
+    const episodeOnPlayId = this.props.episodeOnPlayId;
+    if (this.state.searchingInPodcast) {
+      const updated = this.state.matchedEpisodes.map(
+        item => (item.id === episodeOnPlayId ? { ...item, duration } : item)
+      );
+      this.setState({ matchedEpisodes: updated });
     }
+    const updated = this.state.episodes.map(
+      item => (item.id === episodeOnPlayId ? { ...item, duration } : item)
+    );
+    this.setState({ episodes: updated });
+    // also update the actual duration in this.state.episodeOnPlay of App.js
     this.props.updateActualDurationOfEpisodeOnPlay(duration);
   };
 

@@ -2,11 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function PodcastCardStyleD(props) {
-  const { image, title, desc, publisher, id } = props.podcast;
+  const { image, title, publisher, id } = props.podcast;
+  const desc = descComponent();
 
-  const unstarPodcast = () => {
+  function createDescMarkup() {
+    return { __html: props.podcast.desc };
+  }
+  function descComponent() {
+    return (
+      <div dangerouslySetInnerHTML={createDescMarkup()} className="inline" />
+    );
+  }
+
+  function unstarPodcast() {
     props.unstarPodcast(id);
-  };
+  }
 
   return (
     <div className="starred-podcast">

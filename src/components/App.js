@@ -5,6 +5,7 @@ import AudioPlayer from './AudioPlayer';
 import Home from './Home';
 import StarredPodcasts from './StarredPodcasts';
 import FavoriteEpisodes from './FavoriteEpisodes';
+import PlayHistory from './PlayHistory';
 import Search from './Search';
 import Podcast from './Podcast';
 import Episode from './Episode';
@@ -22,7 +23,8 @@ class App extends React.Component {
     episodeOnPlay: {},
     playing: false,
     speed: 1,
-    favedEpisodes: []
+    favedEpisodes: [],
+    playHistory: []
   };
 
   componentDidMount() {
@@ -31,6 +33,7 @@ class App extends React.Component {
     const episodeOnPlayRef = localStorage.getItem('episodeOnPlay');
     const speedRef = localStorage.getItem('speed');
     const favedEpisodesRef = localStorage.getItem('favedEpisodes');
+    const playHistoryRef = localStorage.getItem('playHistory');
 
     if (customColorRef) {
       document.documentElement.style.setProperty(
@@ -62,34 +65,11 @@ class App extends React.Component {
         favedEpisodes: JSON.parse(favedEpisodesRef)
       });
     }
-  }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (localStorage.getItem('speed') === 'null') {
-      localStorage.setItem('speed', this.state.speed);
-    }
-    if (this.state.speed !== prevState.speed) {
-      localStorage.setItem('speed', this.state.speed);
-    }
-    if (this.state.hidePlayer !== prevState.hidePlayer) {
-      localStorage.setItem('hidePlayer', this.state.hidePlayer);
-    }
-    if (
-      !Object.keys(prevState.episodeOnPlay).length &&
-      Object.keys(this.state.episodeOnPlay).length
-    ) {
-      localStorage.setItem(
-        'episodeOnPlay',
-        JSON.stringify(this.state.episodeOnPlay)
-      );
-      localStorage.setItem('speed', this.state.speed);
-    } else if (
-      this.state.episodeOnPlay.episodeId !== prevState.episodeOnPlay.episodeId
-    ) {
-      localStorage.setItem(
-        'episodeOnPlay',
-        JSON.stringify(this.state.episodeOnPlay)
-      );
+    if (playHistoryRef && playHistoryRef !== '[]') {
+      this.setState({
+        playHistory: JSON.parse(playHistoryRef)
+      });
     }
   }
 
@@ -142,14 +122,15 @@ class App extends React.Component {
   // update the episode on play and the actual duration of the episode if audioRef.current.duration of the relevant child component doesn't return NaN for unknown reasons
   updateEpisodeOnPlay = episode => {
     if (Object.entries(this.state.episodeOnPlay).length === 0) {
-      this.setState({
-        hidePlayer: false
-      });
+      this.setState({ hidePlayer: false });
+      localStorage.setItem('hidePlayer', 'false');
     }
     this.setState({
       episodeOnPlay: episode,
       playing: true
     });
+    localStorage.setItem('episodeOnPlay', JSON.stringify(episode));
+    localStorage.setItem('speed', this.state.speed);
     // also update the actual duration in favedEpisodes if the episode is a fav-ed episode
     const favedEpisodesIds = this.state.favedEpisodes.map(
       item => item.episodeId
@@ -166,6 +147,7 @@ class App extends React.Component {
       this.setState({ favedEpisodes: updated });
       localStorage.setItem('favedEpisodes', JSON.stringify(updated));
     }
+    // no need to update the actual duration in playHistory because playHistory will be set to match the updated episodeOnPlay in addToPlayHistory()
   };
 
   // fallback: update the actual duration of the episode if audioRef.current.duration of the relevant child component returned NaN for unknown reasons on first click
@@ -174,21 +156,23 @@ class App extends React.Component {
     this.setState({ episodeOnPlay });
     localStorage.setItem('episodeOnPlay', JSON.stringify(episodeOnPlay));
     // also update the actual duration in favedEpisodes if the episode is a fav-ed episode
-    const favedEpisodesIds = this.state.favedEpisodes.map(
-      item => item.episodeId
+    const updated = this.state.favedEpisodes.map(
+      item =>
+        item.episodeId === this.state.episodeOnPlay.episodeId
+          ? { ...item, duration }
+          : item
     );
-    const episodeOnPlayIsFaved =
-      favedEpisodesIds.indexOf(this.state.episodeOnPlay.episodeId) !== -1;
-    if (episodeOnPlayIsFaved) {
-      const updated = this.state.favedEpisodes.map(
-        item =>
-          item.episodeId === this.state.episodeOnPlay.episodeId
-            ? { ...item, duration }
-            : item
-      );
-      this.setState({ favedEpisodes: updated });
-      localStorage.setItem('favedEpisodes', JSON.stringify(updated));
-    }
+    this.setState({ favedEpisodes: updated });
+    localStorage.setItem('favedEpisodes', JSON.stringify(updated));
+    // also update the actual duration in playHistory
+    const updatedPlayHistory = this.state.playHistory.map(
+      item =>
+        item.episodeId === this.state.episodeOnPlay.episodeId
+          ? { ...item, duration }
+          : item
+    );
+    this.setState({ playHistory: updatedPlayHistory });
+    localStorage.setItem('playHistory', JSON.stringify(updatedPlayHistory));
   };
 
   updatePlaying = () => {
@@ -204,13 +188,12 @@ class App extends React.Component {
       });
     } else if (userCommand === 'speed') {
       if (this.state.speed < 2) {
-        this.setState({
-          speed: this.state.speed + 0.25
-        });
+        const speed = this.state.speed + 0.25;
+        this.setState({ speed });
+        localStorage.setItem('speed', speed);
       } else if (this.state.speed === 2) {
-        this.setState({
-          speed: 0.5
-        });
+        this.setState({ speed: 0.5 });
+        localStorage.setItem('speed', 0.5);
       }
     }
   };
@@ -227,6 +210,8 @@ class App extends React.Component {
       episodeOnPlay: {},
       playing: false
     });
+    localStorage.removeItem('episodeOnPlay');
+    localStorage.setItem('hidePlayer', 'true');
   };
 
   addFavedEpisode = episode => {
@@ -243,12 +228,46 @@ class App extends React.Component {
     localStorage.setItem('favedEpisodes', JSON.stringify(updated));
   };
 
+  addToPlayHistory = () => {
+    const addToHistory = { ...this.state.episodeOnPlay, timePlayed: 0 };
+    const updated = [...this.state.playHistory, addToHistory];
+    this.setState({ playHistory: updated });
+    localStorage.setItem('playHistory', JSON.stringify(updated));
+  };
+
+  updateTimePlayed = timePlayed => {
+    const updated = this.state.playHistory.map(
+      item =>
+        item.episodeId === this.state.episodeOnPlay.episodeId
+          ? { ...item, timePlayed }
+          : item
+    );
+    this.setState({ playHistory: updated });
+    localStorage.setItem('playHistory', JSON.stringify(updated));
+  };
+
+  removeFromHistory = id => {
+    const updated = this.state.playHistory.filter(
+      item => item.episodeId !== id
+    );
+    this.setState({ playHistory: updated });
+    localStorage.setItem('playHistory', JSON.stringify(updated));
+  };
+
   render() {
     const favedEpisodesIds = this.state.favedEpisodes.map(
       item => item.episodeId
     );
     const episodeOnPlayIsFaved =
       favedEpisodesIds.indexOf(this.state.episodeOnPlay.episodeId) !== -1;
+    const playedIds = this.state.playHistory.map(item => item.episodeId);
+    const episodeOnPlayWasPlayed =
+      playedIds.indexOf(this.state.episodeOnPlay.episodeId) !== -1;
+    const episodeOnPlayStartTime = episodeOnPlayWasPlayed
+      ? this.state.playHistory.filter(
+          item => item.episodeId === this.state.episodeOnPlay.episodeId
+        )[0].timePlayed
+      : 0;
     return (
       <BrowserRouter>
         <div>
@@ -306,6 +325,28 @@ class App extends React.Component {
                   updatePlaying={this.updatePlaying}
                   favedEpisodes={this.state.favedEpisodes}
                   removeFavedEpisode={this.removeFavedEpisode}
+                />
+              )}
+            />
+            <Route
+              path="/me/play-history"
+              render={props => (
+                <PlayHistory
+                  {...props}
+                  currentFullQuery={this.state.currentFullQuery}
+                  customColor={this.state.customColor}
+                  episodeOnPlayId={this.state.episodeOnPlay.episodeId}
+                  playing={this.state.playing}
+                  updateEpisodeOnPlay={this.updateEpisodeOnPlay}
+                  updateActualDurationOfEpisodeOnPlay={
+                    this.updateActualDurationOfEpisodeOnPlay
+                  }
+                  updatePlaying={this.updatePlaying}
+                  favedEpisodesIds={favedEpisodesIds}
+                  addFavedEpisode={this.addFavedEpisode}
+                  removeFavedEpisode={this.removeFavedEpisode}
+                  playHistory={this.state.playHistory}
+                  removeFromHistory={this.removeFromHistory}
                 />
               )}
             />
@@ -396,6 +437,10 @@ class App extends React.Component {
             episodeOnPlayIsFaved={episodeOnPlayIsFaved}
             addFavedEpisode={this.addFavedEpisode}
             removeFavedEpisode={this.removeFavedEpisode}
+            episodeOnPlayWasPlayed={episodeOnPlayWasPlayed}
+            episodeOnPlayStartTime={episodeOnPlayStartTime}
+            addToPlayHistory={this.addToPlayHistory}
+            updateTimePlayed={this.updateTimePlayed}
           />
         </div>
       </BrowserRouter>

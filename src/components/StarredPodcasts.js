@@ -68,7 +68,7 @@ class StarredPodcasts extends React.Component {
               Starred
             </Link>
             <Link to="/me/favorite-episodes">Favorites</Link>
-            <Link to="/me/played-episodes">History</Link>
+            <Link to="/me/play-history">History</Link>
           </div>
           <div className="dashboard-content">{renderStarredPodcasts}</div>
         </div>
