@@ -294,7 +294,6 @@ class App extends React.Component {
                 <Home
                   {...props}
                   currentFullQuery={this.state.currentFullQuery}
-                  customColor={this.state.customColor}
                   hidePlayer={this.state.hidePlayer}
                 />
               )}

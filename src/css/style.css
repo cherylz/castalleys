@@ -145,7 +145,6 @@ ul {
 
 :root {
   --custom-color: #ce0925;
-  --font-color: #000;
 }
 
 html {
@@ -154,6 +153,7 @@ html {
   font-size: 10px;
   /* -webkit-font-smoothing: antialiased; */
   /* -moz-osx-font-smoothing: grayscale; */
+  color: #484848;
   background-color: #f7f7f7;
 }
 
@@ -163,7 +163,7 @@ html {
 
 a {
   display: inline-block;
-  color: #000;
+  color: #484848;
 }
 
 a:hover,
@@ -351,10 +351,20 @@ header {
   margin-bottom: 5px;
 }
 
+.navbar > .navbar-links {
+  padding-right: 0;
+}
+
+.navbar-links > * {
+  margin: 0 16px;
+  letter-spacing: 0.6px;
+}
+
 .navbar > .customize-color {
+  border-left: none;
   position: relative;
   height: 60px;
-  padding-left: 42px;
+  padding-left: 0;
   padding-right: 42px;
   display: flex;
   align-items: center;
@@ -371,10 +381,16 @@ header {
   transition: 0.5s;
   position: absolute;
   top: 60px;
-  left: 0;
+  right: 4px;
   min-width: 140px;
   background-color: #fff;
   border-radius: 0 0 5% 5%;
+  color: #484848;
+}
+
+.color-picker.visible {
+  visibility: visible;
+  opacity: 1;
 }
 
 .color-picker > * {
@@ -398,6 +414,8 @@ header {
   border-radius: 50%;
   display: inline-block;
   margin-left: 10px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .dot.red {
@@ -418,6 +436,10 @@ header {
 
 .dot.purple {
   background-color: #604c8d;
+}
+
+.navbar > .navbar-menu {
+  display: none;
 }
 
 /* Style AudioPlayer.js */
@@ -510,7 +532,6 @@ header {
 }
 
 .progressbar-filled {
-  width: 50%; /* to-do: seems like nothing is different when removing it. or 0%? */
   background-color: var(--custom-color);
   flex: 0;
   flex-basis: 0%;
@@ -530,6 +551,7 @@ header {
   flex-direction: column;
   align-items: center;
   font-family: 'Rubik', sans-serif;
+  color: #000;
 }
 
 .home-cover > * {
@@ -828,6 +850,48 @@ footer {
   width: 90%;
 }
 
+/* Style PodcastCardStyleD.js */
+
+.starred-podcast {
+  display: flex;
+  align-items: flex-start;
+}
+
+.artwork-in-starred {
+  width: 100px;
+  height: 100px;
+  border-radius: 6px;
+}
+
+.info-in-starred {
+  margin: 0 auto 0 20px;
+}
+
+.info-in-starred > * {
+  font-size: 1.4rem;
+  margin-bottom: 7px;
+}
+
+.info-in-starred > .extra-info {
+  display: flex;
+  align-items: center;
+}
+
+.desc-in-starred {
+  line-height: 2rem;
+  max-height: 12rem;
+  overflow: scroll;
+  word-break: break-word;
+}
+
+.tooltip-in-starred {
+  display: flex;
+  position: relative;
+  margin-left: 20px;
+  min-width: 24px;
+  min-height: 24px;
+}
+
 /* Style EpisodeCardStyleB.js */
 
 .episode-preview {
@@ -989,7 +1053,7 @@ footer {
   margin-right: 24px;
 }
 
-/* Sytle the shared parts of StarredPodcasts.js, FavoriteEpisodes.js */
+/* Sytle the shared parts of StarredPodcasts.js, FavoriteEpisodes.js and PlayHistory.js */
 
 .user-dashboard {
   width: 100%;
@@ -1041,48 +1105,6 @@ footer {
   margin: 30px 30px;
 }
 
-/* Style PodcastCardStyleD.js */
-
-.starred-podcast {
-  display: flex;
-  align-items: flex-start;
-}
-
-.artwork-in-starred {
-  width: 100px;
-  height: 100px;
-  border-radius: 6px;
-}
-
-.info-in-starred {
-  margin: 0 auto 0 20px;
-}
-
-.info-in-starred > * {
-  font-size: 1.4rem;
-  margin-bottom: 7px;
-}
-
-.info-in-starred > .extra-info {
-  display: flex;
-  align-items: center;
-}
-
-.desc-in-starred {
-  line-height: 2rem;
-  max-height: 12rem;
-  overflow: scroll;
-  word-break: break-word;
-}
-
-.tooltip-in-starred {
-  display: flex;
-  position: relative;
-  margin-left: 20px;
-  min-width: 24px;
-  min-height: 24px;
-}
-
 /* Make the website responsive */
 
 @media (any-hover: hover) {
@@ -1107,6 +1129,10 @@ footer {
   .customize-color:active .color-picker {
     visibility: visible;
     opacity: 1;
+  }
+
+  .customize-color.no-hover {
+    display: none;
   }
 
   .tooltip {
@@ -1175,11 +1201,7 @@ footer {
 }
 
 @media (any-hover: none) {
-  .navbar > div {
-    border-left: none;
-  }
-
-  .navbar > .customize-color {
+  .customize-color.any-hover {
     display: none;
   }
 
@@ -1213,6 +1235,65 @@ footer {
   .not-found-cover {
     background: center / cover no-repeat url('./images/404-cover-bg.jpg');
     height: 900px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .navbar > .navbar-links,
+  .navbar > .customize-color {
+    display: none;
+  }
+
+  .navbar > .navbar-menu {
+    display: flex;
+    height: 60px;
+    align-items: center;
+  }
+
+  .navbar-menu > svg {
+    margin: 0 18px;
+    z-index: 5;
+  }
+
+  .menu-items {
+    display: none;
+  }
+
+  .menu-items.display {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 60px 90px;
+    background-color: rgba(255, 255, 255, 0.95);
+    font-size: 1.6rem;
+    z-index: 2;
+  }
+
+  .menu-color-picker {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dot {
+    height: 2.6rem;
+    width: 2.6rem;
+    margin-left: 5px;
+    margin-right: 15px;
+  }
+
+  hr {
+    border: 0;
+    border-bottom: 1px solid #dbdbdb;
+    width: 100%;
+  }
+
+  .menu-links {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -1381,6 +1462,10 @@ footer {
 }
 
 @media (max-width: 580px) {
+  .menu-items.display {
+    padding: 60px 44px;
+  }
+
   .episode-info {
     padding-right: 10px;
   }

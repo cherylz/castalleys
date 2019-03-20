@@ -20,7 +20,6 @@ class AudioPlayer extends React.Component {
     ) {
       const timePlayed = this.props.episodeOnPlayStartTime;
       const duration = convertTimeString(this.props.episodeOnPlay.duration);
-      // const duration2 = convertTimeString(JSON.parse(episodeOnPlayRef).duration);
       const percent = (timePlayed / duration) * 100;
       this.setState({
         timePlayed,
