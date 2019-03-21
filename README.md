@@ -2,11 +2,11 @@
 
 [castalleys.com](https://castalleys.com)
 
-![Screenshot of the app](https://i.ibb.co/NW4Nf7D/app-screenshot.jpg)
+![Screenshot of CastAlleys](https://i.ibb.co/nQqC400/Screenshot-of-Cast-Alleys.png)
 
-[Google Lighthouse](https://developers.google.com/web/tools/lighthouse/) Scores:
+Scores by [Google Lighthouse](https://developers.google.com/web/tools/lighthouse/):
 
-![Google Lighthouse Scores](https://i.ibb.co/PjMQ7yj/lighthouse-audit-on-castalleys.png)
+![Scores by Google Lighthouse](https://i.ibb.co/f1cZvky/lighthouse-audit-on-castalleys.png)
 
 ### Table of Contents
 
@@ -26,20 +26,20 @@
 
 - [Why I Built CastAlleys](https://github.com/cherylz/castalleys#why-i-built-castalleys)
 - [User Stories](https://github.com/cherylz/castalleys#user-stories)
-- [Features](https://github.com/cherylz/castalleys#features)
+- [Main Features](https://github.com/cherylz/castalleys#main-features)
 - [Wireframes](https://github.com/cherylz/castalleys#wireframes)
 - [General Approach](https://github.com/cherylz/castalleys#general-approach)
 
 ## What Users Can Do with CastAlleys
 
-Just search for what you want to listen to and you are ready to play the show. You can use it on your phone without having to download an extra app since it's a progressive web app. To add some fun when enjoying its simplicity, you can choose what color you want the app in (only applicable to non-touchscreen users at this moment).
+Just search for what you want to listen to and you are ready to play the show. You can use it on your phone without having to download an extra app since it's a progressive web app. To add some fun when enjoying its simplicity, you can choose what color you want the app in.
 
 ## Technologies
 
 - Written in React, JavaScript, HTML5, and CSS3.
 - Built with [Create React App](https://github.com/facebook/create-react-app), [React Router](https://github.com/ReactTraining/react-router), and [Progressive Web Apps](https://developers.google.com/web/progressive-web-apps/).
 - Deployed to [Heroku](https://www.heroku.com/) and [Netlify](https://netlify.com).
-- Others: Non-sensitive data is stored in the [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) of user's web browser.
+- Non-sensitive data is stored in the [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) of user's web browser.
 
 ## Installation
 
@@ -66,7 +66,7 @@ Thank you,
 
 ## Inspirations
 
-The navigation bar is inspired by https://www.patagonia.com/. The homepage cover image is inspired by https://www.spotify.com/.
+The navigation bar is inspired by [Patagonia](https://www.patagonia.com/). The homepage cover image is inspired by [Spotify](https://www.spotify.com/).
 
 ## Get Support
 
@@ -76,26 +76,28 @@ If you have questions on how to get the app up and running or want to say hi, pl
 
 ### Why I Built CastAlleys
 
-CastAlleys was built as a capstone project for an online coding bootcamp ([Altcademy](https://www.altcademy.com/)) I enrolled. My goals for this project were to build something at least I would use (I like podcasts) and something that allowed me to practice what I had learned and challenged me to learn more.
+CastAlleys was built as a capstone project for an online coding bootcamp ([Altcademy](https://www.altcademy.com/)) I enrolled. My goals for this project were to build something at least I would use (I like podcasts) and something that I could practice what I had learned with and challenged me to learn more.
 
 ### User Stories
 
 - Some podcast listeners who use computers more often than mobile phones want to search and play a show directly from their computer, without the need to take out their phone, unlock the screen and open an app. They will find CastAlleys handy to use since it is optimized for web users.
 - There are also podcast listeners who want to keep their mobile apps to the minimum. They can use CastAlleys on their phone's home screen without downloading it since it is a progressive web app.
 
-### Features
+### Main Features
 
-- Podcast search.
-- Episode search with matched keyword(s) highlighted in titles, descriptions and transcripts.
-- Episode search within a given podcast.
-- Customizable theme color.
-- Podcast streaming with playback controls.
-- Podcast page view.
-- Episode page view.
+- Search:
+  - Podcast search
+  - Episode search with matched keyword(s) highlighted in titles, descriptions and transcripts
+  - Episode search within a given podcast
+- Podcast streaming with playback controls
+- Star a podcast
+- Like an episode
+- Track play history
+- Customizable theme color
 
 ### Wireframes
 
-In case you are interested in checking out wireframes, here are the sketches of the main interfaces I made with pen and paper for large screens: https://drive.google.com/drive/folders/10Y-2lI5bnXj8i2oV2Je0K8V1IdShHSvk?usp=sharing. For small screens, I coded the design.
+In case you are interested in checking out wireframes, here are the initial drafts I made with pen and paper for large screens: [link](https://drive.google.com/drive/folders/10Y-2lI5bnXj8i2oV2Je0K8V1IdShHSvk?usp=sharing). For wireframes of small screens and design changes, I coded them without sketches.
 
 ### General Approach
 
@@ -106,9 +108,9 @@ In case you are interested in checking out wireframes, here are the sketches of 
 #### Building
 
 - Major steps: Build a static version. Then move on to build an interactive version by adding features one at a time.
-- For each major step, repeat the process of 'build, test, deploy, debug, commit to GitHub'.
+- For each major step, repeat the process of 'build, test, deploy, commit to GitHub'.
 
 #### Quality
 
-- For improving the app quality, [Lighthouse](https://developers.google.com/web/tools/lighthouse/) was used to audit pages.
-- For improving the code quality, [Prettier](https://prettier.io/) was used.
+- [Lighthouse](https://developers.google.com/web/tools/lighthouse/) was used to audit the app.
+- [Prettier](https://prettier.io/) was used to format the code.
