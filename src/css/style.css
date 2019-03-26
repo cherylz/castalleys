@@ -520,10 +520,6 @@ header {
   width: 4.2rem;
 }
 
-.fav-in-player {
-  margin-left: 16px;
-}
-
 .progressbar {
   height: 2px;
   background-color: #dbdbdb;
@@ -1375,6 +1371,14 @@ footer {
     margin-left: 30px;
   }
 
+  .playcontrols > * {
+    margin-right: 20px;
+  }
+
+  .playcontrols > *:last-child {
+    margin-right: 0;
+  }
+
   #playPause {
     margin-left: 8px;
     margin-right: 8px;
@@ -1540,7 +1544,7 @@ footer {
   }
 
   .playcontrols {
-    width: 85px;
+    width: 130px;
   }
 
   .dashboard-content > * {
