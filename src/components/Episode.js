@@ -142,6 +142,7 @@ class Episode extends React.Component {
   render() {
     const episode = this.state.episode;
     const podcast = this.state.podcast;
+    let renderPodcastAndEpisode;
     let renderPodcastInfo;
     let renderEpisodeInfo;
     let loadingPromptWhenNeeded = (
@@ -151,7 +152,7 @@ class Episode extends React.Component {
     );
 
     if (Object.keys(podcast).length) {
-      loadingPromptWhenNeeded = '';
+      loadingPromptWhenNeeded = null;
       renderPodcastInfo = (
         <PodcastCardStyleA
           podcastOnWhichPage="episode"
@@ -204,13 +205,19 @@ class Episode extends React.Component {
       );
     }
 
-    return (
-      <div className="page-container">
+    if (Object.keys(podcast).length) {
+      renderPodcastAndEpisode = (
         <div className="podcast-episode-container">
           {renderPodcastInfo}
           <div className="episodes">{renderEpisodeInfo}</div>
         </div>
+      );
+    }
+
+    return (
+      <div className="page-container">
         {loadingPromptWhenNeeded}
+        {renderPodcastAndEpisode}
       </div>
     );
   }
