@@ -3,7 +3,7 @@ import PodcastCardStyleA from './PodcastCardStyleA';
 import EpisodeCardStyleA from './EpisodeCardStyleA';
 import EpisodeCardStyleC from './EpisodeCardStyleC';
 import { apiKey } from '../apiKey';
-import { formatSeconds, msToDate } from '../helpers';
+import { msToDate } from '../helpers';
 
 class Podcast extends React.Component {
   state = {
@@ -61,9 +61,7 @@ class Podcast extends React.Component {
       }
     }
     // handle new search with a podcast ID on Podcast page when the user presses the enter key after typing in keywords in the search bar of Header.js
-    if (
-      this.props.match.params.podcastId !== prevProps.match.params.podcastId
-    ) {
+    if (this.props.match.params.podcastId !== prevProps.match.params.podcastId) {
       this.setState({
         podcast: {},
         episodes: [],
@@ -87,9 +85,7 @@ class Podcast extends React.Component {
   markStarredOrUnstarred = podcast => {
     const starredPodcastsRef = localStorage.getItem('starredPodcasts');
     if (starredPodcastsRef && starredPodcastsRef !== '[]') {
-      const starredPodcastsIds = JSON.parse(starredPodcastsRef).map(
-        podcast => podcast.id
-      );
+      const starredPodcastsIds = JSON.parse(starredPodcastsRef).map(podcast => podcast.id);
       return starredPodcastsIds.indexOf(podcast.id) !== -1
         ? { ...podcast, starred: true }
         : { ...podcast, starred: false };
@@ -112,10 +108,7 @@ class Podcast extends React.Component {
       updated.push(processedPodcast);
       localStorage.setItem('starredPodcasts', JSON.stringify(updated));
     } else {
-      localStorage.setItem(
-        'starredPodcasts',
-        JSON.stringify(Array.of(processedPodcast))
-      );
+      localStorage.setItem('starredPodcasts', JSON.stringify(Array.of(processedPodcast)));
     }
   };
 
@@ -134,14 +127,14 @@ class Podcast extends React.Component {
   searchPodcast = (podcastId, status) => {
     const endpoint =
       status === 'first round'
-        ? `https://api.listennotes.com/api/v1/podcasts/${podcastId}?sort=recent_first`
-        : `https://api.listennotes.com/api/v1/podcasts/${podcastId}?next_episode_pub_date=${
+        ? `https://listen-api.listennotes.com/api/v2/podcasts/${podcastId}?sort=recent_first`
+        : `https://listen-api.listennotes.com/api/v2/podcasts/${podcastId}?next_episode_pub_date=${
             this.state.offsetPubDate
           }&sort=recent_first`;
     const request = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': apiKey,
+        'X-ListenAPI-Key': apiKey,
         Accept: 'application/json'
       }
     };
@@ -150,12 +143,10 @@ class Podcast extends React.Component {
       .then(data => {
         const { episodes, next_episode_pub_date, ...rest } = data;
         const processedEpisodes = episodes.map(episode => {
-          const { audio_length, pub_date_ms, ...episodeParts } = episode;
+          const { audio_length_sec, pub_date_ms, ...episodeParts } = episode;
           return {
             ...episodeParts,
-            duration: episode.audio
-              ? formatSeconds(audio_length)
-              : '(no audio)',
+            duration: episode.audio ? audio_length_sec : '(no audio)',
             date: msToDate(pub_date_ms)
           };
         });
@@ -181,13 +172,13 @@ class Podcast extends React.Component {
 
   callInPodcastSearch = (keywords, status) => {
     const offset = status === 'first round' ? 0 : this.state.offsetMatches;
-    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=${offset}&ocid=${
+    const endpoint = `https://listen-api.listennotes.com/api/v2/search?sort_by_date=0&type=episode&offset=${offset}&ocid=${
       this.state.podcast.id
     }&safe_mode=1&q=%22${keywords}%22`;
     const request = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': apiKey,
+        'X-ListenAPI-Key': apiKey,
         Accept: 'application/json'
       }
     };
@@ -195,10 +186,10 @@ class Podcast extends React.Component {
       .then(res => res.json())
       .then(data => {
         const processedEpisodes = data.results.map(episode => {
-          const { audio_length, pub_date_ms, ...episodeParts } = episode;
+          const { audio_length_sec, pub_date_ms, ...episodeParts } = episode;
           return {
             ...episodeParts,
-            duration: episode.audio ? audio_length : '(no audio)',
+            duration: episode.audio ? audio_length_sec : '(no audio)',
             date: msToDate(pub_date_ms)
           };
         });
@@ -212,10 +203,7 @@ class Podcast extends React.Component {
           });
         } else if (this.state.query === keywords) {
           this.setState({
-            matchedEpisodes: [
-              ...this.state.matchedEpisodes,
-              ...processedEpisodes
-            ],
+            matchedEpisodes: [...this.state.matchedEpisodes, ...processedEpisodes],
             offsetMatches: data.next_offset
           });
         } else if (this.state.query !== keywords) {
@@ -240,10 +228,7 @@ class Podcast extends React.Component {
       ? this.state.matchedEpisodes
       : this.state.episodes;
     const episodesWithActualDuration = episodesToMap.map(
-      item =>
-        item.id === episode.episodeId
-          ? { ...item, duration: episode.duration }
-          : item
+      item => (item.id === episode.episodeId ? { ...item, duration: episode.duration } : item)
     );
     if (!this.state.searchingInPodcast) {
       this.setState({
@@ -302,9 +287,7 @@ class Podcast extends React.Component {
     let renderEpisodesInfo;
     let loadMoreBtn;
     let loadingPromptWhenNeeded = (
-      <div className="loading-prompt">
-        Loading... Good things are worth waiting for :)
-      </div>
+      <div className="loading-prompt">Loading... Good things are worth waiting for :)</div>
     );
 
     if (
@@ -390,10 +373,7 @@ class Podcast extends React.Component {
           />
         );
       });
-    } else if (
-      this.state.searchingInPodcast &&
-      this.state.matchedEpisodes.length
-    ) {
+    } else if (this.state.searchingInPodcast && this.state.matchedEpisodes.length) {
       renderEpisodesInfo = this.state.matchedEpisodes.map(episode => {
         const faved = this.props.favedEpisodesIds.indexOf(episode.id) !== -1;
         return (
@@ -414,13 +394,8 @@ class Podcast extends React.Component {
           />
         );
       });
-    } else if (
-      this.state.searchingInPodcast &&
-      !this.state.matchedEpisodes.length
-    ) {
-      renderEpisodesInfo = (
-        <div className="no-match-prompt">Oops... No matched results found.</div>
-      );
+    } else if (this.state.searchingInPodcast && !this.state.matchedEpisodes.length) {
+      renderEpisodesInfo = <div className="no-match-prompt">Oops... No matched results found.</div>;
     }
 
     if (Object.keys(this.state.podcast).length) {

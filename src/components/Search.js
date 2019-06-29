@@ -31,7 +31,7 @@ class Search extends React.Component {
         const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(
           item =>
             item.id === this.props.episodeOnPlayId
-              ? { ...item, audio_length: this.props.episodeOnPlayDuration }
+              ? { ...item, audio_length_sec: this.props.episodeOnPlayDuration }
               : item
         );
         this.setState({
@@ -40,10 +40,7 @@ class Search extends React.Component {
       }
     }
     // handle new search of episodes in the same Search.js component, i.e. user presses the return key with new keywords in the search bar of Header.js while on the search page
-    if (
-      prevProps.currentFullQuery &&
-      this.props.currentFullQuery !== prevProps.currentFullQuery
-    ) {
+    if (prevProps.currentFullQuery && this.props.currentFullQuery !== prevProps.currentFullQuery) {
       const keywords = this.props.currentFullQuery;
       this.props.history.push(`/search/${keywords}`);
       this.setState({
@@ -64,14 +61,14 @@ class Search extends React.Component {
   callFullSearchEpisodes = (keywords, status) => {
     const endpoint =
       status === 'first round'
-        ? `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=0&safe_mode=1&q=%22${keywords}%22`
-        : `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=episode&offset=${
+        ? `https://listen-api.listennotes.com/api/v2/search?sort_by_date=0&type=episode&offset=0&safe_mode=1&q=%22${keywords}%22`
+        : `https://listen-api.listennotes.com/api/v2/search?sort_by_date=0&type=episode&offset=${
             this.state.offsetEpisodes
           }&safe_mode=1&q=%22${keywords}%22`;
     const request = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': apiKey,
+        'X-ListenAPI-Key': apiKey,
         Accept: 'application/json'
       }
     };
@@ -87,10 +84,7 @@ class Search extends React.Component {
           });
         } else {
           this.setState({
-            fullSearchEpisodes: [
-              ...this.state.fullSearchEpisodes,
-              ...data.results
-            ],
+            fullSearchEpisodes: [...this.state.fullSearchEpisodes, ...data.results],
             offsetEpisodes: data.next_offset
           });
         }
@@ -124,10 +118,7 @@ class Search extends React.Component {
       updated.push(processedPodcast);
       localStorage.setItem('starredPodcasts', JSON.stringify(updated));
     } else {
-      localStorage.setItem(
-        'starredPodcasts',
-        JSON.stringify(Array.of(processedPodcast))
-      );
+      localStorage.setItem('starredPodcasts', JSON.stringify(Array.of(processedPodcast)));
     }
   };
 
@@ -147,9 +138,7 @@ class Search extends React.Component {
   markStarredOrUnstarred = podcasts => {
     const starredPodcastsRef = localStorage.getItem('starredPodcasts');
     if (starredPodcastsRef && starredPodcastsRef !== '[]') {
-      const starredPodcastsIds = JSON.parse(starredPodcastsRef).map(
-        podcast => podcast.id
-      );
+      const starredPodcastsIds = JSON.parse(starredPodcastsRef).map(podcast => podcast.id);
       return podcasts.map(
         podcast =>
           starredPodcastsIds.indexOf(podcast.id) !== -1
@@ -164,13 +153,13 @@ class Search extends React.Component {
   };
 
   callFullSearchPodcasts = keywords => {
-    const endpoint = `https://api.listennotes.com/api/v1/search?sort_by_date=0&type=podcast&offset=${
+    const endpoint = `https://listen-api.listennotes.com/api/v2/search?sort_by_date=0&type=podcast&offset=${
       this.state.offsetPodcasts
     }&safe_mode=1&q=%22${keywords}%22`;
     const request = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': apiKey,
+        'X-ListenAPI-Key': apiKey,
         Accept: 'application/json'
       }
     };
@@ -220,9 +209,7 @@ class Search extends React.Component {
     // Step 1: update the actual duration of the episode on play in this.state.fullSearchEpisodes
     const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(
       item =>
-        item.id === episode.episodeId
-          ? { ...item, audio_length: episode.duration }
-          : item
+        item.id === episode.episodeId ? { ...item, audio_length_sec: episode.duration } : item
     );
     this.setState({
       fullSearchEpisodes: fullSearchEpisodesWithActualDuration
@@ -232,10 +219,8 @@ class Search extends React.Component {
   };
 
   updateActualDuration = (duration, episodeId) => {
-    // the duration passed in is in HH:MM:SS format
     const fullSearchEpisodesWithActualDuration = this.state.fullSearchEpisodes.map(
-      item =>
-        item.id === episodeId ? { ...item, audio_length: duration } : item
+      item => (item.id === episodeId ? { ...item, audio_length_sec: duration } : item)
     );
     this.setState({
       fullSearchEpisodes: fullSearchEpisodesWithActualDuration
@@ -309,9 +294,7 @@ class Search extends React.Component {
         );
       });
     } else if (this.state.calledFullSearchEpisodes) {
-      renderEpisodes = (
-        <div className="no-match-prompt">Oops... No matched result found.</div>
-      );
+      renderEpisodes = <div className="no-match-prompt">Oops... No matched result found.</div>;
     }
 
     if (fullSearchPodcasts.length) {
@@ -326,32 +309,21 @@ class Search extends React.Component {
         />
       ));
     } else if (this.state.calledFullSearchPodcasts) {
-      renderPodcasts = (
-        <div className="no-match-prompt">Oops... No matched result found.</div>
-      );
+      renderPodcasts = <div className="no-match-prompt">Oops... No matched result found.</div>;
     }
 
     // important to assign value to `matches` after the computation of renderEpisodes and renderPodcasts is done.
-    const matches =
-      this.state.fliter === 'episodes' ? renderEpisodes : renderPodcasts;
+    const matches = this.state.fliter === 'episodes' ? renderEpisodes : renderPodcasts;
 
     return (
       <div className="page-container">
         <div className="matched-container2">
           <div className="filter">
-            <button
-              id="episodes"
-              className={episodesActive}
-              onClick={this.handleFilterChange}
-            >
+            <button id="episodes" className={episodesActive} onClick={this.handleFilterChange}>
               Episodes
             </button>
             <span>/</span>
-            <button
-              id="podcasts"
-              className={podcastsActive}
-              onClick={this.handleFilterChange}
-            >
+            <button id="podcasts" className={podcastsActive} onClick={this.handleFilterChange}>
               Podcasts
             </button>
           </div>

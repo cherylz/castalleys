@@ -40,16 +40,12 @@ ul {
   font-weight: 400;
   src: url('./fonts/noto-serif-v6-latin-regular.eot'); /* IE9 Compat Modes */
   src: local('Noto Serif'), local('NotoSerif'),
-    url('./fonts/noto-serif-v6-latin-regular.eot?#iefix')
-      format('embedded-opentype'),
-    /* IE6-IE8 */ url('./fonts/noto-serif-v6-latin-regular.woff2')
-      format('woff2'),
-    /* Super Modern Browsers */ url('./fonts/noto-serif-v6-latin-regular.woff')
-      format('woff'),
-    /* Modern Browsers */ url('./fonts/noto-serif-v6-latin-regular.ttf')
-      format('truetype'),
-    /* Safari, Android, iOS */
-      url('./fonts/noto-serif-v6-latin-regular.svg#NotoSerif') format('svg'); /* Legacy iOS */
+    url('./fonts/noto-serif-v6-latin-regular.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('./fonts/noto-serif-v6-latin-regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('./fonts/noto-serif-v6-latin-regular.woff') format('woff'),
+    /* Modern Browsers */ url('./fonts/noto-serif-v6-latin-regular.ttf') format('truetype'),
+    /* Safari, Android, iOS */ url('./fonts/noto-serif-v6-latin-regular.svg#NotoSerif')
+      format('svg'); /* Legacy iOS */
 }
 
 @font-face {
@@ -59,16 +55,11 @@ ul {
   font-weight: 400;
   src: url('./fonts/open-sans-v15-latin-regular.eot'); /* IE9 Compat Modes */
   src: local('Open Sans Regular'), local('OpenSans-Regular'),
-    url('./fonts/open-sans-v15-latin-regular.eot?#iefix')
-      format('embedded-opentype'),
-    /* IE6-IE8 */ url('./fonts/open-sans-v15-latin-regular.woff2')
-      format('woff2'),
-    /* Super Modern Browsers */ url('./fonts/open-sans-v15-latin-regular.woff')
-      format('woff'),
-    /* Modern Browsers */ url('./fonts/open-sans-v15-latin-regular.ttf')
-      format('truetype'),
-    /* Safari, Android, iOS */
-      url('./fonts/open-sans-v15-latin-regular.svg#OpenSans') format('svg'); /* Legacy iOS */
+    url('./fonts/open-sans-v15-latin-regular.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('./fonts/open-sans-v15-latin-regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('./fonts/open-sans-v15-latin-regular.woff') format('woff'),
+    /* Modern Browsers */ url('./fonts/open-sans-v15-latin-regular.ttf') format('truetype'),
+    /* Safari, Android, iOS */ url('./fonts/open-sans-v15-latin-regular.svg#OpenSans') format('svg'); /* Legacy iOS */
 }
 
 @font-face {
@@ -78,16 +69,12 @@ ul {
   font-weight: 400;
   src: url('./fonts/carter-one-v10-latin-regular.eot'); /* IE9 Compat Modes */
   src: local('Carter One'), local('CarterOne'),
-    url('./fonts/carter-one-v10-latin-regular.eot?#iefix')
-      format('embedded-opentype'),
-    /* IE6-IE8 */ url('./fonts/carter-one-v10-latin-regular.woff2')
-      format('woff2'),
-    /* Super Modern Browsers */ url('./fonts/carter-one-v10-latin-regular.woff')
-      format('woff'),
-    /* Modern Browsers */ url('./fonts/carter-one-v10-latin-regular.ttf')
-      format('truetype'),
-    /* Safari, Android, iOS */
-      url('./fonts/carter-one-v10-latin-regular.svg#CarterOne') format('svg'); /* Legacy iOS */
+    url('./fonts/carter-one-v10-latin-regular.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('./fonts/carter-one-v10-latin-regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('./fonts/carter-one-v10-latin-regular.woff') format('woff'),
+    /* Modern Browsers */ url('./fonts/carter-one-v10-latin-regular.ttf') format('truetype'),
+    /* Safari, Android, iOS */ url('./fonts/carter-one-v10-latin-regular.svg#CarterOne')
+      format('svg'); /* Legacy iOS */
 }
 
 @font-face {
@@ -99,12 +86,9 @@ ul {
   src: local('Rubik Light'), local('Rubik-Light'),
     url('./fonts/rubik-v7-latin-300.eot?#iefix') format('embedded-opentype'),
     /* IE6-IE8 */ url('./fonts/rubik-v7-latin-300.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('./fonts/rubik-v7-latin-300.woff')
-      format('woff'),
-    /* Modern Browsers */ url('./fonts/rubik-v7-latin-300.ttf')
-      format('truetype'),
-    /* Safari, Android, iOS */ url('./fonts/rubik-v7-latin-300.svg#Rubik')
-      format('svg'); /* Legacy iOS */
+    /* Super Modern Browsers */ url('./fonts/rubik-v7-latin-300.woff') format('woff'),
+    /* Modern Browsers */ url('./fonts/rubik-v7-latin-300.ttf') format('truetype'),
+    /* Safari, Android, iOS */ url('./fonts/rubik-v7-latin-300.svg#Rubik') format('svg'); /* Legacy iOS */
 }
 
 @font-face {
@@ -116,12 +100,9 @@ ul {
   src: local('Rubik'), local('Rubik-Regular'),
     url('./fonts/rubik-v7-latin-regular.eot?#iefix') format('embedded-opentype'),
     /* IE6-IE8 */ url('./fonts/rubik-v7-latin-regular.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('./fonts/rubik-v7-latin-regular.woff')
-      format('woff'),
-    /* Modern Browsers */ url('./fonts/rubik-v7-latin-regular.ttf')
-      format('truetype'),
-    /* Safari, Android, iOS */ url('./fonts/rubik-v7-latin-regular.svg#Rubik')
-      format('svg'); /* Legacy iOS */
+    /* Super Modern Browsers */ url('./fonts/rubik-v7-latin-regular.woff') format('woff'),
+    /* Modern Browsers */ url('./fonts/rubik-v7-latin-regular.ttf') format('truetype'),
+    /* Safari, Android, iOS */ url('./fonts/rubik-v7-latin-regular.svg#Rubik') format('svg'); /* Legacy iOS */
 }
 
 @font-face {
@@ -133,12 +114,9 @@ ul {
   src: local('Rubik Bold'), local('Rubik-Bold'),
     url('./fonts/rubik-v7-latin-700.eot?#iefix') format('embedded-opentype'),
     /* IE6-IE8 */ url('./fonts/rubik-v7-latin-700.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('./fonts/rubik-v7-latin-700.woff')
-      format('woff'),
-    /* Modern Browsers */ url('./fonts/rubik-v7-latin-700.ttf')
-      format('truetype'),
-    /* Safari, Android, iOS */ url('./fonts/rubik-v7-latin-700.svg#Rubik')
-      format('svg'); /* Legacy iOS */
+    /* Super Modern Browsers */ url('./fonts/rubik-v7-latin-700.woff') format('woff'),
+    /* Modern Browsers */ url('./fonts/rubik-v7-latin-700.ttf') format('truetype'),
+    /* Safari, Android, iOS */ url('./fonts/rubik-v7-latin-700.svg#Rubik') format('svg'); /* Legacy iOS */
 }
 
 /* Shared styles */
@@ -572,10 +550,18 @@ footer {
   font-family: 'Rubik', sans-serif;
   font-size: 1.4rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.main-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 #email {
@@ -586,6 +572,10 @@ footer {
 
 #email > svg {
   margin-left: 5px;
+}
+
+.listen-notes {
+  width: 200px;
 }
 
 /* Style NotFound.js */

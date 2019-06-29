@@ -26,12 +26,7 @@ class PodcastCardStyleA extends React.Component {
     return { __html: this.props.podcast.description };
   };
   descComponent = () => {
-    return (
-      <div
-        dangerouslySetInnerHTML={this.createDescMarkup()}
-        className="inline"
-      />
-    );
+    return <div dangerouslySetInnerHTML={this.createDescMarkup()} className="inline" />;
   };
 
   render() {
@@ -48,12 +43,9 @@ class PodcastCardStyleA extends React.Component {
       '?utm_source=listennotes.com&utm_campaign=Listen+Notes&utm_medium=website',
       ''
     );
-    const itunes = `https://itunes.apple.com/podcast/id${
-      this.props.podcast.itunes_id
-    }`;
+    const itunes = `https://itunes.apple.com/podcast/id${this.props.podcast.itunes_id}`;
     const firstPublishDate = msToDate(this.props.podcast.earliest_pub_date_ms);
-    const genresInString =
-      this.props.podcast.genres.join(', ').toLowerCase() || 'n/a';
+    // const genresInString = this.props.podcast.genres.join(', ').toLowerCase() || 'n/a';
     let renderTitle;
     let renderSearchBox;
     if (this.props.podcastOnWhichPage === 'podcast') {
@@ -131,7 +123,7 @@ class PodcastCardStyleA extends React.Component {
         </div>
         <p className="more-info">Total episodes: {totalEpisodes}</p>
         <p className="more-info">First published: {firstPublishDate}</p>
-        <p className="more-info">Tags: {genresInString}</p>
+        {/* <p className="more-info">Tags: {genresInString}</p> */}
       </div>
     );
   }

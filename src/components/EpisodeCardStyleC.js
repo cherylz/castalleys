@@ -73,51 +73,35 @@ function EpisodeCardStyleC(props) {
   let togglePlayIcon;
   if (audio) {
     togglePlayIcon =
-      episodeId !== props.episodeOnPlayId
-        ? playIcon
-        : props.playing
-          ? pauseIcon
-          : playIcon;
+      episodeId !== props.episodeOnPlayId ? playIcon : props.playing ? pauseIcon : playIcon;
   }
 
   function createEpisodeTitleMarkup() {
     return { __html: props.episode.title_highlighted };
   }
   function episodeTitleComponent() {
-    return (
-      <div
-        dangerouslySetInnerHTML={createEpisodeTitleMarkup()}
-        className="inline"
-      />
-    );
+    return <div dangerouslySetInnerHTML={createEpisodeTitleMarkup()} className="inline" />;
   }
 
   function createDescMarkup() {
     return { __html: props.episode.description_highlighted };
   }
   function descComponent() {
-    return (
-      <div dangerouslySetInnerHTML={createDescMarkup()} className="inline" />
-    );
+    return <div dangerouslySetInnerHTML={createDescMarkup()} className="inline" />;
   }
 
   function createTranscriptsMarkup() {
     return { __html: props.episode.transcripts_highlighted.join(' ... ') };
   }
   function transcriptsComponent() {
-    return (
-      <div
-        dangerouslySetInnerHTML={createTranscriptsMarkup()}
-        className="inline"
-      />
-    );
+    return <div dangerouslySetInnerHTML={createTranscriptsMarkup()} className="inline" />;
   }
 
   function handleClick() {
     if (episodeId !== props.episodeOnPlayId) {
       // fallback: use original audio length in case audioRef.current.duration returns NaN for unknown reasons.
       const actualDuration = audioRef.current.duration
-        ? formatSeconds(audioRef.current.duration)
+        ? audioRef.current.duration
         : props.episode.duration;
       const episodeOnPlay = {
         podcastTitle,
@@ -134,14 +118,8 @@ function EpisodeCardStyleC(props) {
     } else {
       props.updatePlaying();
       // fallback: in case audioRef.current.duration returns NaN on first click, we still have the chance to update the actual duration on subsequent clicks.
-      if (
-        audioRef.current.duration &&
-        formatSeconds(audioRef.current.duration) !== props.episode.duration
-      ) {
-        props.updateActualDuration(
-          formatSeconds(audioRef.current.duration),
-          episodeId
-        );
+      if (audioRef.current.duration && audioRef.current.duration !== props.episode.duration) {
+        props.updateActualDuration(audioRef.current.duration, episodeId);
       }
     }
   }
@@ -174,7 +152,9 @@ function EpisodeCardStyleC(props) {
       <div className="episode-controls">
         <span className="episode-play-group prevent-tap-hl">
           {togglePlayIcon}
-          <span className="duration">{duration}</span>
+          <span className="duration">
+            {duration === '(no audio)' ? duration : formatSeconds(duration)}
+          </span>
           {toggleFavIcon}
         </span>
       </div>

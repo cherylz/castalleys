@@ -13,10 +13,10 @@ function EpisodeCardStyleE(props) {
     image,
     audio,
     date,
-    duration
+    duration,
+    timePlayed
   } = props.episode;
   const desc = descComponent();
-  const timePlayed = formatSeconds(props.episode.timePlayed);
   const playIcon = (
     <svg
       className="prevent-tap-hl"
@@ -75,27 +75,21 @@ function EpisodeCardStyleE(props) {
   let togglePlayIcon;
   if (audio) {
     togglePlayIcon =
-      episodeId !== props.episodeOnPlayId
-        ? playIcon
-        : props.playing
-          ? pauseIcon
-          : playIcon;
+      episodeId !== props.episodeOnPlayId ? playIcon : props.playing ? pauseIcon : playIcon;
   }
 
   function createDescMarkup() {
     return { __html: props.episode.desc };
   }
   function descComponent() {
-    return (
-      <div dangerouslySetInnerHTML={createDescMarkup()} className="inline" />
-    );
+    return <div dangerouslySetInnerHTML={createDescMarkup()} className="inline" />;
   }
 
   function handleClick() {
     if (episodeId !== props.episodeOnPlayId) {
       // fallback: use original audio length in case audioRef.current.duration returns NaN for unknown reasons.
       const actualDuration = audioRef.current.duration
-        ? formatSeconds(audioRef.current.duration)
+        ? audioRef.current.duration
         : props.episode.duration;
       const episodeOnPlay = {
         podcastTitle,
@@ -112,11 +106,8 @@ function EpisodeCardStyleE(props) {
     } else {
       props.updatePlaying();
       // fallback: in case audioRef.current.duration returns NaN on first click, we still have the chance to update the actual duration on subsequent clicks.
-      if (
-        audioRef.current.duration &&
-        formatSeconds(audioRef.current.duration) !== props.episode.duration
-      ) {
-        props.updateActualDuration(formatSeconds(audioRef.current.duration));
+      if (audioRef.current.duration && audioRef.current.duration !== props.episode.duration) {
+        props.updateActualDuration(audioRef.current.duration);
       }
     }
   }
@@ -159,7 +150,7 @@ function EpisodeCardStyleE(props) {
         <div>
           {togglePlayIcon}
           <span className="duration">
-            {timePlayed} / {duration}
+            {formatSeconds(timePlayed)} / {formatSeconds(duration)}
           </span>
           {toggleFavIcon}
         </div>

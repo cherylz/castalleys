@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatSeconds, convertTimeString } from '../helpers';
+import { formatSeconds } from '../helpers';
 
 class AudioPlayer extends React.Component {
   audio = React.createRef();
@@ -14,12 +14,9 @@ class AudioPlayer extends React.Component {
 
   componentDidMount() {
     // render the episode (time played, percent to show progress on progress bar) from last stored; set state playFromLastTime to true to trigger the execution of componentDidUpdate() to update audio.currentTime
-    if (
-      this.props.episodeOnPlay &&
-      JSON.stringify(this.props.episodeOnPlay) !== '{}'
-    ) {
+    if (this.props.episodeOnPlay && JSON.stringify(this.props.episodeOnPlay) !== '{}') {
       const timePlayed = this.props.episodeOnPlayStartTime;
-      const duration = convertTimeString(this.props.episodeOnPlay.duration);
+      const duration = this.props.episodeOnPlay.duration;
       const percent = (timePlayed / duration) * 100;
       this.setState({
         timePlayed,
@@ -43,16 +40,14 @@ class AudioPlayer extends React.Component {
       if (this.props.speed !== prevProps.speed) {
         audio.playbackRate = this.props.speed;
       }
-      if (
-        this.props.episodeOnPlay.episodeId !== prevProps.episodeOnPlay.episodeId
-      ) {
+      if (this.props.episodeOnPlay.episodeId !== prevProps.episodeOnPlay.episodeId) {
         // add new history to this.state.playHistory of App.js
         if (!this.props.episodeOnPlayWasPlayed) {
           this.props.addToPlayHistory();
         }
         // console.log("Step 1/3 of Rendering time and progress & Updating the audio's current time");
         const timePlayed = this.props.episodeOnPlayStartTime;
-        const duration = convertTimeString(this.props.episodeOnPlay.duration);
+        const duration = this.props.episodeOnPlay.duration;
         const percent = (timePlayed / duration) * 100;
         this.setState({
           timePlayed,
@@ -95,8 +90,7 @@ class AudioPlayer extends React.Component {
   scrub = e => {
     const audio = this.audio.current;
     const progressBar = this.progressBar.current;
-    const scrubTime =
-      (e.nativeEvent.offsetX / progressBar.offsetWidth) * audio.duration; // attention: e.nativeEvent.offsetX instead of e.offsetX because of SyntheticEvent (https://reactjs.org/docs/events.html)
+    const scrubTime = (e.nativeEvent.offsetX / progressBar.offsetWidth) * audio.duration; // attention: e.nativeEvent.offsetX instead of e.offsetX because of SyntheticEvent (https://reactjs.org/docs/events.html)
     audio.currentTime = scrubTime;
   };
 
@@ -112,8 +106,7 @@ class AudioPlayer extends React.Component {
       this.setState({ playFromLastTime: false });
       // console.log("Step 3/3 of Rendering time and progress & Updating the audio's current time");
     } else {
-      const duration =
-        audio.duration || convertTimeString(this.props.episodeOnPlay.duration);
+      const duration = audio.duration || this.props.episodeOnPlay.duration;
       const percent = (audio.currentTime / duration) * 100;
       this.setState({
         timePlayed: audio.currentTime,
@@ -136,10 +129,7 @@ class AudioPlayer extends React.Component {
   };
 
   render() {
-    if (
-      this.props.hidePlayer ||
-      !Object.keys(this.props.episodeOnPlay).length
-    ) {
+    if (this.props.hidePlayer || !Object.keys(this.props.episodeOnPlay).length) {
       return null;
     }
     const timePlayed = formatSeconds(this.state.timePlayed);
@@ -177,11 +167,7 @@ class AudioPlayer extends React.Component {
         height="24"
         viewBox="0 0 24 24"
       >
-        <path
-          className="playPause"
-          d="M8 5v14l11-7z"
-          fill={this.props.customColor}
-        />
+        <path className="playPause" d="M8 5v14l11-7z" fill={this.props.customColor} />
         <path className="playPause" d="M0 0h24v24H0z" fill="none" />
       </svg>
     );
@@ -221,15 +207,8 @@ class AudioPlayer extends React.Component {
       <div className="wrapper">
         <div className="player">
           <div className="episode-info">
-            <Link
-              to={`/episode/${episodeId}`}
-              onClick={this.props.resetSearchbar}
-            >
-              <img
-                className="artwork-in-player"
-                src={image}
-                alt="podcast artwork"
-              />
+            <Link to={`/episode/${episodeId}`} onClick={this.props.resetSearchbar}>
+              <img className="artwork-in-player" src={image} alt="podcast artwork" />
             </Link>
             <div className="titles-in-player">
               <Link
@@ -251,10 +230,7 @@ class AudioPlayer extends React.Component {
           </div>
           <div className="player-controls">
             <div className="main-board">
-              <div
-                className="main-controls"
-                onClick={this.updatePlaybackControls}
-              >
+              <div className="main-controls" onClick={this.updatePlaybackControls}>
                 <span className="speed">{speed}x</span>
                 <span className="playcontrols">
                   <svg
@@ -314,16 +290,13 @@ class AudioPlayer extends React.Component {
                   onMouseDown={() => (mousedown = true)}
                   onMouseUp={() => (mousedown = false)}
                 >
-                  <div
-                    className="progressbar-filled"
-                    style={{ flexBasis: percent + '%' }}
-                  />
+                  <div className="progressbar-filled" style={{ flexBasis: percent + '%' }} />
                 </div>
                 <div className="timer">
                   <span ref={this.currentTime} id="time-elapsed">
                     {timePlayed}
                   </span>
-                  <span id="total-time">{duration}</span>
+                  <span id="total-time">{formatSeconds(duration)}</span>
                 </div>
               </div>
             </div>

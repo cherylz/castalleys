@@ -10,15 +10,9 @@ function EpisodeCardStyleB(props) {
   const publisher = publisherComponent();
   const desc = descComponent();
   const transcripts = transcriptsComponent();
-  const {
-    image,
-    audio_length,
-    audio,
-    podcast_id: podcastId,
-    id: episodeId
-  } = props.episode;
+  const { image, audio_length_sec, audio, podcast_id: podcastId, id: episodeId } = props.episode;
   const date = msToDate(props.episode.pub_date_ms);
-  const duration = audio ? audio_length : '(no audio)';
+  const durationInHHMMSS = audio ? formatSeconds(audio_length_sec) : '(no audio)';
   const playIcon = (
     <svg
       className="prevent-tap-hl"
@@ -77,76 +71,50 @@ function EpisodeCardStyleB(props) {
   let togglePlayIcon;
   if (audio) {
     togglePlayIcon =
-      episodeId !== props.episodeOnPlayId
-        ? playIcon
-        : props.playing
-          ? pauseIcon
-          : playIcon;
+      episodeId !== props.episodeOnPlayId ? playIcon : props.playing ? pauseIcon : playIcon;
   }
 
   function createEpisodeTitleMarkup() {
     return { __html: props.episode.title_highlighted };
   }
   function episodeTitleComponent() {
-    return (
-      <div
-        dangerouslySetInnerHTML={createEpisodeTitleMarkup()}
-        className="inline"
-      />
-    );
+    return <div dangerouslySetInnerHTML={createEpisodeTitleMarkup()} className="inline" />;
   }
 
   function createDescMarkup() {
     return { __html: props.episode.description_highlighted };
   }
   function descComponent() {
-    return (
-      <div dangerouslySetInnerHTML={createDescMarkup()} className="inline" />
-    );
+    return <div dangerouslySetInnerHTML={createDescMarkup()} className="inline" />;
   }
 
   function createPodcastTitleMarkup() {
     return { __html: props.episode.podcast_title_highlighted };
   }
   function podcastTitleComponent() {
-    return (
-      <div
-        dangerouslySetInnerHTML={createPodcastTitleMarkup()}
-        className="inline"
-      />
-    );
+    return <div dangerouslySetInnerHTML={createPodcastTitleMarkup()} className="inline" />;
   }
 
   function createPublisherMarkup() {
     return { __html: props.episode.publisher_highlighted };
   }
   function publisherComponent() {
-    return (
-      <div
-        dangerouslySetInnerHTML={createPublisherMarkup()}
-        className="inline"
-      />
-    );
+    return <div dangerouslySetInnerHTML={createPublisherMarkup()} className="inline" />;
   }
 
   function createTranscriptsMarkup() {
     return { __html: props.episode.transcripts_highlighted.join(' ... ') };
   }
   function transcriptsComponent() {
-    return (
-      <div
-        dangerouslySetInnerHTML={createTranscriptsMarkup()}
-        className="inline"
-      />
-    );
+    return <div dangerouslySetInnerHTML={createTranscriptsMarkup()} className="inline" />;
   }
 
   function handleClick() {
     if (episodeId !== props.episodeOnPlayId) {
       // fallback: use original audio length in case audioRef.current.duration returns NaN for unknown reasons.
       const actualDuration = audioRef.current.duration
-        ? formatSeconds(audioRef.current.duration)
-        : props.episode.audio_length;
+        ? audioRef.current.duration
+        : props.episode.audio_length_sec;
       const episodeOnPlay = {
         podcastTitle: props.episode.podcast_title_original,
         episodeTitle: props.episode.title_original,
@@ -164,12 +132,9 @@ function EpisodeCardStyleB(props) {
       // fallback: in case audioRef.current.duration returns NaN on first click, we still have the chance to update the actual duration on subsequent clicks.
       if (
         audioRef.current.duration &&
-        formatSeconds(audioRef.current.duration) !== props.episode.audio_length
+        audioRef.current.duration !== props.episode.audio_length_sec
       ) {
-        props.updateActualDuration(
-          formatSeconds(audioRef.current.duration),
-          episodeId
-        );
+        props.updateActualDuration(audioRef.current.duration, episodeId);
       }
     }
   }
@@ -181,7 +146,7 @@ function EpisodeCardStyleB(props) {
       podcastId,
       episodeId,
       desc: props.episode.description_original,
-      duration: audio_length,
+      duration: audio_length_sec,
       image,
       audio,
       date
@@ -199,11 +164,7 @@ function EpisodeCardStyleB(props) {
         <img className="artwork-md" src={image} alt="podcast artwork" />
       </Link>
       <div>
-        <Link
-          to={`/episode/${episodeId}`}
-          onClick={props.resetSearchbar}
-          className="title5"
-        >
+        <Link to={`/episode/${episodeId}`} onClick={props.resetSearchbar} className="title5">
           {episodeTitle}
         </Link>
         <div>
@@ -215,7 +176,7 @@ function EpisodeCardStyleB(props) {
         </div>
         <div>
           {togglePlayIcon}
-          <span className="duration">{duration}</span>
+          <span className="duration">{durationInHHMMSS}</span>
           <svg
             className="cursor-none"
             xmlns="http://www.w3.org/2000/svg"

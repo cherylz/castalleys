@@ -44,7 +44,7 @@ Just search for what you want to listen to and you are ready to play the show. Y
 ## Installation
 
 - Run `npm install` to install all the dependencies.
-- Get your freemium X-RapidAPI-Key from https://rapidapi.com/ to be able to call the [ListenNotes API](https://rapidapi.com/listennotes/api/listennotes).
+- Get your freemium X-ListenAPI-Key from https://www.listennotes.com/api/ to be able to call the podcast search API.
 - Create a file named `apiKey.js` in the `src` folder. Paste this line `export const apiKey = "key";` into the file and replace the string `key` with your key grabbed from the previous step.
 - Run `npm start` to make edits in the development mode.
 

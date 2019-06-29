@@ -5,17 +5,9 @@ import { formatSeconds } from '../helpers';
 function EpisodeCardStyleD(props) {
   let audioRef = React.createRef();
 
-  const {
-    podcastTitle,
-    episodeTitle,
-    podcastId,
-    episodeId,
-    image,
-    audio,
-    date
-  } = props.episode;
+  const { podcastTitle, episodeTitle, podcastId, episodeId, image, audio, date } = props.episode;
   const desc = descComponent();
-  const duration = audio ? props.episode.duration : '(no audio)';
+  const durationInHHMMSS = audio ? formatSeconds(props.episode.duration) : '(no audio)';
   const playIcon = (
     <svg
       className="prevent-tap-hl"
@@ -46,27 +38,21 @@ function EpisodeCardStyleD(props) {
   let togglePlayIcon;
   if (audio) {
     togglePlayIcon =
-      episodeId !== props.episodeOnPlayId
-        ? playIcon
-        : props.playing
-          ? pauseIcon
-          : playIcon;
+      episodeId !== props.episodeOnPlayId ? playIcon : props.playing ? pauseIcon : playIcon;
   }
 
   function createDescMarkup() {
     return { __html: props.episode.desc };
   }
   function descComponent() {
-    return (
-      <div dangerouslySetInnerHTML={createDescMarkup()} className="inline" />
-    );
+    return <div dangerouslySetInnerHTML={createDescMarkup()} className="inline" />;
   }
 
   function handleClick() {
     if (episodeId !== props.episodeOnPlayId) {
       // fallback: use original audio length in case audioRef.current.duration returns NaN for unknown reasons.
       const actualDuration = audioRef.current.duration
-        ? formatSeconds(audioRef.current.duration)
+        ? audioRef.current.duration
         : props.episode.duration;
       const episodeOnPlay = {
         podcastTitle,
@@ -83,11 +69,8 @@ function EpisodeCardStyleD(props) {
     } else {
       props.updatePlaying();
       // fallback: in case audioRef.current.duration returns NaN on first click, we still have the chance to update the actual duration on subsequent clicks.
-      if (
-        audioRef.current.duration &&
-        formatSeconds(audioRef.current.duration) !== props.episode.duration
-      ) {
-        props.updateActualDuration(formatSeconds(audioRef.current.duration));
+      if (audioRef.current.duration && audioRef.current.duration !== props.episode.duration) {
+        props.updateActualDuration(audioRef.current.duration);
       }
     }
   }
@@ -106,7 +89,7 @@ function EpisodeCardStyleD(props) {
         </div>
         <div>
           {togglePlayIcon}
-          <span className="duration">{duration}</span>
+          <span className="duration">{durationInHHMMSS}</span>
           <svg
             className="cursor-none"
             xmlns="http://www.w3.org/2000/svg"

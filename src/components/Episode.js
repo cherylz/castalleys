@@ -18,11 +18,11 @@ class Episode extends React.Component {
   componentDidMount() {
     const id = this.props.match.params.episodeId;
     if (id.length === 32) {
-      const endpoint = `https://api.listennotes.com/api/v1/episodes/${id}`;
+      const endpoint = `https://listen-api.listennotes.com/api/v2/episodes/${id}`;
       const request = {
         method: 'GET',
         headers: {
-          'X-RapidAPI-Key': apiKey,
+          'X-ListenAPI-Key': apiKey,
           Accept: 'application/json'
         }
       };
@@ -54,9 +54,7 @@ class Episode extends React.Component {
   markStarredOrUnstarred = podcast => {
     const starredPodcastsRef = localStorage.getItem('starredPodcasts');
     if (starredPodcastsRef && starredPodcastsRef !== '[]') {
-      const starredPodcastsIds = JSON.parse(starredPodcastsRef).map(
-        podcast => podcast.id
-      );
+      const starredPodcastsIds = JSON.parse(starredPodcastsRef).map(podcast => podcast.id);
       return starredPodcastsIds.indexOf(podcast.id) !== -1
         ? { ...podcast, starred: true }
         : { ...podcast, starred: false };
@@ -79,10 +77,7 @@ class Episode extends React.Component {
       updated.push(processedPodcast);
       localStorage.setItem('starredPodcasts', JSON.stringify(updated));
     } else {
-      localStorage.setItem(
-        'starredPodcasts',
-        JSON.stringify(Array.of(processedPodcast))
-      );
+      localStorage.setItem('starredPodcasts', JSON.stringify(Array.of(processedPodcast)));
     }
   };
 
@@ -103,10 +98,10 @@ class Episode extends React.Component {
     try {
       const res = await fetch(endpoint, request);
       const data = await res.json();
-      const { podcast, audio_length, pub_date_ms, ...rest } = data;
+      const { podcast, audio_length_sec, pub_date_ms, ...rest } = data;
       const processedEpisode = {
         ...rest,
-        duration: rest.audio ? formatSeconds(audio_length) : '(no audio)',
+        duration: rest.audio ? formatSeconds(audio_length_sec) : '(no audio)',
         date: msToDate(pub_date_ms)
       };
       this.setState({
@@ -146,9 +141,7 @@ class Episode extends React.Component {
     let renderPodcastInfo;
     let renderEpisodeInfo;
     let loadingPromptWhenNeeded = (
-      <div className="loading-prompt">
-        Loading... Good things are worth waiting for :)
-      </div>
+      <div className="loading-prompt">Loading... Good things are worth waiting for :)</div>
     );
 
     if (Object.keys(podcast).length) {
@@ -192,9 +185,7 @@ class Episode extends React.Component {
           episode={processedEpisode}
           episodeOnPlayId={this.props.episodeOnPlayId}
           playing={this.props.playing}
-          updateEpisodeOnPlayAndMaybeActualDuration={
-            this.updateEpisodeOnPlayAndMaybeActualDuration
-          }
+          updateEpisodeOnPlayAndMaybeActualDuration={this.updateEpisodeOnPlayAndMaybeActualDuration}
           updateActualDuration={this.updateActualDuration}
           updatePlaying={this.props.updatePlaying}
           customColor={this.props.customColor}
